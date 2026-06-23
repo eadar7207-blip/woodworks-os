@@ -1,0 +1,76 @@
+id: example_skill_usage
+name: "Example: Skill Integration Workflow"
+description: "Demonstrates how to use Claude Code skills in automation workflows"
+version: 1.0
+
+# This workflow shows the basic patterns for integrating skills with other actions
+
+steps:
+  # Step 1: Use the prospect skill to research a lead
+  - name: research_lead
+    action: skill
+    config:
+      skill: prospect
+      params:
+        action: research
+        name: "{{prospect_name}}"
+        company: "{{company_name}}"
+
+  # Step 2: Use an HTTP action to fetch additional data
+  - name: fetch_company_data
+    action: http
+    config:
+      method: POST
+      url: "https://api.example.com/company/lookup"
+      headers:
+        Authorization: "Bearer {{api_token}}"
+      body:
+        company_name: "{{company_name}}"
+
+  # Step 3: Use the proposal skill with parameters
+  - name: generate_proposal
+    action: skill
+    config:
+      skill: proposal
+      params:
+        action: generate
+        prospect_name: "{{prospect_name}}"
+        company: "{{company_name}}"
+        scope: "{{proposal_scope}}"
+
+  # Step 4: Send an email with variable interpolation
+  - name: send_email
+    action: email
+    config:
+      to: "{{prospect_email}}"
+      subject: "Your Customized {{company_name}} Proposal"
+      html: |
+        <h2>Hi {{prospect_name}},</h2>
+        <p>Thank you for your interest in our automation services.</p>
+        <p>We've prepared a customized proposal for {{company_name}}.</p>
+        <p>Scope: {{proposal_scope}}</p>
+        <p>Let's discuss next steps.</p>
+        <p>Best regards,<br>Eitan</p>
+
+  # Step 5: Log the activity using the CRM skill
+  - name: log_activity
+    action: skill
+    config:
+      skill: crm
+      params:
+        action: log_activity
+        contact_name: "{{prospect_name}}"
+        email: "{{prospect_email}}"
+        company: "{{company_name}}"
+        activity_type: "proposal_sent"
+        activity_description: "Proposal generated and sent via automated workflow"
+
+# Trigger this workflow with parameters like:
+# curl -X POST http://localhost:5000/webhook/example_skill_usage \
+#   -d '{
+#     "prospect_name": "John Smith",
+#     "company_name": "ABC Real Estate",
+#     "prospect_email": "john@abcrealestate.com",
+#     "proposal_scope": "Lead automation system",
+#     "api_token": "your-api-token"
+#   }'

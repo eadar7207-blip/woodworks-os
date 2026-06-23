@@ -1,0 +1,170 @@
+{% extends "base.html" %}
+
+{% block title %}Execution History - Adar Realty Studio{% endblock %}
+
+{% block extra_css %}
+<style>
+    .status-badge {
+        font-size: 0.85rem;
+        padding: 0.35rem 0.6rem;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <!-- Header -->
+    <div class="row mb-4">
+        <div class="col">
+            <h1 class="display-5">Execution History</h1>
+            <p class="text-muted">{{ total_count }} total executions</p>
+        </div>
+    </div>
+
+    <!-- Filters -->
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <div class="input-group">
+                <span class="input-group-text">
+                    <i class="fas fa-filter"></i>
+                </span>
+                <select class="form-select" id="status-filter" onchange="applyFilter()">
+                    <option value="">All Statuses</option>
+                    <option value="completed" {% if current_status == 'completed' %}selected{% endif %}>Completed</option>
+                    <option value="failed" {% if current_status == 'failed' %}selected{% endif %}>Failed</option>
+                    <option value="running" {% if current_status == 'running' %}selected{% endif %}>Running</option>
+                    <option value="pending" {% if current_status == 'pending' %}selected{% endif %}>Pending</option>
+                </select>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="input-group">
+                <span class="input-group-text">
+                    <i class="fas fa-diagram-project"></i>
+                </span>
+                <select class="form-select" id="workflow-filter" onchange="applyFilter()">
+                    <option value="">All Workflows</option>
+                    {% for workflow in workflows %}
+                        <option value="{{ workflow.id }}" {% if current_workflow_id == workflow.id|string %}selected{% endif %}>
+                            {{ workflow.name }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <!-- Executions Table -->
+    <div class="card">
+        <div class="table-responsive">
+            <table class="table table-hover mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>Execution ID</th>
+                        <th>Workflow</th>
+                        <th>Status</th>
+                        <th>Started</th>
+                        <th>Duration</th>
+                        <th>Steps</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if executions %}
+                        {% for execution in executions %}
+                            <tr>
+                                <td>
+                                    <code class="small">{{ execution.id[:8] }}...</code>
+                                </td>
+                                <td>{{ execution.workflow_name }}</td>
+                                <td>
+                                    {% if execution.status == 'completed' %}
+                                        <span class="badge bg-success status-badge">Completed</span>
+                                    {% elif execution.status == 'failed' %}
+                                        <span class="badge bg-danger status-badge">Failed</span>
+                                    {% elif execution.status == 'running' %}
+                                        <span class="badge bg-info status-badge">
+                                            <span class="spinner-border spinner-border-sm me-2" role="status">
+                                                <span class="visually-hidden">Running...</span>
+                                            </span>
+                                            Running
+                                        </span>
+                                    {% elif execution.status == 'pending' %}
+                                        <span class="badge bg-warning status-badge">Pending</span>
+                                    {% else %}
+                                        <span class="badge bg-secondary status-badge">{{ execution.status }}</span>
+                                    {% endif %}
+                                </td>
+                                <td><small>{{ execution.created_at[:10] }} {{ execution.created_at[11:16] }}</small></td>
+                                <td><small>{{ execution.duration_seconds }}s</small></td>
+                                <td><small>{{ execution.step_count }} steps</small></td>
+                                <td>
+                                    <a href="/execution/{{ execution.id }}" class="btn btn-sm btn-outline-primary">
+                                        <i class="fas fa-eye"></i> View
+                                    </a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr>
+                            <td colspan="7" class="text-center text-muted py-4">
+                                No executions found
+                            </td>
+                        </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Pagination -->
+    {% if total_pages > 1 %}
+        <nav class="mt-4" aria-label="Pagination">
+            <ul class="pagination justify-content-center">
+                {% if page > 1 %}
+                    <li class="page-item">
+                        <a class="page-link" href="/executions?page=1">First</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="/executions?page={{ page - 1 }}">Previous</a>
+                    </li>
+                {% endif %}
+
+                {% for p in range(1, total_pages + 1) %}
+                    {% if p == page %}
+                        <li class="page-item active">
+                            <span class="page-link">{{ p }}</span>
+                        </li>
+                    {% elif p >= page - 2 and p <= page + 2 %}
+                        <li class="page-item">
+                            <a class="page-link" href="/executions?page={{ p }}">{{ p }}</a>
+                        </li>
+                    {% endif %}
+                {% endfor %}
+
+                {% if page < total_pages %}
+                    <li class="page-item">
+                        <a class="page-link" href="/executions?page={{ page + 1 }}">Next</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="/executions?page={{ total_pages }}">Last</a>
+                    </li>
+                {% endif %}
+            </ul>
+        </nav>
+    {% endif %}
+</div>
+
+<script>
+function applyFilter() {
+    const status = document.getElementById('status-filter').value;
+    const workflow = document.getElementById('workflow-filter').value;
+
+    let url = '/executions?page=1';
+    if (status) url += '&status=' + encodeURIComponent(status);
+    if (workflow) url += '&workflow_id=' + encodeURIComponent(workflow);
+
+    window.location.href = url;
+}
+</script>
+{% endblock %}

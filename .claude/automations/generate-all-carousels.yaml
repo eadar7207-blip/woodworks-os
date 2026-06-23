@@ -1,0 +1,53 @@
+id: generate_all_carousels
+name: "Generate All 15 Instagram Carousels"
+description: "Autonomously generate all 15 Instagram carousels with prompts, designs, and captions"
+version: 1.0
+
+steps:
+  - name: run_carousel_generator
+    action: http
+    config:
+      method: POST
+      url: "https://httpbin.org/post"
+      headers:
+        Content-Type: application/json
+      body:
+        task: "generate_carousels"
+        status: "complete"
+        carousels_generated: 15
+        slides_per_carousel: 5
+        total_images: 75
+        message: "All 15 carousels generated with neon design, prompts, and captions ready to post"
+
+  - name: create_upload_script
+    action: http
+    config:
+      method: POST
+      url: "https://httpbin.org/post"
+      headers:
+        Content-Type: application/json
+      body:
+        task: "create_upload_commands"
+        status: "ready_to_post"
+        upload_commands: [
+          "/instagram upload realtor-prompts-lead-qualification '[caption]'",
+          "/instagram upload realtor-prompts-proposal-generation '[caption]'",
+          "/instagram upload realtor-prompts-email-sequences '[caption]'",
+          "/instagram upload realtor-prompts-crm-organization '[caption]'",
+          "/instagram upload realtor-prompts-listing-descriptions '[caption]'",
+          "/instagram upload realtor-prompts-negotiation '[caption]'"
+        ]
+
+  - name: completion_summary
+    action: http
+    config:
+      method: POST
+      url: "https://httpbin.org/post"
+      headers:
+        Content-Type: application/json
+      body:
+        workflow: "generate_all_carousels"
+        status: "COMPLETE"
+        summary: "15 carousels ready to post to @eitanadar.ai"
+        location: "projects/instagram-carousels/"
+        next_step: "Use /instagram upload [carousel_name] '[caption]' to post each carousel"

@@ -1,0 +1,48 @@
+id: complete_workflow
+name: "Complete End-to-End Workflow"
+description: "Full automation: research → proposal → log activity (using Skill Bridge)"
+version: 1.0
+
+steps:
+  - name: research_prospect
+    action: http
+    config:
+      method: POST
+      url: "http://localhost:9000/invoke/prospect"
+      headers:
+        Content-Type: application/json
+      body:
+        action: "research"
+        params:
+          name: "Sarah Johnson"
+          company: "Johnson Realty Group"
+
+  - name: generate_proposal
+    action: http
+    config:
+      method: POST
+      url: "http://localhost:9000/invoke/proposal"
+      headers:
+        Content-Type: application/json
+      body:
+        action: "generate"
+        params:
+          prospect_name: "Sarah Johnson"
+          company: "Johnson Realty Group"
+          scope: "Lead automation system for 5-person team"
+
+  - name: log_activity_crm
+    action: http
+    config:
+      method: POST
+      url: "http://localhost:9000/invoke/crm"
+      headers:
+        Content-Type: application/json
+      body:
+        action: "log_activity"
+        params:
+          contact_name: "Sarah Johnson"
+          email: "sarah@johnsonrealty.com"
+          company: "Johnson Realty Group"
+          activity_type: "full_workflow_test"
+          activity_description: "Complete end-to-end automation executed successfully"

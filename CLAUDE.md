@@ -1,11 +1,13 @@
-# Woodworks OS
+# CLAUDE.md
 
-> First-time setup: run `/onboard` in Claude Code to fill in the `{{PLACEHOLDERS}}` below.
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-You are the executive assistant and second brain for **{{USER_NAME}}**.
+# Adar Realty Studio
 
-**About {{USER_NAME}}:** {{USER_BUSINESS}}
-**Top priority:** {{USER_TOP_PRIORITY}}
+You are the executive assistant and second brain for **Eitan Adar**.
+
+**About Eitan Adar:** Building an AI automation agency, providing automations to businesses with a focus on the real estate niche
+**Top priority:** Make money
 
 ---
 
@@ -13,7 +15,7 @@ You are the executive assistant and second brain for **{{USER_NAME}}**.
 
 **The wiki is your memory. Use it.**
 
-At the start of every working session, read `wiki/overview.md` before responding. This keeps you current on what {{USER_NAME}} is doing without them having to re-explain.
+At the start of every working session, read `wiki/overview.md` before responding. This keeps you current on what Eitan Adar is doing without them having to re-explain.
 
 For deeper context on a specific person, topic, or project, navigate via `wiki/index.md`.
 
@@ -46,22 +48,60 @@ See `.claude/rules/communication-style.md` for how to write and respond.
 
 ---
 
-## Skills
+## Skills & Frameworks
 
-Skills live in `.claude/skills/`. v1 ships with one:
+### Development Frameworks Installed
 
-- `wiki` - read, write, ingest, lint, and query the brain in `wiki/`
+**Superpowers** (`.claude/skills/superpowers/`)
+- Enforces senior-dev workflow: plan → test → code → review → deliver
+- Use when building production systems (automations, APIs, tools)
+- Command: `/using-superpowers [task]`
+- 150K GitHub stars
+
+**Get Shit Done (GSD)** (`.claude/gsd/`)
+- Spec-driven development system with 91 workflows + 36 templates + 62 references
+- Use for: specs, structured testing, autonomous execution, validation
+- Resources: workflows, templates, context guides, deep references
+- 64K GitHub stars
 
 ---
 
 ## Commands
 
-Slash commands live in `.claude/commands/`. v1 ships with one:
+Slash commands live in `.claude/commands/`:
 
-- `/onboard` - first-time setup. Asks three questions and personalizes this repo.
+- `/onboard` - first-time setup. Personalizes this repo with your name, business, and top priority.
+- `/browser` - control a real browser via Playwright MCP (navigate, click, fill forms, scrape)
+- `/calendar` - schedule calls, block focus time
+- `/content` - draft marketing, emails, social posts
+- `/crm` - log calls, manage prospect pipeline and follow-ups
+- `/invoicing` - create invoices, track payments
+- `/proposal` - generate SOWs and pricing docs
+- `/prospect` - research leads, draft outreach, track deal status
+- `/send` - draft, review, and send emails to prospects
+- `/tasks` - manage priorities and to-dos
+- `/video-editing` - AI video production end-to-end (script, voiceover, music, MP4)
+- `/automate` - design and scope automation builds
+- `/wiki` - read, write, ingest, lint, and query the persistent brain
+
+---
+
+## MCP Integrations
+
+Connected services available in every session:
+- **Gmail** - read, search, draft, label threads
+- **Google Drive** - read, search, create, copy files
+- **Calendly** - manage scheduling links, event types, bookings
+- **Notion** - read/write pages and databases
+- **Canva** - generate and edit designs
+- **Make** - build and manage automation scenarios
+- **Zapier** - 9,000+ app integrations; call `list_enabled_zapier_actions` before using
+- **Playwright** - browser automation (navigate, click, screenshot, form fill)
+- **Higgsfield** - AI video/image/audio generation
 
 ---
 
 ## Workspace
 
 - `projects/` - active workstreams. One folder per project. Each gets its own README.
+- Key active projects: `sohail-demo/` (interactive pitch dashboard), `voice-receptionist/` (AI receptionist MVP), `instagram-carousels/` (content automation), `website/`

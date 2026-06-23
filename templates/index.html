@@ -1,0 +1,305 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - Adar Realty Studio{% endblock %}
+
+{% block extra_css %}
+<style>
+    .stat-card {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+    }
+    .stat-card.success {
+        background: linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%);
+        color: #333;
+    }
+    .stat-card.warning {
+        background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+        color: #333;
+    }
+    .stat-card.error {
+        background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+        color: #333;
+    }
+    .stat-number {
+        font-size: 2.5rem;
+        font-weight: bold;
+    }
+    .stat-label {
+        font-size: 0.9rem;
+        opacity: 0.9;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <!-- Header -->
+    <div class="row mb-4">
+        <div class="col">
+            <h1 class="display-5">Dashboard</h1>
+            <p class="text-muted">Automation Execution Overview</p>
+        </div>
+        <div class="col-auto">
+            <button class="btn btn-primary" onclick="refreshDashboard()">
+                <i class="fas fa-sync"></i> Refresh
+            </button>
+        </div>
+    </div>
+
+    <!-- Stats Row -->
+    <div class="row g-4 mb-4">
+        <div class="col-md-3">
+            <div class="card stat-card">
+                <div class="card-body">
+                    <div class="stat-number" id="total-executions">{{ stats.total }}</div>
+                    <div class="stat-label">Total Executions</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card stat-card success">
+                <div class="card-body">
+                    <div class="stat-number" id="success-rate">{{ stats.success_rate }}%</div>
+                    <div class="stat-label">Success Rate</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card stat-card warning">
+                <div class="card-body">
+                    <div class="stat-number" id="running-count">{{ stats.running }}</div>
+                    <div class="stat-label">Running</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card stat-card error">
+                <div class="card-body">
+                    <div class="stat-number" id="failed-count">{{ stats.failed }}</div>
+                    <div class="stat-label">Failed</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content Row -->
+    <div class="row g-4">
+        <!-- Recent Executions -->
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-header bg-dark text-white">
+                    <h5 class="mb-0"><i class="fas fa-history"></i> Recent Executions</h5>
+                </div>
+                <div class="card-body p-0">
+                    <div id="recent-executions" class="loading">
+                        <div class="text-center py-4">
+                            <div class="spinner-border" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="/executions" class="btn btn-sm btn-outline-primary">View All Executions</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Most Used Workflows -->
+        <div class="col-lg-4">
+            <div class="card">
+                <div class="card-header bg-dark text-white">
+                    <h5 class="mb-0"><i class="fas fa-diagram-project"></i> Popular Workflows</h5>
+                </div>
+                <div class="card-body">
+                    <div id="popular-workflows" class="loading">
+                        <div class="text-center">
+                            <div class="spinner-border spinner-border-sm" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="/workflows" class="btn btn-sm btn-outline-primary">View All Workflows</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Charts Row -->
+    <div class="row g-4 mt-2">
+        <div class="col-lg-6">
+            <div class="card">
+                <div class="card-header bg-dark text-white">
+                    <h5 class="mb-0"><i class="fas fa-chart-pie"></i> Execution Status</h5>
+                </div>
+                <div class="card-body">
+                    <canvas id="status-chart"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="card">
+                <div class="card-header bg-dark text-white">
+                    <h5 class="mb-0"><i class="fas fa-chart-bar"></i> Execution Timeline</h5>
+                </div>
+                <div class="card-body">
+                    <div id="timeline-chart" class="text-muted text-center py-4">
+                        <p>Timeline data not yet available</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+let statusChart = null;
+
+function refreshDashboard() {
+    loadStats();
+    loadRecentExecutions();
+    loadPopularWorkflows();
+}
+
+function loadStats() {
+    fetch('/api/stats')
+        .then(r => r.json())
+        .then(data => {
+            document.getElementById('total-executions').textContent = data.total;
+            document.getElementById('success-rate').textContent = data.success_rate + '%';
+            document.getElementById('running-count').textContent = data.running;
+            document.getElementById('failed-count').textContent = data.failed;
+
+            // Update status chart
+            updateStatusChart(data.by_status);
+        })
+        .catch(e => console.error('Failed to load stats:', e));
+}
+
+function loadRecentExecutions() {
+    fetch('/api/executions?limit=10')
+        .then(r => r.json())
+        .then(executions => {
+            const html = executions.length > 0
+                ? executions.map(e => `
+                    <tr>
+                        <td>
+                            <a href="/execution/${e.id}" class="text-decoration-none">
+                                <code>${e.id.substring(0, 8)}</code>
+                            </a>
+                        </td>
+                        <td>${e.workflow_name}</td>
+                        <td>
+                            <span class="badge badge-${getStatusColor(e.status)}">
+                                ${e.status}
+                            </span>
+                        </td>
+                        <td>${formatDate(e.created_at)}</td>
+                        <td>${e.duration_seconds}s</td>
+                    </tr>
+                `).join('')
+                : '<tr><td colspan="5" class="text-center text-muted py-4">No executions yet</td></tr>';
+
+            document.getElementById('recent-executions').innerHTML = `
+                <table class="table table-hover mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>ID</th>
+                            <th>Workflow</th>
+                            <th>Status</th>
+                            <th>Date</th>
+                            <th>Duration</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${html}
+                    </tbody>
+                </table>
+            `;
+        })
+        .catch(e => console.error('Failed to load executions:', e));
+}
+
+function loadPopularWorkflows() {
+    fetch('/api/stats')
+        .then(r => r.json())
+        .then(data => {
+            const workflows = data.most_used_workflows || [];
+            const html = workflows.length > 0
+                ? workflows.map(w => `
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <div>
+                            <div><strong>${w.name}</strong></div>
+                            <small class="text-muted">${w.count} executions</small>
+                        </div>
+                        <div class="progress" style="width: 100px;">
+                            <div class="progress-bar" style="width: ${Math.min(w.count * 10, 100)}%"></div>
+                        </div>
+                    </div>
+                `).join('')
+                : '<p class="text-muted">No workflows executed yet</p>';
+
+            document.getElementById('popular-workflows').innerHTML = html;
+        })
+        .catch(e => console.error('Failed to load workflows:', e));
+}
+
+function updateStatusChart(byStatus) {
+    const ctx = document.getElementById('status-chart').getContext('2d');
+
+    if (statusChart) {
+        statusChart.destroy();
+    }
+
+    statusChart = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: Object.keys(byStatus),
+            datasets: [{
+                data: Object.values(byStatus),
+                backgroundColor: [
+                    '#84fab0',
+                    '#ffd89b',
+                    '#fa709a',
+                    '#666666'
+                ]
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: true,
+            plugins: {
+                legend: {
+                    position: 'bottom'
+                }
+            }
+        }
+    });
+}
+
+function getStatusColor(status) {
+    const colors = {
+        'completed': 'success',
+        'failed': 'danger',
+        'running': 'info',
+        'pending': 'warning'
+    };
+    return colors[status] || 'secondary';
+}
+
+function formatDate(dateStr) {
+    const date = new Date(dateStr);
+    return date.toLocaleDateString() + ' ' + date.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+}
+
+// Initial load
+document.addEventListener('DOMContentLoaded', () => {
+    refreshDashboard();
+    // Refresh every 5 seconds
+    setInterval(refreshDashboard, 5000);
+});
+</script>
+{% endblock %}

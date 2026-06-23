@@ -1,0 +1,60 @@
+version: '3.8'
+
+services:
+  voice-receptionist:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "5001:5001"
+    environment:
+      - FLASK_ENV=development
+      - FLASK_APP=app.py
+      - DEBUG=True
+      - LOG_LEVEL=DEBUG
+      - DATABASE_URL=sqlite:///voice_receptionist.db
+      - SKILL_BRIDGE_URL=http://localhost:9000
+      - EXECUTOR_URL=http://localhost:5000
+      - AUTOMATION_API_KEY=dev-key
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - ELEVENLABS_API_KEY=${ELEVENLABS_API_KEY}
+    volumes:
+      - .:/app
+      - /app/__pycache__
+    depends_on:
+      - db
+    networks:
+      - voice-net
+
+  db:
+    image: postgres:15
+    environment:
+      POSTGRES_DB: voice_receptionist
+      POSTGRES_USER: voice_user
+      POSTGRES_PASSWORD: dev_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - voice-net
+
+  skill-bridge-mock:
+    image: mockserver/mockserver:latest
+    ports:
+      - "9000:1080"
+    environment:
+      MOCKSERVER_PROPERTY_FILE: /config/mockserver.properties
+      MOCKSERVER_INITIALIZATION_JSON_PATH: /config/expectations.json
+    volumes:
+      - ./mock-expectations.json:/config/expectations.json
+    networks:
+      - voice-net
+
+volumes:
+  postgres_data:
+
+networks:
+  voice-net:
+    driver: bridge

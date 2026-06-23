@@ -1,0 +1,2554 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UGC Studio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #080808;
+  --surface: #111111;
+  --surface-2: #1a1a1a;
+  --surface-3: #222222;
+  --accent: #6366f1;
+  --accent-hover: #4f46e5;
+  --accent-dim: rgba(99,102,241,0.15);
+  --green: #22c55e;
+  --red: #ef4444;
+  --text: #f5f5f5;
+  --text-muted: #6b7280;
+  --text-soft: #9ca3af;
+  --border: #2a2a2a;
+  --border-hover: #3a3a3a;
+  --radius: 12px;
+  --radius-sm: 8px;
+  --sidebar-w: 220px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Inter', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  height: 100vh;
+  display: flex;
+  overflow: hidden;
+  font-size: 14px;
+}
+
+/* SIDEBAR */
+#sidebar {
+  width: var(--sidebar-w);
+  min-width: var(--sidebar-w);
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  padding: 20px 0;
+}
+
+.logo {
+  padding: 0 20px 24px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 16px;
+}
+
+.logo-icon {
+  width: 32px;
+  height: 32px;
+  background: var(--accent);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+}
+
+.logo-text {
+  font-weight: 700;
+  font-size: 15px;
+  letter-spacing: -0.3px;
+}
+
+.logo-badge {
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--accent);
+  background: var(--accent-dim);
+  padding: 2px 6px;
+  border-radius: 4px;
+  margin-left: auto;
+}
+
+.nav-section {
+  padding: 0 12px;
+  margin-bottom: 8px;
+}
+
+.nav-label {
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--text-muted);
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  padding: 0 8px;
+  margin-bottom: 4px;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  color: var(--text-soft);
+  font-weight: 500;
+  transition: all 0.15s;
+  margin-bottom: 2px;
+}
+
+.nav-item:hover { background: var(--surface-2); color: var(--text); }
+.nav-item.active { background: var(--accent-dim); color: var(--accent); }
+
+.nav-item .icon { width: 16px; text-align: center; font-size: 15px; }
+
+.sidebar-bottom {
+  margin-top: auto;
+  padding: 16px 12px 0;
+  border-top: 1px solid var(--border);
+}
+
+.sidebar-stat {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px;
+  background: var(--surface-2);
+  border-radius: var(--radius-sm);
+  margin-bottom: 8px;
+}
+
+.stat-label { font-size: 12px; color: var(--text-muted); }
+.stat-val { font-weight: 600; font-size: 14px; color: var(--accent); }
+
+/* MAIN */
+#main {
+  flex: 1;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* SCREEN */
+.screen { display: none; flex: 1; overflow: hidden; }
+.screen.active { display: flex; flex-direction: column; }
+
+/* TOP BAR */
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 28px;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface);
+  min-height: 64px;
+}
+
+.topbar-title { font-size: 18px; font-weight: 700; letter-spacing: -0.4px; }
+.topbar-sub { font-size: 13px; color: var(--text-muted); margin-top: 2px; }
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 16px;
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  transition: all 0.15s;
+  font-family: inherit;
+}
+
+.btn-primary { background: var(--accent); color: #fff; }
+.btn-primary:hover { background: var(--accent-hover); }
+.btn-ghost { background: transparent; color: var(--text-soft); border: 1px solid var(--border); }
+.btn-ghost:hover { background: var(--surface-2); color: var(--text); border-color: var(--border-hover); }
+.btn-sm { padding: 6px 12px; font-size: 12px; }
+.btn-danger { background: rgba(239,68,68,0.15); color: var(--red); border: 1px solid rgba(239,68,68,0.3); }
+.btn-danger:hover { background: rgba(239,68,68,0.25); }
+.btn-green { background: rgba(34,197,94,0.15); color: var(--green); border: 1px solid rgba(34,197,94,0.3); }
+.btn-green:hover { background: rgba(34,197,94,0.25); }
+
+/* SCROLL CONTENT */
+.scroll-area {
+  flex: 1;
+  overflow-y: auto;
+  padding: 28px;
+}
+
+.scroll-area::-webkit-scrollbar { width: 6px; }
+.scroll-area::-webkit-scrollbar-track { background: transparent; }
+.scroll-area::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+/* DASHBOARD */
+.dashboard-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+.stat-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px;
+}
+
+.stat-card-label { font-size: 12px; color: var(--text-muted); font-weight: 500; margin-bottom: 8px; }
+.stat-card-val { font-size: 28px; font-weight: 700; letter-spacing: -0.5px; }
+.stat-card-sub { font-size: 11px; color: var(--text-muted); margin-top: 4px; }
+
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.section-title { font-size: 16px; font-weight: 600; }
+
+/* PROJECT CARDS */
+.projects-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+.project-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.project-card:hover { border-color: var(--accent); transform: translateY(-2px); }
+
+.project-thumb {
+  width: 100%;
+  aspect-ratio: 9/16;
+  background: var(--surface-2);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.project-thumb video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.project-thumb-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-muted);
+  font-size: 12px;
+}
+
+.thumb-icon { font-size: 32px; }
+
+.project-status {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  padding: 3px 8px;
+  border-radius: 20px;
+  font-size: 10px;
+  font-weight: 600;
+}
+
+.status-done { background: rgba(34,197,94,0.2); color: var(--green); }
+.status-processing { background: rgba(251,191,36,0.2); color: #fbbf24; }
+.status-draft { background: var(--surface-3); color: var(--text-muted); }
+
+.project-info { padding: 12px; }
+.project-name { font-weight: 600; margin-bottom: 4px; font-size: 13px; }
+.project-meta { font-size: 11px; color: var(--text-muted); }
+
+.project-actions {
+  display: flex;
+  gap: 6px;
+  margin-top: 10px;
+}
+
+/* NEW PROJECT WIZARD */
+.wizard-steps {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  padding: 20px 28px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+}
+
+.wizard-step {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 16px;
+  border-radius: 30px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-muted);
+  position: relative;
+}
+
+.wizard-step.active { color: var(--text); }
+.wizard-step.done { color: var(--accent); }
+
+.step-num {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 700;
+  min-width: 24px;
+}
+
+.wizard-step.active .step-num { background: var(--accent); border-color: var(--accent); color: #fff; }
+.wizard-step.done .step-num { background: var(--accent-dim); border-color: var(--accent); color: var(--accent); }
+
+.step-divider {
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+  min-width: 20px;
+  max-width: 40px;
+}
+
+.wizard-content {
+  flex: 1;
+  display: flex;
+  gap: 0;
+  overflow: hidden;
+}
+
+.wizard-panel {
+  display: none;
+  flex: 1;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.wizard-panel.active { display: flex; }
+
+/* CHARACTER GRID */
+.char-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 12px;
+  padding: 20px;
+}
+
+.char-card {
+  background: var(--surface);
+  border: 2px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  cursor: pointer;
+  transition: all 0.15s;
+  position: relative;
+}
+
+.char-card:hover { border-color: var(--border-hover); }
+.char-card.selected { border-color: var(--accent); }
+
+.char-card.selected::after {
+  content: '✓';
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 22px;
+  height: 22px;
+  background: var(--accent);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 700;
+  color: #fff;
+  display: grid;
+  place-items: center;
+}
+
+.char-thumb {
+  width: 100%;
+  aspect-ratio: 9/16;
+  background: var(--surface-2);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 48px;
+}
+
+.char-thumb video { width: 100%; height: 100%; object-fit: cover; }
+
+.char-info { padding: 8px; }
+.char-name { font-size: 12px; font-weight: 600; margin-bottom: 2px; }
+.char-type { font-size: 10px; color: var(--text-muted); }
+
+.upload-char-card {
+  border: 2px dashed var(--border);
+  border-radius: var(--radius);
+  aspect-ratio: 9/16;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: all 0.15s;
+  color: var(--text-muted);
+}
+
+.upload-char-card:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-dim); }
+.upload-char-card .upload-icon { font-size: 28px; }
+.upload-char-card .upload-text { font-size: 11px; font-weight: 600; text-align: center; }
+
+/* SCRIPT PANEL */
+.script-layout {
+  display: grid;
+  grid-template-columns: 1fr 360px;
+  gap: 0;
+  flex: 1;
+  overflow: hidden;
+}
+
+.script-main { padding: 24px; overflow-y: auto; border-right: 1px solid var(--border); }
+.script-sidebar { padding: 20px; overflow-y: auto; }
+
+.form-group { margin-bottom: 20px; }
+.form-label { font-size: 12px; font-weight: 600; color: var(--text-soft); margin-bottom: 8px; display: block; }
+
+.input {
+  width: 100%;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 10px 14px;
+  color: var(--text);
+  font-size: 13px;
+  font-family: inherit;
+  transition: border-color 0.15s;
+  outline: none;
+  resize: none;
+}
+
+.input:focus { border-color: var(--accent); }
+
+textarea.input { min-height: 160px; line-height: 1.6; }
+
+.word-count {
+  font-size: 11px;
+  color: var(--text-muted);
+  text-align: right;
+  margin-top: 4px;
+}
+
+.hook-templates { display: flex; flex-direction: column; gap: 8px; }
+
+.hook-item {
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 10px;
+  cursor: pointer;
+  font-size: 12px;
+  transition: all 0.15s;
+  line-height: 1.5;
+}
+
+.hook-item:hover { border-color: var(--accent); background: var(--accent-dim); }
+
+.hook-category {
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 6px;
+}
+
+/* STYLE PANEL */
+.style-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.style-card {
+  background: var(--surface);
+  border: 2px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px;
+  cursor: pointer;
+  transition: all 0.15s;
+  text-align: center;
+}
+
+.style-card:hover { border-color: var(--border-hover); }
+.style-card.selected { border-color: var(--accent); background: var(--accent-dim); }
+.style-card .style-icon { font-size: 28px; margin-bottom: 8px; }
+.style-card .style-name { font-size: 13px; font-weight: 600; margin-bottom: 4px; }
+.style-card .style-desc { font-size: 11px; color: var(--text-muted); line-height: 1.4; }
+
+.music-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.music-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.music-item:hover { border-color: var(--border-hover); }
+.music-item.selected { border-color: var(--accent); background: var(--accent-dim); }
+.music-play { font-size: 18px; }
+.music-name { font-size: 13px; font-weight: 500; flex: 1; }
+.music-duration { font-size: 11px; color: var(--text-muted); }
+
+/* CAPTION STYLES */
+.caption-styles {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.caption-preview {
+  background: var(--surface);
+  border: 2px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 12px;
+  cursor: pointer;
+  text-align: center;
+  transition: all 0.15s;
+}
+
+.caption-preview:hover { border-color: var(--border-hover); }
+.caption-preview.selected { border-color: var(--accent); background: var(--accent-dim); }
+.caption-text-preview { font-size: 11px; margin-bottom: 6px; }
+.caption-style-name { font-size: 10px; color: var(--text-muted); font-weight: 600; }
+
+/* EDITOR */
+.editor-layout {
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  flex: 1;
+  overflow: hidden;
+}
+
+.editor-main {
+  display: flex;
+  flex-direction: column;
+  background: #000;
+  position: relative;
+}
+
+.video-preview-area {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #000;
+  position: relative;
+}
+
+.video-container {
+  position: relative;
+  max-height: 100%;
+  max-width: calc(100% - 40px);
+  aspect-ratio: 9/16;
+  background: var(--surface-2);
+  border-radius: var(--radius);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.video-container video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.video-overlay-text {
+  position: absolute;
+  bottom: 80px;
+  left: 0; right: 0;
+  text-align: center;
+  padding: 0 20px;
+}
+
+.caption-word {
+  display: inline-block;
+  background: rgba(0,0,0,0.75);
+  color: #fff;
+  padding: 4px 12px;
+  border-radius: 4px;
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: 0.2px;
+}
+
+.caption-word.bold-style {
+  background: #fff;
+  color: #000;
+  border-radius: 3px;
+}
+
+.caption-word.outline-style {
+  background: transparent;
+  color: #fff;
+  text-shadow: -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000;
+}
+
+.video-controls {
+  padding: 12px 20px;
+  background: rgba(0,0,0,0.8);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.control-btn {
+  background: transparent;
+  border: none;
+  color: #fff;
+  cursor: pointer;
+  font-size: 18px;
+  padding: 4px;
+  transition: opacity 0.15s;
+}
+
+.control-btn:hover { opacity: 0.7; }
+
+.progress-bar {
+  flex: 1;
+  height: 4px;
+  background: rgba(255,255,255,0.2);
+  border-radius: 2px;
+  cursor: pointer;
+  position: relative;
+}
+
+.progress-fill {
+  height: 100%;
+  background: var(--accent);
+  border-radius: 2px;
+  transition: width 0.1s;
+}
+
+.time-display { font-size: 12px; color: rgba(255,255,255,0.7); min-width: 70px; }
+
+/* EDITOR SIDEBAR */
+.editor-sidebar {
+  background: var(--surface);
+  border-left: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+}
+
+.editor-tabs {
+  display: flex;
+  border-bottom: 1px solid var(--border);
+}
+
+.editor-tab {
+  flex: 1;
+  padding: 12px;
+  text-align: center;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-muted);
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: all 0.15s;
+}
+
+.editor-tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+.editor-tab:hover { color: var(--text); }
+
+.editor-panel { display: none; padding: 16px; overflow-y: auto; flex: 1; }
+.editor-panel.active { display: block; }
+
+.caption-list { display: flex; flex-direction: column; gap: 8px; }
+
+.caption-item {
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 10px;
+  position: relative;
+}
+
+.caption-time { font-size: 10px; color: var(--accent); font-weight: 600; margin-bottom: 4px; }
+.caption-edit {
+  width: 100%;
+  background: transparent;
+  border: none;
+  color: var(--text);
+  font-size: 12px;
+  font-family: inherit;
+  resize: none;
+  outline: none;
+  line-height: 1.5;
+}
+
+.overlay-item {
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 12px;
+  margin-bottom: 8px;
+}
+
+.overlay-label { font-size: 11px; font-weight: 600; color: var(--text-muted); margin-bottom: 6px; }
+.overlay-controls { display: flex; gap: 6px; align-items: center; }
+
+.toggle {
+  width: 36px;
+  height: 20px;
+  background: var(--border);
+  border-radius: 10px;
+  position: relative;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.toggle.on { background: var(--accent); }
+
+.toggle-dot {
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  background: #fff;
+  border-radius: 50%;
+  top: 2px;
+  left: 2px;
+  transition: left 0.2s;
+}
+
+.toggle.on .toggle-dot { left: 18px; }
+
+/* GENERATE SCREEN */
+.generate-screen {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.generate-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 40px;
+  text-align: center;
+  max-width: 480px;
+  width: 100%;
+}
+
+.generate-title { font-size: 22px; font-weight: 700; margin-bottom: 8px; }
+.generate-sub { font-size: 13px; color: var(--text-muted); margin-bottom: 28px; line-height: 1.5; }
+
+.generate-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 28px;
+  text-align: left;
+}
+
+.gen-step {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  background: var(--surface-2);
+  border-radius: var(--radius-sm);
+}
+
+.gen-step-icon { width: 32px; height: 32px; border-radius: 50%; background: var(--border); display: grid; place-items: center; font-size: 14px; min-width: 32px; }
+.gen-step.active .gen-step-icon { background: var(--accent-dim); }
+.gen-step.done .gen-step-icon { background: rgba(34,197,94,0.2); color: var(--green); }
+
+.gen-step-text { font-size: 13px; }
+.gen-step.active .gen-step-text { font-weight: 600; }
+.gen-step.done .gen-step-text { color: var(--text-muted); }
+
+.spinner {
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--border);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  margin-left: auto;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.progress-track {
+  height: 4px;
+  background: var(--surface-3);
+  border-radius: 2px;
+  overflow: hidden;
+  margin-bottom: 24px;
+}
+
+.progress-bar-gen {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent), #818cf8);
+  border-radius: 2px;
+  transition: width 0.3s;
+}
+
+/* CHARACTERS SCREEN */
+.chars-section-header {
+  padding: 20px 28px 16px;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface);
+}
+
+.chars-filter {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.filter-chip {
+  padding: 5px 14px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text-muted);
+  transition: all 0.15s;
+  font-family: inherit;
+}
+
+.filter-chip.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+.filter-chip:hover:not(.active) { border-color: var(--border-hover); color: var(--text); }
+
+.char-full-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 16px;
+  padding: 24px 28px;
+}
+
+.char-full-card {
+  background: var(--surface);
+  border: 2px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.char-full-card:hover { border-color: var(--accent); transform: translateY(-2px); }
+
+.char-full-thumb {
+  width: 100%;
+  aspect-ratio: 3/4;
+  background: var(--surface-2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 60px;
+  position: relative;
+}
+
+.char-tag {
+  position: absolute;
+  bottom: 6px;
+  left: 6px;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.tag-custom { background: var(--accent-dim); color: var(--accent); }
+.tag-builtin { background: rgba(34,197,94,0.15); color: var(--green); }
+.tag-ai { background: rgba(251,191,36,0.15); color: #fbbf24; }
+
+.char-full-info { padding: 12px; }
+.char-full-name { font-size: 13px; font-weight: 600; margin-bottom: 2px; }
+.char-full-niche { font-size: 11px; color: var(--text-muted); }
+.char-full-actions { display: flex; gap: 6px; margin-top: 10px; }
+
+/* UPLOAD MODAL */
+.modal-bg {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.75);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  backdrop-filter: blur(4px);
+}
+
+.modal-bg.open { display: flex; }
+
+.modal {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 28px;
+  width: 480px;
+  max-width: 90vw;
+}
+
+.modal-title { font-size: 18px; font-weight: 700; margin-bottom: 6px; }
+.modal-sub { font-size: 13px; color: var(--text-muted); margin-bottom: 24px; }
+.modal-footer { display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px; }
+
+.drop-zone {
+  border: 2px dashed var(--border);
+  border-radius: var(--radius);
+  padding: 40px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.15s;
+  margin-bottom: 16px;
+}
+
+.drop-zone:hover, .drop-zone.drag-over { border-color: var(--accent); background: var(--accent-dim); }
+.drop-zone .drop-icon { font-size: 40px; margin-bottom: 12px; }
+.drop-zone .drop-text { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
+.drop-zone .drop-sub { font-size: 12px; color: var(--text-muted); }
+
+input[type="file"] { display: none; }
+
+/* TOAST */
+.toast-container {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  z-index: 200;
+}
+
+.toast {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 12px 16px;
+  font-size: 13px;
+  font-weight: 500;
+  min-width: 240px;
+  animation: slideIn 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.toast.success { border-left: 3px solid var(--green); }
+.toast.error { border-left: 3px solid var(--red); }
+.toast.info { border-left: 3px solid var(--accent); }
+
+@keyframes slideIn { from { transform: translateX(20px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+
+/* EMPTY STATE */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  text-align: center;
+  color: var(--text-muted);
+}
+
+.empty-icon { font-size: 48px; margin-bottom: 16px; }
+.empty-title { font-size: 16px; font-weight: 600; color: var(--text-soft); margin-bottom: 6px; }
+.empty-desc { font-size: 13px; line-height: 1.5; }
+
+/* SETTINGS SCREEN */
+.settings-layout { display: grid; grid-template-columns: 200px 1fr; flex: 1; }
+
+.settings-nav { border-right: 1px solid var(--border); padding: 20px 0; }
+.settings-nav-item {
+  padding: 8px 20px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-muted);
+  transition: all 0.15s;
+}
+.settings-nav-item:hover { color: var(--text); }
+.settings-nav-item.active { color: var(--accent); }
+
+.settings-content { padding: 28px; overflow-y: auto; }
+
+.settings-group {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  margin-bottom: 20px;
+  overflow: hidden;
+}
+
+.settings-group-title {
+  padding: 14px 20px;
+  font-weight: 600;
+  font-size: 13px;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface-2);
+}
+
+.settings-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 20px;
+  border-bottom: 1px solid var(--border);
+}
+
+.settings-row:last-child { border-bottom: none; }
+.settings-row-label { font-size: 13px; font-weight: 500; }
+.settings-row-desc { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+
+/* ASPECT RATIO SELECTOR */
+.ratio-options { display: flex; gap: 8px; }
+.ratio-option {
+  padding: 6px 14px;
+  border-radius: 6px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+  color: var(--text-muted);
+  font-family: inherit;
+}
+.ratio-option.active { background: var(--accent-dim); border-color: var(--accent); color: var(--accent); }
+.ratio-option:hover:not(.active) { border-color: var(--border-hover); }
+
+/* RANGE INPUT */
+input[type="range"] {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 4px;
+  background: var(--border);
+  border-radius: 2px;
+  outline: none;
+}
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 16px;
+  height: 16px;
+  background: var(--accent);
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+/* TEMPLATES SCREEN */
+.templates-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 16px;
+  padding: 24px;
+}
+
+.template-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.template-card:hover { border-color: var(--accent); transform: translateY(-2px); }
+
+.template-thumb {
+  width: 100%;
+  padding-top: 56.25%;
+  background: var(--surface-2);
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.template-thumb-inner {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 12px;
+}
+
+.template-tag {
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.tag-realstate { background: rgba(99,102,241,0.2); color: var(--accent); }
+.tag-ecom { background: rgba(34,197,94,0.2); color: var(--green); }
+.tag-saas { background: rgba(251,191,36,0.2); color: #fbbf24; }
+
+.template-info { padding: 12px; }
+.template-name { font-size: 13px; font-weight: 600; margin-bottom: 3px; }
+.template-desc { font-size: 11px; color: var(--text-muted); line-height: 1.4; }
+
+/* TOPBAR ACTIONS */
+.topbar-actions { display: flex; align-items: center; gap: 10px; }
+
+/* RESPONSIVE */
+@media (max-width: 900px) {
+  #sidebar { display: none; }
+  .script-layout { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<nav id="sidebar">
+  <div class="logo">
+    <div class="logo-icon">🎬</div>
+    <span class="logo-text">UGC Studio</span>
+    <span class="logo-badge">FREE</span>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-label">Create</div>
+    <div class="nav-item active" onclick="showScreen('dashboard')">
+      <span class="icon">⚡</span> Dashboard
+    </div>
+    <div class="nav-item" onclick="showScreen('characters')">
+      <span class="icon">🧑</span> Characters
+    </div>
+    <div class="nav-item" onclick="showScreen('templates')">
+      <span class="icon">📋</span> Templates
+    </div>
+  </div>
+
+  <div class="nav-section" style="margin-top:8px">
+    <div class="nav-label">Settings</div>
+    <div class="nav-item" onclick="showScreen('settings')">
+      <span class="icon">⚙️</span> Settings
+    </div>
+  </div>
+
+  <div class="sidebar-bottom">
+    <div class="sidebar-stat">
+      <span class="stat-label">Videos made</span>
+      <span class="stat-val" id="total-videos">0</span>
+    </div>
+    <div class="sidebar-stat">
+      <span class="stat-label">Characters</span>
+      <span class="stat-val" id="total-chars">5</span>
+    </div>
+  </div>
+</nav>
+
+<!-- MAIN -->
+<main id="main">
+
+  <!-- DASHBOARD SCREEN -->
+  <div id="screen-dashboard" class="screen active">
+    <div class="topbar">
+      <div>
+        <div class="topbar-title">Your Projects</div>
+        <div class="topbar-sub">Free UGC video ads — no subscription needed</div>
+      </div>
+      <div class="topbar-actions">
+        <button class="btn btn-ghost btn-sm" onclick="showUploadModal()">↑ Upload Character</button>
+        <button class="btn btn-primary" onclick="startNewProject()">+ New Project</button>
+      </div>
+    </div>
+    <div class="scroll-area">
+      <div class="dashboard-stats">
+        <div class="stat-card">
+          <div class="stat-card-label">Total Projects</div>
+          <div class="stat-card-val" id="stat-projects">0</div>
+          <div class="stat-card-sub">All time</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card-label">Exported Videos</div>
+          <div class="stat-card-val" id="stat-exports">0</div>
+          <div class="stat-card-sub">Ready to post</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card-label">Characters</div>
+          <div class="stat-card-val" id="stat-chars">5</div>
+          <div class="stat-card-sub">+ unlimited uploads</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card-label">Cost Saved</div>
+          <div class="stat-card-val" style="color:var(--green)">$0</div>
+          <div class="stat-card-sub">vs Arcads $99/mo</div>
+        </div>
+      </div>
+
+      <div class="section-header">
+        <div class="section-title">Recent Projects</div>
+      </div>
+
+      <div id="projects-grid" class="projects-grid">
+        <!-- filled by JS -->
+      </div>
+
+      <div id="empty-projects" class="empty-state">
+        <div class="empty-icon">🎥</div>
+        <div class="empty-title">No projects yet</div>
+        <div class="empty-desc">Create your first UGC video ad.<br>Pick a character, write a script, export in seconds.</div>
+        <button class="btn btn-primary" style="margin-top:20px" onclick="startNewProject()">+ Create First Project</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- NEW PROJECT SCREEN -->
+  <div id="screen-new-project" class="screen">
+    <div class="topbar">
+      <div>
+        <div class="topbar-title" id="wizard-title">New Project</div>
+        <div class="topbar-sub" id="wizard-sub">Select a character to start</div>
+      </div>
+      <div class="topbar-actions">
+        <button class="btn btn-ghost btn-sm" onclick="showScreen('dashboard')">← Back</button>
+        <button class="btn btn-primary btn-sm" id="wizard-next" onclick="wizardNext()" disabled>Next →</button>
+      </div>
+    </div>
+
+    <!-- STEPS -->
+    <div class="wizard-steps">
+      <div class="wizard-step active" id="wstep-1">
+        <div class="step-num">1</div> Character
+      </div>
+      <div class="step-divider"></div>
+      <div class="wizard-step" id="wstep-2">
+        <div class="step-num">2</div> Script
+      </div>
+      <div class="step-divider"></div>
+      <div class="wizard-step" id="wstep-3">
+        <div class="step-num">3</div> Style
+      </div>
+      <div class="step-divider"></div>
+      <div class="wizard-step" id="wstep-4">
+        <div class="step-num">4</div> Generate
+      </div>
+    </div>
+
+    <!-- WIZARD PANELS -->
+    <div class="wizard-content">
+
+      <!-- STEP 1: Character -->
+      <div class="wizard-panel active" id="wpanel-1">
+        <div class="scroll-area" style="padding:20px">
+          <div style="margin-bottom:16px;display:flex;align-items:center;justify-content:space-between">
+            <span style="font-size:13px;color:var(--text-muted)">Choose your UGC character or upload your own AI video</span>
+            <button class="btn btn-ghost btn-sm" onclick="showUploadModal()">↑ Upload Your Own</button>
+          </div>
+          <div class="char-grid" id="wizard-char-grid">
+            <!-- filled by JS -->
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 2: Script -->
+      <div class="wizard-panel" id="wpanel-2">
+        <div class="script-layout">
+          <div class="script-main">
+            <div class="form-group">
+              <label class="form-label">PROJECT NAME</label>
+              <input class="input" type="text" id="project-name" placeholder="My UGC Ad #1">
+            </div>
+            <div class="form-group">
+              <label class="form-label">AD HOOK (First 3 seconds)</label>
+              <input class="input" type="text" id="script-hook" placeholder="Did you know most people never...">
+            </div>
+            <div class="form-group">
+              <label class="form-label">SCRIPT BODY</label>
+              <textarea class="input" id="script-body" placeholder="Write what your character will say. Keep it under 60 seconds." oninput="updateWordCount()"></textarea>
+              <div class="word-count"><span id="word-count">0</span> words · ~<span id="read-time">0</span>s</div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">CALL TO ACTION</label>
+              <input class="input" type="text" id="script-cta" placeholder="Follow for more / DM me / Check link in bio">
+            </div>
+          </div>
+          <div class="script-sidebar">
+            <div style="margin-bottom:16px">
+              <div class="form-label" style="margin-bottom:10px">HOOK TEMPLATES</div>
+              <div class="hook-templates">
+                <div class="hook-category">Real Estate</div>
+                <div class="hook-item" onclick="useHook(this)">Did you know most buyers lose their dream home because of ONE mistake? Here's what to do instead...</div>
+                <div class="hook-item" onclick="useHook(this)">I've helped 50+ families buy homes in [CITY]. The #1 thing sellers NEVER tell you is...</div>
+                <div class="hook-item" onclick="useHook(this)">Stop renting. Here's exactly how I helped my client buy their first home with zero down...</div>
+
+                <div class="hook-category" style="margin-top:12px">Product Review</div>
+                <div class="hook-item" onclick="useHook(this)">I tested this for 30 days so you don't have to. Honest results:</div>
+                <div class="hook-item" onclick="useHook(this)">Nobody's talking about this and I don't know why. This changed everything for me...</div>
+
+                <div class="hook-category" style="margin-top:12px">Service</div>
+                <div class="hook-item" onclick="useHook(this)">If you're still doing [X] manually, you're wasting hours. Here's what I switched to...</div>
+                <div class="hook-item" onclick="useHook(this)">3 things I wish I knew before [X]. This alone saved me $[Y]...</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 3: Style -->
+      <div class="wizard-panel" id="wpanel-3">
+        <div class="scroll-area">
+          <div style="margin-bottom:24px">
+            <div class="form-label" style="margin-bottom:12px">VIDEO STYLE</div>
+            <div class="style-grid">
+              <div class="style-card selected" onclick="selectStyle(this, 'ugc')" data-style="ugc">
+                <div class="style-icon">📱</div>
+                <div class="style-name">Raw UGC</div>
+                <div class="style-desc">Casual, authentic selfie-cam feel. No frills, just real.</div>
+              </div>
+              <div class="style-card" onclick="selectStyle(this, 'clean')" data-style="clean">
+                <div class="style-icon">✨</div>
+                <div class="style-name">Clean Pro</div>
+                <div class="style-desc">Polished look with brand colors and clean captions.</div>
+              </div>
+              <div class="style-card" onclick="selectStyle(this, 'bold')" data-style="bold">
+                <div class="style-icon">⚡</div>
+                <div class="style-name">Bold & Punchy</div>
+                <div class="style-desc">High contrast, big text, fast cuts. Made for virality.</div>
+              </div>
+            </div>
+          </div>
+
+          <div style="margin-bottom:24px">
+            <div class="form-label" style="margin-bottom:12px">CAPTION STYLE</div>
+            <div class="caption-styles">
+              <div class="caption-preview selected" onclick="selectCaption(this, 'subtitle')" data-caption="subtitle">
+                <div class="caption-text-preview" style="background:rgba(0,0,0,0.7);color:#fff;padding:4px 8px;border-radius:3px;display:inline-block;font-size:11px">This is your</div>
+                <div class="caption-style-name" style="margin-top:6px">Subtitle</div>
+              </div>
+              <div class="caption-preview" onclick="selectCaption(this, 'bold')" data-caption="bold">
+                <div class="caption-text-preview" style="background:#fff;color:#000;padding:4px 8px;border-radius:3px;display:inline-block;font-size:11px;font-weight:800">CAPTION</div>
+                <div class="caption-style-name" style="margin-top:6px">Bold White</div>
+              </div>
+              <div class="caption-preview" onclick="selectCaption(this, 'outline')" data-caption="outline">
+                <div class="caption-text-preview" style="color:#fff;text-shadow:-1px -1px 0 #000,1px -1px 0 #000,-1px 1px 0 #000,1px 1px 0 #000;padding:4px 8px;display:inline-block;font-size:11px;font-weight:700">Outline</div>
+                <div class="caption-style-name" style="margin-top:6px">Outline</div>
+              </div>
+              <div class="caption-preview" onclick="selectCaption(this, 'highlight')" data-caption="highlight">
+                <div class="caption-text-preview" style="background:#6366f1;color:#fff;padding:4px 8px;border-radius:3px;display:inline-block;font-size:11px;font-weight:700">Highlight</div>
+                <div class="caption-style-name" style="margin-top:6px">Highlight</div>
+              </div>
+              <div class="caption-preview" onclick="selectCaption(this, 'none')" data-caption="none">
+                <div class="caption-text-preview" style="color:var(--text-muted);font-size:11px">—</div>
+                <div class="caption-style-name" style="margin-top:6px">None</div>
+              </div>
+            </div>
+          </div>
+
+          <div style="margin-bottom:24px">
+            <div class="form-label" style="margin-bottom:12px">ASPECT RATIO</div>
+            <div class="ratio-options">
+              <button class="ratio-option active" onclick="selectRatio(this, '9:16')">9:16 Reels/TikTok</button>
+              <button class="ratio-option" onclick="selectRatio(this, '1:1')">1:1 Feed</button>
+              <button class="ratio-option" onclick="selectRatio(this, '16:9')">16:9 YouTube</button>
+            </div>
+          </div>
+
+          <div>
+            <div class="form-label" style="margin-bottom:12px">BACKGROUND MUSIC</div>
+            <div class="music-grid">
+              <div class="music-item selected" onclick="selectMusic(this, 'none')">
+                <div class="music-play">🔇</div>
+                <div class="music-name">No Music</div>
+                <div class="music-duration">—</div>
+              </div>
+              <div class="music-item" onclick="selectMusic(this, 'upbeat')">
+                <div class="music-play">▶</div>
+                <div class="music-name">Upbeat Positive</div>
+                <div class="music-duration">2:15</div>
+              </div>
+              <div class="music-item" onclick="selectMusic(this, 'chill')">
+                <div class="music-play">▶</div>
+                <div class="music-name">Chill Lo-Fi</div>
+                <div class="music-duration">3:00</div>
+              </div>
+              <div class="music-item" onclick="selectMusic(this, 'hype')">
+                <div class="music-play">▶</div>
+                <div class="music-name">Hype Build</div>
+                <div class="music-duration">1:45</div>
+              </div>
+              <div class="music-item" onclick="selectMusic(this, 'inspire')">
+                <div class="music-play">▶</div>
+                <div class="music-name">Inspirational</div>
+                <div class="music-duration">2:30</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 4: Generate -->
+      <div class="wizard-panel" id="wpanel-4">
+        <div class="generate-screen">
+          <div class="generate-card">
+            <div class="generate-title" id="gen-title">Ready to Generate</div>
+            <div class="generate-sub" id="gen-sub">Your UGC ad will be composed using ffmpeg locally — no cloud, no cost, no limits.</div>
+
+            <div id="gen-summary" style="text-align:left;background:var(--surface-2);border-radius:var(--radius-sm);padding:16px;margin-bottom:24px;font-size:13px">
+              <div style="display:flex;justify-content:space-between;margin-bottom:8px"><span style="color:var(--text-muted)">Character</span><span id="summary-char" style="font-weight:600">—</span></div>
+              <div style="display:flex;justify-content:space-between;margin-bottom:8px"><span style="color:var(--text-muted)">Script words</span><span id="summary-words" style="font-weight:600">—</span></div>
+              <div style="display:flex;justify-content:space-between;margin-bottom:8px"><span style="color:var(--text-muted)">Style</span><span id="summary-style" style="font-weight:600">—</span></div>
+              <div style="display:flex;justify-content:space-between"><span style="color:var(--text-muted)">Duration</span><span id="summary-duration" style="font-weight:600">—</span></div>
+            </div>
+
+            <div id="gen-steps-list" class="generate-steps" style="display:none">
+              <div class="gen-step" id="gstep-1">
+                <div class="gen-step-icon">📝</div>
+                <div class="gen-step-text">Parsing script & generating captions</div>
+              </div>
+              <div class="gen-step" id="gstep-2">
+                <div class="gen-step-icon">🎬</div>
+                <div class="gen-step-text">Compositing character video</div>
+              </div>
+              <div class="gen-step" id="gstep-3">
+                <div class="gen-step-icon">💬</div>
+                <div class="gen-step-text">Burning in captions</div>
+              </div>
+              <div class="gen-step" id="gstep-4">
+                <div class="gen-step-icon">🎵</div>
+                <div class="gen-step-text">Mixing background music</div>
+              </div>
+              <div class="gen-step" id="gstep-5">
+                <div class="gen-step-icon">📦</div>
+                <div class="gen-step-text">Exporting final MP4</div>
+              </div>
+            </div>
+
+            <div class="progress-track" id="gen-progress-track" style="display:none">
+              <div class="progress-bar-gen" id="gen-progress-bar" style="width:0%"></div>
+            </div>
+
+            <button class="btn btn-primary" id="generate-btn" onclick="generateVideo()" style="width:100%;justify-content:center;padding:14px">
+              ⚡ Generate Video
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- EDITOR SCREEN -->
+  <div id="screen-editor" class="screen">
+    <div class="topbar">
+      <div>
+        <div class="topbar-title" id="editor-project-name">Project Name</div>
+        <div class="topbar-sub" id="editor-project-meta">UGC · Raw · 9:16</div>
+      </div>
+      <div class="topbar-actions">
+        <button class="btn btn-ghost btn-sm" onclick="showScreen('dashboard')">← Projects</button>
+        <button class="btn btn-ghost btn-sm" onclick="regenerateVideo()">↺ Regenerate</button>
+        <button class="btn btn-primary btn-sm" id="export-btn" onclick="exportVideo()">↓ Export MP4</button>
+      </div>
+    </div>
+
+    <div class="editor-layout">
+      <!-- VIDEO PREVIEW -->
+      <div class="editor-main">
+        <div class="video-preview-area">
+          <div class="video-container" id="video-container">
+            <video id="preview-video" loop>
+              <source src="" type="video/mp4">
+            </video>
+            <div class="video-overlay-text" id="caption-overlay">
+              <span class="caption-word" id="current-caption">Your caption appears here</span>
+            </div>
+          </div>
+        </div>
+        <div class="video-controls">
+          <button class="control-btn" id="play-btn" onclick="togglePlay()">▶</button>
+          <div class="progress-bar" onclick="seekVideo(event)">
+            <div class="progress-fill" id="video-progress" style="width:0%"></div>
+          </div>
+          <span class="time-display" id="time-display">0:00 / 0:00</span>
+          <button class="control-btn" onclick="toggleMute()">🔊</button>
+        </div>
+      </div>
+
+      <!-- EDITOR SIDEBAR -->
+      <div class="editor-sidebar">
+        <div class="editor-tabs">
+          <div class="editor-tab active" onclick="switchEditorTab('captions', this)">Captions</div>
+          <div class="editor-tab" onclick="switchEditorTab('overlays', this)">Overlays</div>
+          <div class="editor-tab" onclick="switchEditorTab('music', this)">Music</div>
+        </div>
+
+        <!-- CAPTIONS PANEL -->
+        <div class="editor-panel active" id="panel-captions">
+          <div style="font-size:11px;color:var(--text-muted);margin-bottom:12px">
+            Auto-generated from your script. Edit any segment.
+          </div>
+          <div class="caption-list" id="caption-list">
+            <!-- filled by JS -->
+          </div>
+        </div>
+
+        <!-- OVERLAYS PANEL -->
+        <div class="editor-panel" id="panel-overlays">
+          <div class="overlay-item">
+            <div class="overlay-label">HOOK TEXT</div>
+            <input class="input" type="text" id="overlay-hook" placeholder="Hook text overlay...">
+            <div style="display:flex;align-items:center;gap:8px;margin-top:8px">
+              <span style="font-size:12px;color:var(--text-muted)">Show hook</span>
+              <div class="toggle on" id="hook-toggle" onclick="toggleOverlay('hook-toggle')"><div class="toggle-dot"></div></div>
+            </div>
+          </div>
+          <div class="overlay-item">
+            <div class="overlay-label">CTA OVERLAY</div>
+            <input class="input" type="text" id="overlay-cta" placeholder="Follow for more tips">
+            <div style="display:flex;align-items:center;gap:8px;margin-top:8px">
+              <span style="font-size:12px;color:var(--text-muted)">Show CTA</span>
+              <div class="toggle on" id="cta-toggle" onclick="toggleOverlay('cta-toggle')"><div class="toggle-dot"></div></div>
+            </div>
+          </div>
+          <div class="overlay-item">
+            <div class="overlay-label">LOGO / WATERMARK</div>
+            <input class="input" type="text" id="overlay-brand" placeholder="@yourhandle">
+            <div style="display:flex;align-items:center;gap:8px;margin-top:8px">
+              <span style="font-size:12px;color:var(--text-muted)">Show watermark</span>
+              <div class="toggle" id="brand-toggle" onclick="toggleOverlay('brand-toggle')"><div class="toggle-dot"></div></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- MUSIC PANEL -->
+        <div class="editor-panel" id="panel-music">
+          <div style="margin-bottom:16px">
+            <div class="form-label" style="margin-bottom:8px">MUSIC VOLUME</div>
+            <input type="range" min="0" max="100" value="30" id="music-vol" oninput="updateMusicVol(this.value)">
+            <div style="font-size:11px;color:var(--text-muted);margin-top:4px"><span id="vol-display">30</span>%</div>
+          </div>
+          <div>
+            <div class="form-label" style="margin-bottom:8px">CHANGE TRACK</div>
+            <div class="music-grid">
+              <div class="music-item" onclick="selectEditorMusic(this, 'none')"><div class="music-play">🔇</div><div class="music-name">No Music</div></div>
+              <div class="music-item selected" onclick="selectEditorMusic(this, 'upbeat')"><div class="music-play">▶</div><div class="music-name">Upbeat</div></div>
+              <div class="music-item" onclick="selectEditorMusic(this, 'chill')"><div class="music-play">▶</div><div class="music-name">Chill</div></div>
+              <div class="music-item" onclick="selectEditorMusic(this, 'hype')"><div class="music-play">▶</div><div class="music-name">Hype</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CHARACTERS SCREEN -->
+  <div id="screen-characters" class="screen">
+    <div class="topbar">
+      <div class="topbar-title">Characters</div>
+      <button class="btn btn-primary" onclick="showUploadModal()">↑ Upload Character</button>
+    </div>
+    <div class="chars-section-header">
+      <div style="font-size:13px;color:var(--text-muted)">Upload AI videos of yourself or choose from built-in UGC archetypes</div>
+      <div class="chars-filter">
+        <button class="filter-chip active" onclick="filterChars(this, 'all')">All</button>
+        <button class="filter-chip" onclick="filterChars(this, 'custom')">My Characters</button>
+        <button class="filter-chip" onclick="filterChars(this, 'builtin')">Built-in</button>
+      </div>
+    </div>
+    <div class="scroll-area" style="padding:0">
+      <div class="char-full-grid" id="chars-full-grid">
+        <!-- filled by JS -->
+      </div>
+    </div>
+  </div>
+
+  <!-- TEMPLATES SCREEN -->
+  <div id="screen-templates" class="screen">
+    <div class="topbar">
+      <div class="topbar-title">Ad Templates</div>
+      <div style="display:flex;gap:8px">
+        <button class="filter-chip active">All</button>
+        <button class="filter-chip">Real Estate</button>
+        <button class="filter-chip">E-commerce</button>
+        <button class="filter-chip">SaaS</button>
+      </div>
+    </div>
+    <div class="scroll-area" style="padding:0">
+      <div class="templates-grid" id="templates-grid">
+        <!-- filled by JS -->
+      </div>
+    </div>
+  </div>
+
+  <!-- SETTINGS SCREEN -->
+  <div id="screen-settings" class="screen">
+    <div class="topbar">
+      <div class="topbar-title">Settings</div>
+    </div>
+    <div class="settings-layout">
+      <div class="settings-nav">
+        <div class="settings-nav-item active">General</div>
+        <div class="settings-nav-item">Export</div>
+        <div class="settings-nav-item">AI / API</div>
+        <div class="settings-nav-item">Brand</div>
+      </div>
+      <div class="settings-content">
+        <div class="settings-group">
+          <div class="settings-group-title">Default Export Settings</div>
+          <div class="settings-row">
+            <div>
+              <div class="settings-row-label">Default Aspect Ratio</div>
+              <div class="settings-row-desc">Used for all new projects</div>
+            </div>
+            <div class="ratio-options">
+              <button class="ratio-option active" onclick="selectRatioBtn(this)">9:16</button>
+              <button class="ratio-option" onclick="selectRatioBtn(this)">1:1</button>
+              <button class="ratio-option" onclick="selectRatioBtn(this)">16:9</button>
+            </div>
+          </div>
+          <div class="settings-row">
+            <div>
+              <div class="settings-row-label">Export Quality</div>
+              <div class="settings-row-desc">Higher = larger file size</div>
+            </div>
+            <select class="input" style="width:140px">
+              <option>1080p (High)</option>
+              <option>720p (Medium)</option>
+              <option>480p (Draft)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="settings-group">
+          <div class="settings-group-title">Server Connection</div>
+          <div class="settings-row">
+            <div>
+              <div class="settings-row-label">Local Server URL</div>
+              <div class="settings-row-desc">Flask backend for video processing</div>
+            </div>
+            <input class="input" style="width:200px" value="http://localhost:8765" id="server-url">
+          </div>
+          <div class="settings-row">
+            <div>
+              <div class="settings-row-label">Server Status</div>
+              <div class="settings-row-desc">Ping the local ffmpeg server</div>
+            </div>
+            <button class="btn btn-ghost btn-sm" onclick="pingServer()">Check Status</button>
+          </div>
+        </div>
+
+        <div class="settings-group">
+          <div class="settings-group-title">Brand Kit</div>
+          <div class="settings-row">
+            <div>
+              <div class="settings-row-label">Your Handle</div>
+              <div class="settings-row-desc">Auto-added as watermark</div>
+            </div>
+            <input class="input" style="width:160px" placeholder="@eitanadar.ai" id="brand-handle">
+          </div>
+          <div class="settings-row">
+            <div>
+              <div class="settings-row-label">Brand Color</div>
+              <div class="settings-row-desc">Used for caption highlights</div>
+            </div>
+            <input type="color" value="#6366f1" id="brand-color" style="width:40px;height:32px;border:none;background:none;cursor:pointer;border-radius:6px">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<!-- UPLOAD MODAL -->
+<div class="modal-bg" id="upload-modal">
+  <div class="modal">
+    <div class="modal-title">Upload Your Character</div>
+    <div class="modal-sub">Upload an AI video of yourself. Works best with 9:16 selfie-cam style, 10-60 seconds.</div>
+
+    <div class="drop-zone" id="drop-zone" onclick="document.getElementById('file-input').click()" ondragover="dragOver(event)" ondrop="dropFile(event)" ondragleave="dragLeave()">
+      <div class="drop-icon">📹</div>
+      <div class="drop-text">Drop video here or click to browse</div>
+      <div class="drop-sub">MP4, MOV, WebM · Max 500MB</div>
+    </div>
+
+    <input type="file" id="file-input" accept="video/*" onchange="fileSelected(event)">
+
+    <div id="upload-preview" style="display:none;margin-bottom:16px">
+      <video id="upload-video-preview" controls style="width:100%;max-height:200px;border-radius:8px;background:#000"></video>
+      <div class="form-group" style="margin-top:12px;margin-bottom:8px">
+        <label class="form-label">CHARACTER NAME</label>
+        <input class="input" type="text" id="char-name-input" placeholder="e.g. Eitan — Real Estate">
+      </div>
+      <div class="form-group">
+        <label class="form-label">NICHE / ARCHETYPE</label>
+        <select class="input" id="char-niche-input">
+          <option value="real-estate">Real Estate</option>
+          <option value="lifestyle">Lifestyle</option>
+          <option value="tech">Tech / SaaS</option>
+          <option value="fitness">Health & Fitness</option>
+          <option value="finance">Finance</option>
+          <option value="ecom">E-commerce</option>
+          <option value="custom">Custom</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeUploadModal()">Cancel</button>
+      <button class="btn btn-primary" id="confirm-upload" onclick="confirmUpload()">Add Character</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST CONTAINER -->
+<div class="toast-container" id="toast-container"></div>
+
+<script>
+// ============================================================
+// STATE
+// ============================================================
+const state = {
+  projects: JSON.parse(localStorage.getItem('ugc_projects') || '[]'),
+  characters: JSON.parse(localStorage.getItem('ugc_characters') || 'null') || getDefaultChars(),
+  currentWizardStep: 1,
+  selectedChar: null,
+  selectedStyle: 'ugc',
+  selectedCaption: 'subtitle',
+  selectedRatio: '9:16',
+  selectedMusic: 'none',
+  currentProject: null,
+  uploadedFile: null,
+  serverUrl: localStorage.getItem('ugc_server_url') || 'http://localhost:8765',
+};
+
+function getDefaultChars() {
+  return [
+    { id: 'char1', name: 'Alex – Lifestyle', niche: 'lifestyle', emoji: '🧑‍💼', type: 'builtin', videoUrl: null },
+    { id: 'char2', name: 'Sarah – Real Estate', niche: 'real-estate', emoji: '🏠', type: 'builtin', videoUrl: null },
+    { id: 'char3', name: 'Jordan – Tech', niche: 'tech', emoji: '💻', type: 'builtin', videoUrl: null },
+    { id: 'char4', name: 'Maya – Fitness', niche: 'fitness', emoji: '💪', type: 'builtin', videoUrl: null },
+    { id: 'char5', name: 'Sam – Finance', niche: 'finance', emoji: '📈', type: 'builtin', videoUrl: null },
+  ];
+}
+
+function save() {
+  localStorage.setItem('ugc_projects', JSON.stringify(state.projects));
+  localStorage.setItem('ugc_characters', JSON.stringify(state.characters));
+}
+
+// ============================================================
+// NAVIGATION
+// ============================================================
+function showScreen(name) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('screen-' + name).classList.add('active');
+
+  const map = { dashboard: 0, characters: 1, templates: 2, settings: 3 };
+  const items = document.querySelectorAll('.nav-item');
+  if (map[name] !== undefined) items[map[name]].classList.add('active');
+
+  if (name === 'dashboard') renderDashboard();
+  if (name === 'characters') renderCharsScreen();
+  if (name === 'templates') renderTemplates();
+}
+
+// ============================================================
+// DASHBOARD
+// ============================================================
+function renderDashboard() {
+  const grid = document.getElementById('projects-grid');
+  const empty = document.getElementById('empty-projects');
+  const total = state.projects.length;
+  const exports = state.projects.filter(p => p.status === 'done').length;
+
+  document.getElementById('stat-projects').textContent = total;
+  document.getElementById('stat-exports').textContent = exports;
+  document.getElementById('stat-chars').textContent = state.characters.length;
+  document.getElementById('total-videos').textContent = exports;
+  document.getElementById('total-chars').textContent = state.characters.length;
+
+  if (total === 0) {
+    grid.style.display = 'none';
+    empty.style.display = 'flex';
+    return;
+  }
+  grid.style.display = 'grid';
+  empty.style.display = 'none';
+
+  grid.innerHTML = state.projects.map(p => `
+    <div class="project-card" onclick="openProject('${p.id}')">
+      <div class="project-thumb">
+        ${p.videoUrl
+          ? `<video src="${p.videoUrl}" muted loop onmouseenter="this.play()" onmouseleave="this.pause()"></video>`
+          : `<div class="project-thumb-placeholder"><div class="thumb-icon">🎬</div><div>${p.charName || 'No video yet'}</div></div>`}
+        <div class="project-status ${p.status === 'done' ? 'status-done' : p.status === 'processing' ? 'status-processing' : 'status-draft'}">${p.status}</div>
+      </div>
+      <div class="project-info">
+        <div class="project-name">${p.name || 'Untitled'}</div>
+        <div class="project-meta">${p.charName} · ${p.style} · ${p.ratio}</div>
+        <div class="project-actions">
+          <button class="btn btn-ghost btn-sm" onclick="event.stopPropagation();openProject('${p.id}')">Edit</button>
+          <button class="btn btn-ghost btn-sm" onclick="event.stopPropagation();exportProject('${p.id}')">↓ Export</button>
+          <button class="btn btn-danger btn-sm" onclick="event.stopPropagation();deleteProject('${p.id}')">✕</button>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function deleteProject(id) {
+  state.projects = state.projects.filter(p => p.id !== id);
+  save();
+  renderDashboard();
+  toast('Project deleted', 'info');
+}
+
+function exportProject(id) {
+  const p = state.projects.find(p => p.id === id);
+  if (!p || !p.videoUrl) { toast('Generate the video first', 'error'); return; }
+  const a = document.createElement('a');
+  a.href = p.videoUrl;
+  a.download = (p.name || 'ugc-ad') + '.mp4';
+  a.click();
+  toast('Download started', 'success');
+}
+
+function openProject(id) {
+  const p = state.projects.find(p => p.id === id);
+  if (!p) return;
+  state.currentProject = p;
+  loadEditor(p);
+  showScreen('editor');
+  document.getElementById('screen-editor').classList.add('active');
+}
+
+// ============================================================
+// WIZARD
+// ============================================================
+function startNewProject() {
+  state.selectedChar = null;
+  state.currentWizardStep = 1;
+  state.selectedStyle = 'ugc';
+  state.selectedCaption = 'subtitle';
+  state.selectedRatio = '9:16';
+  state.selectedMusic = 'none';
+  renderWizardStep(1);
+  renderWizardCharGrid();
+  showScreen('new-project');
+  document.getElementById('screen-new-project').classList.add('active');
+}
+
+function renderWizardStep(step) {
+  for (let i = 1; i <= 4; i++) {
+    const wstep = document.getElementById('wstep-' + i);
+    const wpanel = document.getElementById('wpanel-' + i);
+    wstep.className = 'wizard-step' + (i < step ? ' done' : i === step ? ' active' : '');
+    wpanel.className = 'wizard-panel' + (i === step ? ' active' : '');
+  }
+
+  const titles = ['Select Character', 'Write Your Script', 'Choose Style', 'Generate Video'];
+  const subs = [
+    'Pick a UGC character or upload your own AI video',
+    'Write what your character will say',
+    'Choose look, feel, and music',
+    'Generate your free UGC ad'
+  ];
+  document.getElementById('wizard-title').textContent = titles[step - 1];
+  document.getElementById('wizard-sub').textContent = subs[step - 1];
+
+  const nextBtn = document.getElementById('wizard-next');
+  nextBtn.textContent = step === 4 ? '—' : 'Next →';
+  nextBtn.style.display = step === 4 ? 'none' : '';
+  nextBtn.disabled = step === 1 && !state.selectedChar;
+
+  if (step === 4) populateSummary();
+}
+
+function wizardNext() {
+  if (state.currentWizardStep === 1 && !state.selectedChar) {
+    toast('Select a character first', 'error'); return;
+  }
+  if (state.currentWizardStep === 2) {
+    const body = document.getElementById('script-body').value.trim();
+    if (!body) { toast('Write your script first', 'error'); return; }
+  }
+  if (state.currentWizardStep < 4) {
+    state.currentWizardStep++;
+    renderWizardStep(state.currentWizardStep);
+  }
+}
+
+function renderWizardCharGrid() {
+  const grid = document.getElementById('wizard-char-grid');
+  grid.innerHTML = state.characters.map(c => `
+    <div class="char-card ${state.selectedChar?.id === c.id ? 'selected' : ''}" onclick="selectWizardChar('${c.id}')">
+      <div class="char-thumb">
+        ${c.videoUrl
+          ? `<video src="${c.videoUrl}" muted loop onmouseenter="this.play()" onmouseleave="this.pause()"></video>`
+          : `<span>${c.emoji}</span>`}
+      </div>
+      <div class="char-info">
+        <div class="char-name">${c.name}</div>
+        <div class="char-type">${c.niche}</div>
+      </div>
+    </div>
+  `).join('') + `
+    <div class="upload-char-card" onclick="showUploadModal()">
+      <div class="upload-icon">+</div>
+      <div class="upload-text">Upload<br>Your Own</div>
+    </div>
+  `;
+}
+
+function selectWizardChar(id) {
+  state.selectedChar = state.characters.find(c => c.id === id);
+  renderWizardCharGrid();
+  document.getElementById('wizard-next').disabled = false;
+}
+
+function populateSummary() {
+  const script = document.getElementById('script-body').value.trim();
+  const words = script.split(/\s+/).filter(Boolean).length;
+  const dur = Math.round(words / 2.5);
+  document.getElementById('summary-char').textContent = state.selectedChar?.name || '—';
+  document.getElementById('summary-words').textContent = words + ' words';
+  document.getElementById('summary-style').textContent = state.selectedStyle + ' · ' + state.selectedCaption;
+  document.getElementById('summary-duration').textContent = '~' + dur + 's';
+}
+
+function updateWordCount() {
+  const words = document.getElementById('script-body').value.trim().split(/\s+/).filter(Boolean).length;
+  const secs = Math.round(words / 2.5);
+  document.getElementById('word-count').textContent = words;
+  document.getElementById('read-time').textContent = secs;
+}
+
+function useHook(el) {
+  document.getElementById('script-hook').value = el.textContent;
+  toast('Hook applied', 'success');
+}
+
+function selectStyle(el, style) {
+  document.querySelectorAll('.style-card').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+  state.selectedStyle = style;
+}
+
+function selectCaption(el, cap) {
+  document.querySelectorAll('.caption-preview').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+  state.selectedCaption = cap;
+}
+
+function selectRatio(el, ratio) {
+  document.querySelectorAll('.ratio-option').forEach(r => r.classList.remove('active'));
+  el.classList.add('active');
+  state.selectedRatio = ratio;
+}
+
+function selectRatioBtn(el) {
+  el.closest('.ratio-options').querySelectorAll('.ratio-option').forEach(r => r.classList.remove('active'));
+  el.classList.add('active');
+}
+
+function selectMusic(el, music) {
+  document.querySelectorAll('#wpanel-3 .music-item').forEach(m => m.classList.remove('selected'));
+  el.classList.add('selected');
+  state.selectedMusic = music;
+}
+
+// ============================================================
+// GENERATE
+// ============================================================
+async function generateVideo() {
+  const script = document.getElementById('script-body').value.trim();
+  const hook = document.getElementById('script-hook').value.trim();
+  const cta = document.getElementById('script-cta').value.trim();
+  const name = document.getElementById('project-name').value.trim() || 'UGC Ad ' + (state.projects.length + 1);
+
+  if (!state.selectedChar || !script) { toast('Missing character or script', 'error'); return; }
+
+  document.getElementById('gen-summary').style.display = 'none';
+  document.getElementById('gen-steps-list').style.display = 'flex';
+  document.getElementById('gen-progress-track').style.display = 'block';
+  document.getElementById('generate-btn').disabled = true;
+  document.getElementById('generate-btn').textContent = 'Generating...';
+  document.getElementById('gen-title').textContent = 'Building Your Video...';
+  document.getElementById('gen-sub').textContent = 'This happens locally — free, fast, private.';
+
+  const stepIds = ['gstep-1', 'gstep-2', 'gstep-3', 'gstep-4', 'gstep-5'];
+  const stepPcts = [15, 35, 55, 75, 100];
+  const bar = document.getElementById('gen-progress-bar');
+
+  const captions = generateCaptions(script);
+
+  let videoUrl = null;
+
+  for (let i = 0; i < stepIds.length; i++) {
+    const el = document.getElementById(stepIds[i]);
+    el.classList.add('active');
+    el.querySelector('.gen-step-icon').innerHTML = '<div class="spinner"></div>';
+
+    try {
+      if (i === 0) {
+        // Parse + captions — local, instant
+        await delay(600);
+      } else if (i === 1) {
+        // Try server composite
+        const resp = await fetch(state.serverUrl + '/api/generate', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            charId: state.selectedChar.id,
+            charVideoUrl: state.selectedChar.videoUrl,
+            script, hook, cta,
+            style: state.selectedStyle,
+            captionStyle: state.selectedCaption,
+            ratio: state.selectedRatio,
+            music: state.selectedMusic,
+            name,
+          })
+        }).catch(() => null);
+
+        if (resp && resp.ok) {
+          const data = await resp.json();
+          videoUrl = data.videoUrl || null;
+        }
+        await delay(400);
+      } else {
+        await delay(700 + Math.random() * 400);
+      }
+    } catch(e) {}
+
+    el.classList.remove('active');
+    el.classList.add('done');
+    el.querySelector('.gen-step-icon').innerHTML = '✓';
+    bar.style.width = stepPcts[i] + '%';
+  }
+
+  // Build project
+  const project = {
+    id: 'proj_' + Date.now(),
+    name,
+    charId: state.selectedChar.id,
+    charName: state.selectedChar.name,
+    script,
+    hook,
+    cta,
+    captions,
+    style: state.selectedStyle,
+    captionStyle: state.selectedCaption,
+    ratio: state.selectedRatio,
+    music: state.selectedMusic,
+    videoUrl: videoUrl || state.selectedChar.videoUrl || null,
+    status: videoUrl ? 'done' : (state.selectedChar.videoUrl ? 'done' : 'draft'),
+    createdAt: new Date().toISOString(),
+  };
+
+  state.projects.unshift(project);
+  save();
+
+  document.getElementById('gen-title').textContent = '✓ Video Ready';
+  document.getElementById('gen-sub').textContent = 'Opening editor...';
+
+  await delay(800);
+
+  state.currentProject = project;
+  loadEditor(project);
+  showScreen('editor');
+  document.getElementById('screen-editor').classList.add('active');
+  toast('Video generated successfully', 'success');
+}
+
+// ============================================================
+// EDITOR
+// ============================================================
+function loadEditor(project) {
+  document.getElementById('editor-project-name').textContent = project.name;
+  document.getElementById('editor-project-meta').textContent =
+    [project.style, project.captionStyle, project.ratio].filter(Boolean).join(' · ');
+
+  const video = document.getElementById('preview-video');
+  if (project.videoUrl) {
+    video.src = project.videoUrl;
+    video.load();
+    video.parentElement.querySelector('.video-overlay-text').style.display = 'block';
+  } else {
+    video.parentElement.querySelector('.video-overlay-text').style.display = 'flex';
+  }
+
+  document.getElementById('overlay-hook').value = project.hook || '';
+  document.getElementById('overlay-cta').value = project.cta || '';
+
+  renderCaptions(project.captions || []);
+  startCaptionAnimation(project);
+}
+
+function renderCaptions(captions) {
+  const list = document.getElementById('caption-list');
+  if (!captions.length) {
+    list.innerHTML = '<div style="color:var(--text-muted);font-size:12px">No captions generated yet.</div>';
+    return;
+  }
+  list.innerHTML = captions.map((c, i) => `
+    <div class="caption-item">
+      <div class="caption-time">${formatTime(c.start)} – ${formatTime(c.end)}</div>
+      <textarea class="caption-edit" rows="2" onchange="updateCaption(${i}, this.value)">${c.text}</textarea>
+    </div>
+  `).join('');
+}
+
+function updateCaption(idx, val) {
+  if (state.currentProject?.captions) {
+    state.currentProject.captions[idx].text = val;
+    save();
+  }
+}
+
+let captionInterval = null;
+function startCaptionAnimation(project) {
+  if (captionInterval) clearInterval(captionInterval);
+  if (!project.captions?.length) return;
+  let idx = 0;
+  const overlay = document.getElementById('current-caption');
+  const styleClass = (project.captionStyle === 'bold' ? 'bold-style' : project.captionStyle === 'outline' ? 'outline-style' : '');
+  overlay.className = 'caption-word ' + styleClass;
+
+  captionInterval = setInterval(() => {
+    if (idx < project.captions.length) {
+      overlay.textContent = project.captions[idx].text;
+      idx++;
+    } else {
+      idx = 0;
+    }
+  }, 1500);
+}
+
+function togglePlay() {
+  const v = document.getElementById('preview-video');
+  const btn = document.getElementById('play-btn');
+  if (v.paused) { v.play(); btn.textContent = '⏸'; }
+  else { v.pause(); btn.textContent = '▶'; }
+}
+
+function toggleMute() {
+  const v = document.getElementById('preview-video');
+  v.muted = !v.muted;
+}
+
+document.getElementById('preview-video').addEventListener('timeupdate', function() {
+  const pct = this.currentTime / (this.duration || 1) * 100;
+  document.getElementById('video-progress').style.width = pct + '%';
+  document.getElementById('time-display').textContent = formatTime(this.currentTime) + ' / ' + formatTime(this.duration || 0);
+});
+
+function seekVideo(e) {
+  const v = document.getElementById('preview-video');
+  const bar = e.currentTarget;
+  const pct = e.offsetX / bar.offsetWidth;
+  v.currentTime = pct * (v.duration || 0);
+}
+
+function switchEditorTab(name, el) {
+  document.querySelectorAll('.editor-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.editor-panel').forEach(p => p.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('panel-' + name).classList.add('active');
+}
+
+function toggleOverlay(id) {
+  const t = document.getElementById(id);
+  t.classList.toggle('on');
+}
+
+function updateMusicVol(val) {
+  document.getElementById('vol-display').textContent = val;
+  const v = document.getElementById('preview-video');
+  v.volume = val / 100;
+}
+
+function selectEditorMusic(el, music) {
+  document.querySelectorAll('#panel-music .music-item').forEach(m => m.classList.remove('selected'));
+  el.classList.add('selected');
+}
+
+function exportVideo() {
+  const p = state.currentProject;
+  if (!p) return;
+
+  if (p.videoUrl) {
+    const a = document.createElement('a');
+    a.href = p.videoUrl;
+    a.download = (p.name || 'ugc-ad') + '.mp4';
+    a.click();
+    toast('Downloading MP4...', 'success');
+
+    const btn = document.getElementById('export-btn');
+    btn.textContent = '✓ Downloaded';
+    setTimeout(() => btn.textContent = '↓ Export MP4', 2000);
+  } else {
+    toast('Connect server to export composed video', 'info');
+    callServerExport(p);
+  }
+}
+
+async function callServerExport(project) {
+  try {
+    const resp = await fetch(state.serverUrl + '/api/export', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(project)
+    });
+    if (resp.ok) {
+      const data = await resp.json();
+      const a = document.createElement('a');
+      a.href = state.serverUrl + data.downloadUrl;
+      a.download = project.name + '.mp4';
+      a.click();
+      toast('Export complete', 'success');
+    } else {
+      toast('Server error — make sure server.py is running', 'error');
+    }
+  } catch(e) {
+    toast('Run: python3 server.py to enable full export', 'info');
+  }
+}
+
+function regenerateVideo() {
+  if (!state.currentProject) return;
+  const p = state.currentProject;
+  // Re-populate wizard fields
+  document.getElementById('project-name').value = p.name;
+  document.getElementById('script-hook').value = p.hook || '';
+  document.getElementById('script-body').value = p.script || '';
+  document.getElementById('script-cta').value = p.cta || '';
+  state.selectedChar = state.characters.find(c => c.id === p.charId) || state.characters[0];
+  state.selectedStyle = p.style;
+  state.selectedCaption = p.captionStyle;
+  state.selectedRatio = p.ratio;
+  state.selectedMusic = p.music;
+  state.currentWizardStep = 4;
+  renderWizardStep(4);
+  showScreen('new-project');
+  document.getElementById('screen-new-project').classList.add('active');
+}
+
+// ============================================================
+// CHARACTERS SCREEN
+// ============================================================
+function renderCharsScreen() {
+  const grid = document.getElementById('chars-full-grid');
+  grid.innerHTML = state.characters.map(c => `
+    <div class="char-full-card">
+      <div class="char-full-thumb">
+        ${c.videoUrl
+          ? `<video src="${c.videoUrl}" muted loop style="width:100%;height:100%;object-fit:cover" onmouseenter="this.play()" onmouseleave="this.pause()"></video>`
+          : `<span>${c.emoji}</span>`}
+        <div class="char-tag ${c.type === 'custom' ? 'tag-custom' : 'tag-builtin'}">${c.type === 'custom' ? 'Custom' : 'Built-in'}</div>
+      </div>
+      <div class="char-full-info">
+        <div class="char-full-name">${c.name}</div>
+        <div class="char-full-niche">${c.niche}</div>
+        <div class="char-full-actions">
+          <button class="btn btn-primary btn-sm" onclick="useCharInNew('${c.id}')">Use in Ad</button>
+          ${c.type === 'custom' ? `<button class="btn btn-danger btn-sm" onclick="deleteChar('${c.id}')">Delete</button>` : ''}
+        </div>
+      </div>
+    </div>
+  `).join('') + `
+    <div class="char-full-card" style="border:2px dashed var(--border);cursor:pointer;display:flex;align-items:center;justify-content:center;min-height:240px" onclick="showUploadModal()">
+      <div style="text-align:center;color:var(--text-muted)">
+        <div style="font-size:36px;margin-bottom:8px">+</div>
+        <div style="font-size:13px;font-weight:600">Upload Character</div>
+        <div style="font-size:11px;margin-top:4px">Your AI video</div>
+      </div>
+    </div>
+  `;
+}
+
+function filterChars(el, type) {
+  document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+  const grid = document.getElementById('chars-full-grid');
+  const items = grid.querySelectorAll('.char-full-card:not(:last-child)');
+  items.forEach(item => {
+    const nameEl = item.querySelector('.char-full-niche');
+    if (type === 'all') item.style.display = '';
+    else if (type === 'custom') item.style.display = item.querySelector('.tag-custom') ? '' : 'none';
+    else if (type === 'builtin') item.style.display = item.querySelector('.tag-builtin') ? '' : 'none';
+  });
+}
+
+function useCharInNew(id) {
+  state.selectedChar = state.characters.find(c => c.id === id);
+  startNewProject();
+}
+
+function deleteChar(id) {
+  state.characters = state.characters.filter(c => c.id !== id);
+  save();
+  renderCharsScreen();
+  toast('Character deleted', 'info');
+}
+
+// ============================================================
+// UPLOAD
+// ============================================================
+function showUploadModal() {
+  document.getElementById('upload-modal').classList.add('open');
+  document.getElementById('upload-preview').style.display = 'none';
+  document.getElementById('drop-zone').style.display = 'block';
+  state.uploadedFile = null;
+}
+
+function closeUploadModal() {
+  document.getElementById('upload-modal').classList.remove('open');
+  document.getElementById('file-input').value = '';
+  state.uploadedFile = null;
+}
+
+function dragOver(e) {
+  e.preventDefault();
+  document.getElementById('drop-zone').classList.add('drag-over');
+}
+
+function dragLeave() {
+  document.getElementById('drop-zone').classList.remove('drag-over');
+}
+
+function dropFile(e) {
+  e.preventDefault();
+  dragLeave();
+  const file = e.dataTransfer.files[0];
+  if (file) handleFileUpload(file);
+}
+
+function fileSelected(e) {
+  const file = e.target.files[0];
+  if (file) handleFileUpload(file);
+}
+
+function handleFileUpload(file) {
+  if (!file.type.startsWith('video/')) { toast('Please upload a video file', 'error'); return; }
+  if (file.size > 500 * 1024 * 1024) { toast('File too large (max 500MB)', 'error'); return; }
+  state.uploadedFile = file;
+  const url = URL.createObjectURL(file);
+  document.getElementById('upload-video-preview').src = url;
+  document.getElementById('drop-zone').style.display = 'none';
+  document.getElementById('upload-preview').style.display = 'block';
+  document.getElementById('char-name-input').value = file.name.replace(/\.[^.]+$/, '').replace(/[_-]/g, ' ');
+}
+
+async function confirmUpload() {
+  if (!state.uploadedFile) { toast('Choose a video first', 'error'); return; }
+  const name = document.getElementById('char-name-input').value.trim() || 'My Character';
+  const niche = document.getElementById('char-niche-input').value;
+
+  // Try to upload to server, fallback to local blob URL
+  const localUrl = URL.createObjectURL(state.uploadedFile);
+  let serverUrl = null;
+
+  try {
+    const fd = new FormData();
+    fd.append('video', state.uploadedFile);
+    fd.append('name', name);
+    fd.append('niche', niche);
+    const resp = await fetch(state.serverUrl + '/api/upload-character', {
+      method: 'POST', body: fd
+    }).catch(() => null);
+    if (resp && resp.ok) {
+      const data = await resp.json();
+      serverUrl = state.serverUrl + data.url;
+    }
+  } catch(e) {}
+
+  const emojis = { 'real-estate': '🏠', 'lifestyle': '🧑‍💼', 'tech': '💻', 'fitness': '💪', 'finance': '📈', 'ecom': '🛍️', 'custom': '🎬' };
+  const char = {
+    id: 'custom_' + Date.now(),
+    name,
+    niche,
+    emoji: emojis[niche] || '🎬',
+    type: 'custom',
+    videoUrl: serverUrl || localUrl,
+  };
+
+  state.characters.unshift(char);
+  save();
+
+  closeUploadModal();
+  toast('Character added: ' + name, 'success');
+  renderWizardCharGrid();
+  renderCharsScreen();
+
+  document.getElementById('total-chars').textContent = state.characters.length;
+  document.getElementById('stat-chars').textContent = state.characters.length;
+}
+
+// ============================================================
+// TEMPLATES
+// ============================================================
+const templates = [
+  { id: 't1', name: 'First-Time Buyer', desc: 'Perfect for RE agents targeting first-time buyers. Hook + 3 tips + CTA.', tag: 'real-state', emoji: '🏠', hook: "Most first-time buyers don't know this one thing...", script: "I've helped dozens of families buy their first home. The biggest mistake? Waiting for perfect conditions. Here's what you need to know..." },
+  { id: 't2', name: 'Problem Agitate Solve', desc: 'Classic UGC format. Problem → agitate → your solution.', tag: 'ecom', emoji: '😤', hook: 'I was so frustrated with [X] until I found this...', script: 'For 3 years I struggled with [problem]. I tried everything. Nothing worked. Until I discovered...' },
+  { id: 't3', name: 'Before & After', desc: 'Before/after transformation story. Works for any niche.', tag: 'lifestyle', emoji: '✨', hook: 'This is what my [life/results/business] looked like 6 months ago...', script: 'Six months ago I was [before state]. Today [after state]. Here is exactly what changed...' },
+  { id: 't4', name: 'Social Proof', desc: 'Share a client win. Builds trust fast.', tag: 'saas', emoji: '🏆', hook: 'My client just [result] and I need to share how...', script: 'Last month [client] came to me with [problem]. In 30 days they achieved [result]. Here is the system we used...' },
+  { id: 't5', name: 'Myth Buster', desc: 'Debunk a common belief. High engagement hook.', tag: 'real-state', emoji: '❌', hook: 'You need 20% down to buy a house. FALSE.', script: 'I hear this myth every day. The truth is you can buy a home with as little as 3% down...' },
+  { id: 't6', name: '3 Secrets', desc: 'The listicle format. "3 things nobody tells you about X."', tag: 'ecom', emoji: '🔑', hook: '3 things nobody tells you before you [action]...', script: 'Number one. [Secret 1]. Most people skip this and regret it. Number two. [Secret 2]. This alone saves you [time/money]. Number three...' },
+];
+
+function renderTemplates() {
+  const grid = document.getElementById('templates-grid');
+  grid.innerHTML = templates.map(t => `
+    <div class="template-card" onclick="useTemplate('${t.id}')">
+      <div class="template-thumb">
+        <div class="template-thumb-inner">
+          <div style="font-size:36px">${t.emoji}</div>
+          <div class="template-tag tag-${t.tag}">${t.tag.replace('-', ' ')}</div>
+        </div>
+      </div>
+      <div class="template-info">
+        <div class="template-name">${t.name}</div>
+        <div class="template-desc">${t.desc}</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function useTemplate(id) {
+  const t = templates.find(t => t.id === id);
+  if (!t) return;
+  startNewProject();
+  setTimeout(() => {
+    document.getElementById('script-hook').value = t.hook;
+    document.getElementById('script-body').value = t.script;
+    document.getElementById('project-name').value = t.name;
+    updateWordCount();
+    if (state.currentWizardStep === 1 && state.selectedChar) wizardNext();
+  }, 100);
+}
+
+// ============================================================
+// SETTINGS
+// ============================================================
+async function pingServer() {
+  try {
+    const resp = await fetch(state.serverUrl + '/api/health');
+    if (resp.ok) toast('Server online ✓', 'success');
+    else toast('Server error', 'error');
+  } catch(e) {
+    toast('Server offline — run: python3 server.py', 'error');
+  }
+}
+
+// ============================================================
+// HELPERS
+// ============================================================
+function generateCaptions(script) {
+  const sentences = script.match(/[^.!?]+[.!?]+/g) || [script];
+  const captions = [];
+  let t = 0;
+  for (const sent of sentences) {
+    const words = sent.trim().split(/\s+/).filter(Boolean);
+    const dur = Math.max(1.5, words.length / 2.5);
+    // split into ~5-word chunks
+    const chunks = [];
+    for (let i = 0; i < words.length; i += 5) chunks.push(words.slice(i, i+5).join(' '));
+    const chunkDur = dur / chunks.length;
+    for (const chunk of chunks) {
+      captions.push({ start: t, end: t + chunkDur, text: chunk.trim() });
+      t += chunkDur;
+    }
+  }
+  return captions;
+}
+
+function formatTime(s) {
+  if (!s || isNaN(s)) return '0:00';
+  const m = Math.floor(s / 60);
+  const sec = Math.floor(s % 60);
+  return m + ':' + String(sec).padStart(2, '0');
+}
+
+function delay(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+function toast(msg, type = 'info') {
+  const cont = document.getElementById('toast-container');
+  const el = document.createElement('div');
+  el.className = 'toast ' + type;
+  el.innerHTML = (type === 'success' ? '✓' : type === 'error' ? '✕' : 'ℹ') + ' ' + msg;
+  cont.appendChild(el);
+  setTimeout(() => el.remove(), 3000);
+}
+
+// ============================================================
+// INIT
+// ============================================================
+renderDashboard();
+renderCharsScreen();
+renderTemplates();
+</script>
+</body>
+</html>

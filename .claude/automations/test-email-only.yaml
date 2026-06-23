@@ -1,0 +1,16 @@
+id: test_email_only
+name: "Simple Email Test"
+description: "Minimal test - just send an email"
+version: 1.0
+
+steps:
+  - name: send_welcome_email
+    action: email
+    config:
+      to: "john.smith@test.local"
+      subject: "Welcome John - Real Estate Automation"
+      html: |
+        <h2>Welcome!</h2>
+        <p>This is a test automation email from Adar Realty Studio.</p>
+        <p>If you received this, the automation executor is working correctly.</p>
+        <p>Best regards,<br>Eitan Adar<br>Adar Realty Studio</p>

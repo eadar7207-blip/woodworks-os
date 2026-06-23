@@ -1,0 +1,277 @@
+{% extends "base.html" %}
+
+{% block title %}Execute Workflow - Adar Realty Studio{% endblock %}
+
+{% block extra_css %}
+<style>
+    .form-section {
+        background: #f8f9fa;
+        border-left: 4px solid #007bff;
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+        border-radius: 4px;
+    }
+    .execution-monitor {
+        background: #f8f9fa;
+        border-radius: 4px;
+        padding: 1.5rem;
+    }
+    .step-status {
+        display: flex;
+        align-items: center;
+        padding: 0.75rem;
+        margin-bottom: 0.5rem;
+        border-radius: 4px;
+    }
+    .step-status.completed {
+        background: #d4edda;
+        color: #155724;
+    }
+    .step-status.running {
+        background: #d1ecf1;
+        color: #0c5460;
+    }
+    .step-status.pending {
+        background: #fff3cd;
+        color: #856404;
+    }
+    .step-status.failed {
+        background: #f8d7da;
+        color: #721c24;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <!-- Header -->
+    <div class="row mb-4">
+        <div class="col">
+            <h1 class="display-5">Execute Workflow</h1>
+            <p class="text-muted">{{ workflow.name }}</p>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <!-- Form Column -->
+        <div class="col-lg-6">
+            <div class="card">
+                <div class="card-header bg-dark text-white">
+                    <h5 class="mb-0">Workflow Parameters</h5>
+                </div>
+                <div class="card-body">
+                    <form id="execute-form">
+                        <div class="form-section">
+                            <h6>Workflow Information</h6>
+                            <dl class="row small">
+                                <dt class="col-sm-4">Name:</dt>
+                                <dd class="col-sm-8"><strong>{{ workflow.name }}</strong></dd>
+                                <dt class="col-sm-4">Type:</dt>
+                                <dd class="col-sm-8"><code>{{ workflow.trigger_type }}</code></dd>
+                                <dt class="col-sm-4">Description:</dt>
+                                <dd class="col-sm-8">{{ workflow.description or 'N/A' }}</dd>
+                            </dl>
+                        </div>
+
+                        {% if workflow.config %}
+                            <div class="form-section">
+                                <h6>Configuration</h6>
+                                <div id="config-inputs">
+                                    <!-- Dynamic inputs will be generated from workflow config -->
+                                </div>
+                            </div>
+                        {% endif %}
+
+                        <div class="form-section">
+                            <h6>Execution Options</h6>
+                            <div class="form-check mb-3">
+                                <input class="form-check-input" type="checkbox" id="monitor-execution" checked>
+                                <label class="form-check-label" for="monitor-execution">
+                                    Monitor execution in real-time
+                                </label>
+                            </div>
+                        </div>
+
+                        <button type="button" class="btn btn-primary btn-lg w-100" onclick="executeWorkflow()">
+                            <i class="fas fa-play"></i> Execute Workflow
+                        </button>
+                        <a href="/workflows" class="btn btn-secondary btn-lg w-100 mt-2">
+                            <i class="fas fa-arrow-left"></i> Cancel
+                        </a>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Monitor Column -->
+        <div class="col-lg-6">
+            <div class="card">
+                <div class="card-header bg-dark text-white">
+                    <h5 class="mb-0">Execution Monitor</h5>
+                </div>
+                <div class="card-body execution-monitor" style="min-height: 400px;">
+                    <div id="monitor-content">
+                        <p class="text-muted">
+                            <i class="fas fa-info-circle"></i>
+                            Execute the workflow to see real-time progress here.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+const workflowId = '{{ workflow.id }}';
+let executionId = null;
+let monitorInterval = null;
+
+function executeWorkflow() {
+    const btn = event.target.closest('button');
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Executing...';
+
+    const payload = {
+        workflow_id: workflowId,
+        trigger_data: collectFormData()
+    };
+
+    fetch('/api/workflows/' + workflowId + '/execute', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(payload)
+    })
+    .then(r => {
+        if (!r.ok) throw new Error('Execution failed: ' + r.statusText);
+        return r.json();
+    })
+    .then(data => {
+        executionId = data.execution_id;
+        showMonitor();
+        if (document.getElementById('monitor-execution').checked) {
+            startMonitoring();
+        } else {
+            window.location.href = '/execution/' + executionId;
+        }
+    })
+    .catch(e => {
+        alert('Error: ' + e.message);
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fas fa-play"></i> Execute Workflow';
+    });
+}
+
+function showMonitor() {
+    document.getElementById('monitor-content').innerHTML = `
+        <div class="alert alert-info">
+            <i class="fas fa-info-circle"></i>
+            Execution started: <strong>${executionId}</strong>
+        </div>
+        <div id="execution-status" class="mb-3">
+            <small class="text-muted">Loading status...</small>
+        </div>
+        <div id="steps-list"></div>
+        <div class="text-center mt-3">
+            <a href="/execution/${executionId}" class="btn btn-sm btn-primary">
+                <i class="fas fa-external-link-alt"></i> View Full Details
+            </a>
+        </div>
+    `;
+}
+
+function startMonitoring() {
+    monitorInterval = setInterval(updateMonitor, 1000);
+    updateMonitor();
+}
+
+function updateMonitor() {
+    if (!executionId) return;
+
+    fetch('/api/executions/' + executionId + '/monitor')
+        .then(r => {
+            if (!r.ok) throw new Error('Monitor failed');
+            return r.json();
+        })
+        .then(data => {
+            // Update status
+            const statusDiv = document.getElementById('execution-status');
+            const statusBadge = {
+                'completed': '<span class="badge bg-success">Completed</span>',
+                'failed': '<span class="badge bg-danger">Failed</span>',
+                'running': '<span class="badge bg-info">Running</span>',
+                'pending': '<span class="badge bg-warning">Pending</span>'
+            }[data.status] || '<span class="badge bg-secondary">' + data.status + '</span>';
+
+            statusDiv.innerHTML = `
+                <div class="d-flex justify-content-between align-items-center">
+                    <strong>Status:</strong> ${statusBadge}
+                </div>
+                <small class="text-muted">
+                    Progress: ${data.completed_steps} / ${data.total_steps} steps
+                    (${data.progress_percent}%)
+                </small>
+                <div class="progress mt-2">
+                    <div class="progress-bar" style="width: ${data.progress_percent}%"></div>
+                </div>
+            `;
+
+            // Update steps
+            if (data.steps && data.steps.length > 0) {
+                const stepsList = document.getElementById('steps-list');
+                stepsList.innerHTML = data.steps.map((step, i) => `
+                    <div class="step-status ${step.status}">
+                        <span class="me-2">
+                            ${step.status === 'completed' ? '<i class="fas fa-check-circle"></i>' :
+                              step.status === 'failed' ? '<i class="fas fa-times-circle"></i>' :
+                              step.status === 'running' ? '<i class="fas fa-spinner fa-spin"></i>' :
+                              '<i class="fas fa-circle"></i>'}
+                        </span>
+                        <span>
+                            <strong>${step.step_name}</strong>
+                            <small>(${step.action_type})</small>
+                        </span>
+                    </div>
+                `).join('');
+            }
+
+            // Stop monitoring if complete
+            if (data.status === 'completed' || data.status === 'failed') {
+                clearInterval(monitorInterval);
+                const btn = document.querySelector('button[onclick="executeWorkflow()"]');
+                if (btn) {
+                    btn.disabled = false;
+                    btn.innerHTML = '<i class="fas fa-play"></i> Execute Workflow';
+                }
+            }
+        })
+        .catch(e => console.error('Monitor error:', e));
+}
+
+function collectFormData() {
+    // Collect any form inputs
+    const inputs = {};
+    document.querySelectorAll('#execute-form input, #execute-form textarea').forEach(el => {
+        if (el.id) inputs[el.id] = el.value;
+    });
+    return inputs;
+}
+
+// Initialize config inputs if needed
+document.addEventListener('DOMContentLoaded', () => {
+    const config = {{ workflow.config|tojson if workflow.config else '{}' }};
+    if (config && Object.keys(config).length > 0) {
+        const configDiv = document.getElementById('config-inputs');
+        const html = Object.entries(config).map(([key, value]) => `
+            <div class="mb-3">
+                <label for="${key}" class="form-label">${key}</label>
+                <input type="text" class="form-control" id="${key}" value="${value || ''}">
+            </div>
+        `).join('');
+        configDiv.innerHTML = html;
+    }
+});
+</script>
+{% endblock %}

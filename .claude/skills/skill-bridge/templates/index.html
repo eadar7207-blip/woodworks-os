@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Automation Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Header -->
+        <header class="dashboard-header">
+            <div class="header-content">
+                <div class="header-left">
+                    <h1 class="dashboard-title">Automation Dashboard</h1>
+                    <p class="header-subtitle">Manage workflows and monitor execution</p>
+                </div>
+                <div class="header-right">
+                    <div class="search-box">
+                        <input type="text" id="searchInput" class="search-input" placeholder="Search workflows...">
+                        <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <path d="m21 21-4.35-4.35"></path>
+                        </svg>
+                    </div>
+                    <button class="btn btn-primary" id="createWorkflowBtn">
+                        <span>+ New Workflow</span>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="dashboard-main">
+            <!-- Stats Row -->
+            <section class="stats-section">
+                <div class="stat-card">
+                    <div class="stat-icon total-workflows">
+                        <svg viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8m3.5-9c.83 0 1.5-.67 1.5-1.5S16.33 8 15.5 8 14 8.67 14 9.5s.67 1.5 1.5 1.5m-7 0c.83 0 1.5-.67 1.5-1.5S9.33 8 8.5 8 7 8.67 7 9.5 7.67 11 8.5 11m3.5 6.5c2.33 0 4.31-1.46 5.11-3.5H6.89c.8 2.04 2.78 3.5 5.11 3.5z"/>
+                        </svg>
+                    </div>
+                    <div class="stat-content">
+                        <p class="stat-label">Total Workflows</p>
+                        <p class="stat-value" id="totalWorkflows">0</p>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon active-executions">
+                        <svg viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8m.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/>
+                        </svg>
+                    </div>
+                    <div class="stat-content">
+                        <p class="stat-label">Active Now</p>
+                        <p class="stat-value" id="activeExecutions">0</p>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon success-rate">
+                        <svg viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+                        </svg>
+                    </div>
+                    <div class="stat-content">
+                        <p class="stat-label">Success Rate</p>
+                        <p class="stat-value" id="successRate">96%</p>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon failed-executions">
+                        <svg viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14zm-8-3l4.25-5.25-1.06-1.06L10 13.63 6.81 10.44 5.75 11.5z"/>
+                        </svg>
+                    </div>
+                    <div class="stat-content">
+                        <p class="stat-label">Failed</p>
+                        <p class="stat-value" id="failedExecutions">0</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Tabs -->
+            <div class="tab-container">
+                <button class="tab-button active" data-tab="workflows">
+                    <span>Workflows</span>
+                    <span class="tab-count" id="workflowCount">0</span>
+                </button>
+                <button class="tab-button" data-tab="executions">
+                    <span>Execution History</span>
+                    <span class="tab-count" id="executionCount">0</span>
+                </button>
+                <button class="tab-button" data-tab="recovery">
+                    <span>Error Recovery</span>
+                    <span class="tab-badge" id="recoveryBadge">0</span>
+                </button>
+            </div>
+
+            <!-- Workflows Tab -->
+            <section id="workflows-tab" class="tab-content active">
+                <div class="section-header">
+                    <h2>Active Workflows</h2>
+                    <div class="filter-group">
+                        <select id="workflowStatus" class="filter-select">
+                            <option value="">All Status</option>
+                            <option value="active">Active</option>
+                            <option value="scheduled">Scheduled</option>
+                            <option value="paused">Paused</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="workflows-grid" id="workflowsGrid">
+                    <!-- Workflows will be populated here -->
+                </div>
+
+                <div class="empty-state" id="workflowsEmpty" style="display: none;">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2M9 5a2 2 0 0 0 2-2 2 2 0 0 0-2-2 2 2 0 0 0-2 2 2 2 0 0 0 2 2m0 0h6m-3 9l2 2 4-4"/>
+                    </svg>
+                    <p>No workflows found</p>
+                    <button class="btn btn-secondary">Create your first workflow</button>
+                </div>
+            </section>
+
+            <!-- Execution History Tab -->
+            <section id="executions-tab" class="tab-content">
+                <div class="section-header">
+                    <h2>Recent Executions</h2>
+                    <div class="filter-group">
+                        <select id="executionStatus" class="filter-select">
+                            <option value="">All Status</option>
+                            <option value="success">Success</option>
+                            <option value="failed">Failed</option>
+                            <option value="running">Running</option>
+                            <option value="cancelled">Cancelled</option>
+                        </select>
+                        <input type="date" id="executionDate" class="filter-select">
+                    </div>
+                </div>
+
+                <div class="executions-table-wrapper">
+                    <table class="executions-table" id="executionsTable">
+                        <thead>
+                            <tr>
+                                <th>Workflow</th>
+                                <th>Status</th>
+                                <th>Started</th>
+                                <th>Duration</th>
+                                <th>Progress</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="executionsTableBody">
+                            <!-- Executions will be populated here -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="empty-state" id="executionsEmpty" style="display: none;">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <path d="M12 8v4l3 2m6-2a9 9 0 1 1-18 0 9 9 0 0 1 18 0z"/>
+                    </svg>
+                    <p>No executions found</p>
+                </div>
+            </section>
+
+            <!-- Error Recovery Tab -->
+            <section id="recovery-tab" class="tab-content">
+                <div class="section-header">
+                    <h2>Error Recovery Status</h2>
+                    <div class="filter-group">
+                        <select id="recoveryStatus" class="filter-select">
+                            <option value="">All Status</option>
+                            <option value="recovering">Recovering</option>
+                            <option value="recovered">Recovered</option>
+                            <option value="unrecoverable">Unrecoverable</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="recovery-list" id="recoveryList">
+                    <!-- Recovery items will be populated here -->
+                </div>
+
+                <div class="empty-state" id="recoveryEmpty">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8m3.5-9c.83 0 1.5-.67 1.5-1.5S16.33 8 15.5 8 14 8.67 14 9.5s.67 1.5 1.5 1.5m-7 0c.83 0 1.5-.67 1.5-1.5S9.33 8 8.5 8 7 8.67 7 9.5 7.67 11 8.5 11m3.5 6.5c2.33 0 4.31-1.46 5.11-3.5H6.89c.8 2.04 2.78 3.5 5.11 3.5z"/>
+                    </svg>
+                    <p>All systems operating normally</p>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Modals -->
+    <div id="executionModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <button class="modal-close">&times;</button>
+            <div id="executionModalBody">
+                <!-- Execution details will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='dashboard.js') }}"></script>
+</body>
+</html>

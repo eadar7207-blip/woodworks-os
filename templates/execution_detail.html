@@ -1,0 +1,285 @@
+{% extends "base.html" %}
+
+{% block title %}Execution Details - Adar Realty Studio{% endblock %}
+
+{% block extra_css %}
+<style>
+    .step-item {
+        border-left: 4px solid #ccc;
+        padding-left: 1rem;
+        margin-bottom: 1.5rem;
+        position: relative;
+    }
+    .step-item.completed {
+        border-left-color: #28a745;
+    }
+    .step-item.failed {
+        border-left-color: #dc3545;
+    }
+    .step-item.running {
+        border-left-color: #17a2b8;
+    }
+    .step-item.pending {
+        border-left-color: #ffc107;
+    }
+    .step-dot {
+        position: absolute;
+        left: -12px;
+        top: 3px;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background: white;
+        border: 2px solid #ccc;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.7rem;
+        color: #666;
+    }
+    .step-item.completed .step-dot {
+        border-color: #28a745;
+        background: #28a745;
+        color: white;
+    }
+    .step-item.failed .step-dot {
+        border-color: #dc3545;
+        background: #dc3545;
+        color: white;
+    }
+    .step-item.running .step-dot {
+        border-color: #17a2b8;
+        background: #17a2b8;
+        color: white;
+    }
+    .code-block {
+        background: #f5f5f5;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        padding: 1rem;
+        overflow-x: auto;
+        font-size: 0.85rem;
+    }
+    .progress-section {
+        margin: 1.5rem 0;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <!-- Header -->
+    <div class="row mb-4">
+        <div class="col">
+            <h1 class="display-5">Execution Details</h1>
+            <p class="text-muted">{{ execution.execution_id }}</p>
+        </div>
+        <div class="col-auto">
+            <button class="btn btn-primary" onclick="refreshExecution()">
+                <i class="fas fa-sync"></i> Refresh
+            </button>
+            <a href="/api/executions/{{ execution.id }}/export" class="btn btn-secondary">
+                <i class="fas fa-download"></i> Export
+            </a>
+        </div>
+    </div>
+
+    <!-- Overview Card -->
+    <div class="row mb-4">
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-header bg-dark text-white">
+                    <h5 class="mb-0">Execution Summary</h5>
+                </div>
+                <div class="card-body">
+                    <dl class="row">
+                        <dt class="col-sm-3">Workflow:</dt>
+                        <dd class="col-sm-9"><strong>{{ execution.workflow_name }}</strong></dd>
+
+                        <dt class="col-sm-3">Status:</dt>
+                        <dd class="col-sm-9">
+                            {% if execution.status == 'completed' %}
+                                <span class="badge bg-success">Completed</span>
+                            {% elif execution.status == 'failed' %}
+                                <span class="badge bg-danger">Failed</span>
+                            {% elif execution.status == 'running' %}
+                                <span class="badge bg-info">Running</span>
+                            {% elif execution.status == 'pending' %}
+                                <span class="badge bg-warning">Pending</span>
+                            {% else %}
+                                <span class="badge bg-secondary">{{ execution.status }}</span>
+                            {% endif %}
+                        </dd>
+
+                        <dt class="col-sm-3">Started:</dt>
+                        <dd class="col-sm-9">{{ execution.started_at or 'Not started' }}</dd>
+
+                        <dt class="col-sm-3">Completed:</dt>
+                        <dd class="col-sm-9">{{ execution.completed_at or 'Still running' }}</dd>
+
+                        <dt class="col-sm-3">Duration:</dt>
+                        <dd class="col-sm-9">{{ execution.duration_seconds }}s ({{ execution.duration_ms }}ms)</dd>
+
+                        <dt class="col-sm-3">Steps:</dt>
+                        <dd class="col-sm-9">{{ execution.steps|length }} total</dd>
+                    </dl>
+
+                    {% if execution.error_message %}
+                        <div class="alert alert-danger mt-3 mb-0">
+                            <strong>Error:</strong> {{ execution.error_message }}
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Progress Card -->
+        <div class="col-lg-4">
+            <div class="card">
+                <div class="card-header bg-dark text-white">
+                    <h5 class="mb-0">Progress</h5>
+                </div>
+                <div class="card-body">
+                    {% set total_steps = execution.steps|length %}
+                    {% set completed_steps = execution.steps|selectattr('status', 'in', ['completed', 'failed', 'skipped'])|list|length %}
+                    {% set progress = (completed_steps / total_steps * 100) if total_steps > 0 else 0 %}
+
+                    <div class="progress-section">
+                        <div class="d-flex justify-content-between mb-2">
+                            <strong>{{ completed_steps }} / {{ total_steps }} Steps</strong>
+                            <span>{{ progress|round(1) }}%</span>
+                        </div>
+                        <div class="progress">
+                            <div class="progress-bar bg-success" role="progressbar"
+                                 style="width: {{ progress }}%"
+                                 aria-valuenow="{{ progress }}" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                    </div>
+
+                    <div class="card bg-light">
+                        <div class="card-body small">
+                            <div class="mb-2">
+                                <span class="badge bg-success">Completed: {{ execution.steps|selectattr('status', 'equalto', 'completed')|list|length }}</span>
+                            </div>
+                            <div class="mb-2">
+                                <span class="badge bg-danger">Failed: {{ execution.steps|selectattr('status', 'equalto', 'failed')|list|length }}</span>
+                            </div>
+                            <div>
+                                <span class="badge bg-warning">Pending: {{ execution.steps|selectattr('status', 'equalto', 'pending')|list|length }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Steps Timeline -->
+    <div class="card">
+        <div class="card-header bg-dark text-white">
+            <h5 class="mb-0"><i class="fas fa-list"></i> Execution Steps</h5>
+        </div>
+        <div class="card-body">
+            {% if execution.steps %}
+                {% for step in execution.steps %}
+                    <div class="step-item {{ step.status }}">
+                        <div class="step-dot">{{ loop.index }}</div>
+                        <div class="row">
+                            <div class="col">
+                                <h6 class="mb-1">
+                                    <strong>{{ step.step_name }}</strong>
+                                    <small class="text-muted">({{ step.action_type }})</small>
+                                </h6>
+                                <p class="text-muted small mb-2">
+                                    {% if step.started_at %}
+                                        Started: {{ step.started_at }}
+                                    {% endif %}
+                                    {% if step.duration_ms %}
+                                        | Duration: {{ step.duration_ms }}ms
+                                    {% endif %}
+                                    {% if step.retry_count %}
+                                        | Retries: {{ step.retry_count }}
+                                    {% endif %}
+                                </p>
+
+                                {% if step.status == 'failed' and step.error_message %}
+                                    <div class="alert alert-danger alert-sm mb-2" role="alert">
+                                        <small><strong>Error:</strong> {{ step.error_message }}</small>
+                                    </div>
+                                {% endif %}
+
+                                {% if step.input_data %}
+                                    <details class="mb-2">
+                                        <summary class="cursor-pointer"><small>Input Data</small></summary>
+                                        <div class="code-block mt-2">
+                                            <pre class="mb-0">{{ step.input_data|tojson(indent=2) }}</pre>
+                                        </div>
+                                    </details>
+                                {% endif %}
+
+                                {% if step.output_data %}
+                                    <details class="mb-2">
+                                        <summary class="cursor-pointer"><small>Output Data</small></summary>
+                                        <div class="code-block mt-2">
+                                            <pre class="mb-0">{{ step.output_data|tojson(indent=2) }}</pre>
+                                        </div>
+                                    </details>
+                                {% endif %}
+                            </div>
+                            <div class="col-auto">
+                                <span class="badge badge-{{ getStatusColor(step.status) }}">
+                                    {{ step.status }}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <div class="alert alert-info">
+                    No steps recorded for this execution
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Actions -->
+    <div class="mt-4">
+        {% if execution.status == 'failed' %}
+            <button class="btn btn-warning" onclick="retryExecution()">
+                <i class="fas fa-redo"></i> Retry Execution
+            </button>
+        {% endif %}
+        <a href="/executions" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i> Back to History
+        </a>
+    </div>
+</div>
+
+<script>
+function refreshExecution() {
+    location.reload();
+}
+
+function retryExecution() {
+    if (confirm('Retry this execution?')) {
+        fetch('/api/executions/{{ execution.id }}/retry', {method: 'POST'})
+            .then(r => r.json())
+            .then(data => {
+                alert('Retry initiated');
+                location.reload();
+            })
+            .catch(e => alert('Error: ' + e));
+    }
+}
+
+function getStatusColor(status) {
+    const colors = {
+        'completed': 'success',
+        'failed': 'danger',
+        'running': 'info',
+        'pending': 'warning'
+    };
+    return colors[status] || 'secondary';
+}
+</script>
+{% endblock %}

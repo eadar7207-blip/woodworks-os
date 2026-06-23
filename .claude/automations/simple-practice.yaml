@@ -1,0 +1,41 @@
+id: simple_practice
+name: "Simple Practice - HTTP Echo Test"
+description: "Test executor with httpbin echo service"
+version: 1.0
+
+steps:
+  - name: step_1_echo
+    action: http
+    config:
+      method: POST
+      url: "https://httpbin.org/post"
+      headers:
+        Content-Type: application/json
+      body:
+        workflow: "practice"
+        step: 1
+        message: "First step executed"
+
+  - name: step_2_echo
+    action: http
+    config:
+      method: POST
+      url: "https://httpbin.org/post"
+      headers:
+        Content-Type: application/json
+      body:
+        workflow: "practice"
+        step: 2
+        message: "Second step executed"
+
+  - name: step_3_echo
+    action: http
+    config:
+      method: POST
+      url: "https://httpbin.org/post"
+      headers:
+        Content-Type: application/json
+      body:
+        workflow: "practice"
+        step: 3
+        message: "All steps complete!"

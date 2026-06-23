@@ -1,0 +1,52 @@
+[Unit]
+Description=Skill Bridge API - Claude Code skill bridge for automation executor
+Documentation=https://github.com/your-org/woodworks-os
+After=network.target
+
+[Service]
+Type=simple
+User=your-user
+Group=your-group
+
+# Set working directory to project root
+WorkingDirectory=/path/to/woodworks-os
+
+# Python environment
+Environment="PATH=/usr/local/bin:/usr/bin:/bin"
+Environment="PYTHONUNBUFFERED=1"
+
+# Skill Bridge configuration
+Environment="SKILL_BRIDGE_HOST=127.0.0.1"
+Environment="SKILL_BRIDGE_PORT=9000"
+Environment="SKILL_BRIDGE_DEBUG=false"
+Environment="SKILL_TIMEOUT=120"
+Environment="CLAUDE_CODE_WORKSPACE=/path/to/woodworks-os"
+
+# Optional: API key authentication
+# Environment="SKILL_BRIDGE_API_KEY=your-secret-key"
+
+# Execute the skill bridge
+ExecStart=/usr/bin/python3 /path/to/woodworks-os/.claude/skills/skill-bridge/skill_bridge.py
+
+# Restart policy
+Restart=on-failure
+RestartSec=10
+StartLimitInterval=600
+StartLimitBurst=3
+
+# Security
+NoNewPrivileges=true
+PrivateTmp=true
+
+# Logging
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=skill-bridge
+
+# Process management
+KillMode=mixed
+KillSignal=SIGTERM
+TimeoutStopSec=30
+
+[Install]
+WantedBy=multi-user.target

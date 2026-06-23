@@ -1,0 +1,74 @@
+id: crm_integrated_workflow
+name: "Real Estate Lead - CRM Integrated"
+description: "Complete lead automation: research → create prospect in CRM → log proposal → update stage"
+version: 1.0
+
+steps:
+  - name: step_1_research_lead
+    action: http
+    config:
+      method: POST
+      url: "http://localhost:9000/invoke/prospect"
+      headers:
+        Content-Type: application/json
+      body:
+        action: "research"
+        params:
+          name: "Jennifer Davis"
+          company: "Davis Properties Group"
+
+  - name: step_2_create_prospect_in_crm
+    action: http
+    config:
+      method: POST
+      url: "http://localhost:5000/api/workflow-action"
+      headers:
+        Content-Type: application/json
+      body:
+        action: "crm_create"
+        params:
+          name: "Jennifer Davis"
+          company: "Davis Properties Group"
+          email: "jennifer@davisproperties.com"
+          phone: "555-1234"
+
+  - name: step_3_generate_proposal
+    action: http
+    config:
+      method: POST
+      url: "http://localhost:9000/invoke/proposal"
+      headers:
+        Content-Type: application/json
+      body:
+        action: "generate"
+        params:
+          prospect_name: "Jennifer Davis"
+          company: "Davis Properties Group"
+          scope: "Complete lead automation system for property management"
+
+  - name: step_4_log_proposal_activity
+    action: http
+    config:
+      method: POST
+      url: "http://localhost:5000/api/workflow-action"
+      headers:
+        Content-Type: application/json
+      body:
+        action: "crm_log"
+        params:
+          prospect_name: "Jennifer Davis"
+          activity_type: "proposal_sent"
+          notes: "Custom lead automation proposal sent for review"
+
+  - name: step_5_update_prospect_stage
+    action: http
+    config:
+      method: POST
+      url: "http://localhost:5000/api/workflow-action"
+      headers:
+        Content-Type: application/json
+      body:
+        action: "crm_update_stage"
+        params:
+          prospect_name: "Jennifer Davis"
+          new_stage: "proposal_sent"

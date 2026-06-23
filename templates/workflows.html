@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block title %}Workflows - Adar Realty Studio{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <!-- Header -->
+    <div class="row mb-4">
+        <div class="col">
+            <h1 class="display-5">Workflows</h1>
+            <p class="text-muted">Available automation workflows</p>
+        </div>
+    </div>
+
+    <!-- Workflows Grid -->
+    <div class="row g-4">
+        {% if workflows %}
+            {% for workflow in workflows %}
+                <div class="col-lg-4 col-md-6">
+                    <div class="card h-100">
+                        <div class="card-header bg-dark text-white">
+                            <h5 class="mb-0">{{ workflow.name }}</h5>
+                        </div>
+                        <div class="card-body">
+                            <p class="text-muted">{{ workflow.description }}</p>
+                            <dl class="row small">
+                                <dt class="col-sm-5">Type:</dt>
+                                <dd class="col-sm-7"><code>{{ workflow.trigger_type }}</code></dd>
+                                <dt class="col-sm-5">Status:</dt>
+                                <dd class="col-sm-7">
+                                    {% if workflow.is_active %}
+                                        <span class="badge bg-success">Active</span>
+                                    {% else %}
+                                        <span class="badge bg-secondary">Inactive</span>
+                                    {% endif %}
+                                </dd>
+                                <dt class="col-sm-5">Created:</dt>
+                                <dd class="col-sm-7"><small>{{ workflow.created_at }}</small></dd>
+                            </dl>
+                        </div>
+                        <div class="card-footer">
+                            <a href="/workflow/{{ workflow.id }}/execute" class="btn btn-sm btn-primary">
+                                <i class="fas fa-play"></i> Execute
+                            </a>
+                            <a href="/executions?workflow_id={{ workflow.id }}" class="btn btn-sm btn-outline-secondary">
+                                <i class="fas fa-history"></i> History
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="col-12">
+                <div class="alert alert-info">
+                    <i class="fas fa-info-circle"></i> No workflows found. Create a workflow to get started.
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

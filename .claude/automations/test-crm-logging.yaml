@@ -1,0 +1,64 @@
+id: test_crm_logging
+name: "Test CRM Logging - Real Data"
+description: "Test if CRM logging actually captures useful lead data"
+version: 1.0
+
+steps:
+  - name: step_1_research_lead
+    action: http
+    config:
+      method: POST
+      url: "http://localhost:9000/invoke/prospect"
+      headers:
+        Content-Type: application/json
+      body:
+        action: "research"
+        params:
+          name: "Michael Thompson"
+          company: "Thompson Real Estate Group"
+
+  - name: step_2_generate_proposal
+    action: http
+    config:
+      method: POST
+      url: "http://localhost:9000/invoke/proposal"
+      headers:
+        Content-Type: application/json
+      body:
+        action: "generate"
+        params:
+          prospect_name: "Michael Thompson"
+          company: "Thompson Real Estate Group"
+          scope: "Full lead automation and CRM integration"
+
+  - name: step_3_log_to_crm
+    action: http
+    config:
+      method: POST
+      url: "http://localhost:9000/invoke/crm"
+      headers:
+        Content-Type: application/json
+      body:
+        action: "log_activity"
+        params:
+          contact_name: "Michael Thompson"
+          email: "michael@thompsonrealty.com"
+          company: "Thompson Real Estate Group"
+          activity_type: "proposal_sent"
+          activity_description: "Automated proposal sent for lead automation system"
+
+  - name: step_4_log_followup_needed
+    action: http
+    config:
+      method: POST
+      url: "http://localhost:9000/invoke/crm"
+      headers:
+        Content-Type: application/json
+      body:
+        action: "log_activity"
+        params:
+          contact_name: "Michael Thompson"
+          email: "michael@thompsonrealty.com"
+          company: "Thompson Real Estate Group"
+          activity_type: "follow_up_due"
+          activity_description: "Follow-up required by June 14, 2026 - check proposal interest"

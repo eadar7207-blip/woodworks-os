@@ -1,0 +1,56 @@
+id: test_follow_up_sequence
+name: "Full Follow-up Sequence - Test (Executor Validation)"
+description: "Test workflow: research → proposal → format email → log activity. Tests executor framework without external dependencies."
+version: 1.0
+
+steps:
+  # Step 1: Research the prospect (via Claude Code skill)
+  - name: research_prospect
+    action: skill
+    config:
+      skill: prospect
+      params:
+        action: research
+        name: "{{lead_name}}"
+        company: "{{lead_company}}"
+
+  # Step 2: Generate a proposal (via Claude Code skill)
+  - name: generate_proposal
+    action: skill
+    config:
+      skill: proposal
+      params:
+        action: generate
+        prospect_name: "{{lead_name}}"
+        company: "{{lead_company}}"
+        scope: "Real estate lead automation system"
+
+  # Step 3: Format email message (data transform - no external service)
+  - name: format_email
+    action: transform
+    config:
+      operation: map
+      input:
+        to: "{{lead_email}}"
+        subject: "Your Real Estate Automation Proposal - {{lead_name}}"
+        lead_name: "{{lead_name}}"
+        lead_company: "{{lead_company}}"
+      template: |
+        {
+          "to": .to,
+          "subject": .subject,
+          "message": "Hi " + .lead_name + ",\n\nThank you for your interest. We've researched " + .lead_company + " and prepared a custom proposal.\n\nBest regards,\nEitan Adar"
+        }
+
+  # Step 4: Log the activity to CRM (via Claude Code skill)
+  - name: log_activity
+    action: skill
+    config:
+      skill: crm
+      params:
+        action: log_activity
+        contact_name: "{{lead_name}}"
+        email: "{{lead_email}}"
+        company: "{{lead_company}}"
+        activity_type: "proposal_sent"
+        activity_description: "Prospect research completed, proposal generated, email formatted"

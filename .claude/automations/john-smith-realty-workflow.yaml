@@ -1,0 +1,77 @@
+id: john_smith_realty
+name: "John Smith Real Estate - Complete Automation"
+description: "End-to-end real estate lead automation: research → proposal → email → CRM logging"
+version: 1.0
+
+steps:
+  - name: step_1_research_prospect
+    action: http
+    config:
+      method: POST
+      url: "http://localhost:9000/invoke/prospect"
+      headers:
+        Content-Type: application/json
+      body:
+        action: "research"
+        params:
+          name: "John Smith"
+          company: "John Smith Real Estate"
+
+  - name: step_2_generate_proposal
+    action: http
+    config:
+      method: POST
+      url: "http://localhost:9000/invoke/proposal"
+      headers:
+        Content-Type: application/json
+      body:
+        action: "generate"
+        params:
+          prospect_name: "John Smith"
+          company: "John Smith Real Estate"
+          scope: "Lead management automation for Chicago real estate team"
+
+  - name: step_3_log_crm_activity
+    action: http
+    config:
+      method: POST
+      url: "http://localhost:9000/invoke/crm"
+      headers:
+        Content-Type: application/json
+      body:
+        action: "log_activity"
+        params:
+          contact_name: "John Smith"
+          email: "john@smithrealty.com"
+          company: "John Smith Real Estate"
+          activity_type: "proposal_sent"
+          activity_description: "Automated lead automation proposal sent to John Smith Real Estate"
+
+  - name: step_4_send_proposal_email
+    action: http
+    config:
+      method: POST
+      url: "http://localhost:9000/invoke/send"
+      headers:
+        Content-Type: application/json
+      body:
+        action: "email"
+        params:
+          to: "john@smithrealty.com"
+          subject: "Real Estate Lead Automation System - Custom Proposal for John Smith"
+          body: "Hi John,\n\nWe've reviewed your real estate business and created a customized lead automation proposal.\n\nThis system will:\n- Automate lead research and qualification\n- Integrate with your CRM\n- Send personalized follow-ups\n- Track pipeline metrics\n\nExpected results:\n- 40% more qualified leads\n- 60% less manual data entry\n- Faster deal closure\n\nLet's discuss how this can transform your team.\n\nBest regards,\nEitan Adar\nAdar Realty Studio"
+
+  - name: step_5_create_followup_task
+    action: http
+    config:
+      method: POST
+      url: "http://localhost:9000/invoke/tasks"
+      headers:
+        Content-Type: application/json
+      body:
+        action: "create"
+        params:
+          title: "Follow up with John Smith - Real Estate Automation"
+          description: "Check if John Smith received proposal and schedule discovery call"
+          due_date: "2026-06-14"
+          priority: "high"

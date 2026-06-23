@@ -1,0 +1,45 @@
+id: practice_workflow
+name: "Practice Workflow - Research + Proposal"
+description: "End-to-end test: research prospect via bridge → generate proposal via bridge → success"
+version: 1.0
+
+steps:
+  - name: research_via_bridge
+    action: http
+    config:
+      method: POST
+      url: "http://localhost:9000/invoke/prospect"
+      headers:
+        Content-Type: application/json
+      body:
+        action: "research"
+        name: "Sarah Johnson"
+        company: "Johnson Realty Group"
+
+  - name: generate_proposal_via_bridge
+    action: http
+    config:
+      method: POST
+      url: "http://localhost:9000/invoke/proposal"
+      headers:
+        Content-Type: application/json
+      body:
+        action: "generate"
+        prospect_name: "Sarah Johnson"
+        company: "Johnson Realty Group"
+        scope: "Lead automation for 5-person team"
+
+  - name: log_completion
+    action: http
+    config:
+      method: POST
+      url: "http://localhost:9000/invoke/crm"
+      headers:
+        Content-Type: application/json
+      body:
+        action: "log_activity"
+        contact_name: "Sarah Johnson"
+        email: "sarah@johnsonrealty.com"
+        company: "Johnson Realty Group"
+        activity_type: "automation_test"
+        activity_description: "Practice workflow executed successfully"

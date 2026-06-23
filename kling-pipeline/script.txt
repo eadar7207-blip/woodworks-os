@@ -1,0 +1,7 @@
+I run my entire business through one tool. Client work, my content, day-to-day ops — all of it goes through Claude Code.
+
+Most people think it's just for writing code. It's not. I use it to build the actual AI systems I sell to clients — listing generators, follow-up sequencers, lead qualifiers. I use it to build my own tools, like the one that repurposes my videos automatically. I use it for business tasks I used to do by hand.
+
+Here's the thing — it reads what you're working with, plans out the steps, takes real action, then checks its own work and adjusts. You just describe what you want in plain English. It still asks before it changes anything — you stay in control. But the amount of stuff I used to outsource or grind through manually? Most of it runs through this now.
+
+If you're running a business solo and you're not using this, you're doing more manual work than you need to. I'll start showing more of how I actually use it — follow if you want to see behind the curtain.

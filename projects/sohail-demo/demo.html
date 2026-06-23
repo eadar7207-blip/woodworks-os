@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Meridian Group — Automation Dashboard</title>
+<style>
+  :root {
+    --bg: #0a0c10;
+    --surface: #111318;
+    --surface2: #181c24;
+    --border: #1e2330;
+    --accent: #4f8ef7;
+    --accent2: #7c3aed;
+    --green: #22c55e;
+    --yellow: #f59e0b;
+    --red: #ef4444;
+    --text: #e8eaf0;
+    --muted: #6b7280;
+    --exp: #c8a84b;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Inter', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    font-size: 14px;
+  }
+
+  /* HEADER */
+  header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 28px;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface);
+  }
+
+  .logo-group {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .logo-icon {
+    width: 36px; height: 36px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; font-weight: 800; color: #fff;
+  }
+
+  .logo-text h1 { font-size: 16px; font-weight: 700; letter-spacing: -0.3px; }
+  .logo-text p { font-size: 11px; color: var(--exp); font-weight: 600; letter-spacing: 0.8px; text-transform: uppercase; margin-top: 1px; }
+
+  .header-right {
+    display: flex; align-items: center; gap: 20px;
+  }
+
+  .live-badge {
+    display: flex; align-items: center; gap: 6px;
+    font-size: 11px; font-weight: 600; color: var(--green);
+    text-transform: uppercase; letter-spacing: 0.8px;
+  }
+
+  .live-dot {
+    width: 7px; height: 7px;
+    background: var(--green);
+    border-radius: 50%;
+    animation: pulse 1.8s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(0.8); }
+  }
+
+  .header-time {
+    font-size: 12px; color: var(--muted);
+  }
+
+  /* STATS BAR */
+  .stats-bar {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+    background: var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .stat-card {
+    background: var(--surface);
+    padding: 18px 24px;
+    display: flex; align-items: center; gap: 14px;
+  }
+
+  .stat-icon {
+    width: 40px; height: 40px;
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; flex-shrink: 0;
+  }
+
+  .stat-icon.blue { background: rgba(79,142,247,0.12); }
+  .stat-icon.green { background: rgba(34,197,94,0.12); }
+  .stat-icon.yellow { background: rgba(245,158,11,0.12); }
+  .stat-icon.purple { background: rgba(124,58,237,0.12); }
+
+  .stat-label { font-size: 11px; color: var(--muted); font-weight: 500; text-transform: uppercase; letter-spacing: 0.6px; }
+  .stat-value { font-size: 26px; font-weight: 700; line-height: 1.1; margin-top: 2px; letter-spacing: -0.5px; }
+  .stat-value.blue { color: var(--accent); }
+  .stat-value.green { color: var(--green); }
+  .stat-value.yellow { color: var(--yellow); }
+  .stat-value.purple { color: #a78bfa; }
+
+  .stat-delta {
+    font-size: 11px; margin-top: 3px; color: var(--green); font-weight: 500;
+  }
+
+  /* MAIN GRID */
+  .main {
+    display: grid;
+    grid-template-columns: 1fr 1fr 340px;
+    grid-template-rows: auto auto;
+    gap: 1px;
+    background: var(--border);
+    height: calc(100vh - 120px);
+  }
+
+  .panel {
+    background: var(--surface);
+    display: flex; flex-direction: column;
+    overflow: hidden;
+  }
+
+  .panel-header {
+    padding: 16px 20px 12px;
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between;
+    flex-shrink: 0;
+  }
+
+  .panel-title {
+    font-size: 13px; font-weight: 600; letter-spacing: -0.2px;
+  }
+
+  .panel-badge {
+    font-size: 10px; font-weight: 700; padding: 3px 8px;
+    border-radius: 20px; text-transform: uppercase; letter-spacing: 0.6px;
+  }
+
+  .panel-badge.blue { background: rgba(79,142,247,0.15); color: var(--accent); }
+  .panel-badge.green { background: rgba(34,197,94,0.15); color: var(--green); }
+  .panel-badge.purple { background: rgba(124,58,237,0.15); color: #a78bfa; }
+
+  .panel-body { flex: 1; overflow-y: auto; padding: 12px 16px; }
+  .panel-body::-webkit-scrollbar { width: 4px; }
+  .panel-body::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+  /* LEAD FEED */
+  .lead-item {
+    display: flex; align-items: flex-start; gap: 12px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border);
+    animation: slideIn 0.4s ease;
+  }
+
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .lead-item:last-child { border-bottom: none; }
+
+  .lead-avatar {
+    width: 34px; height: 34px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 700; flex-shrink: 0;
+    color: #fff;
+  }
+
+  .lead-info { flex: 1; }
+  .lead-name { font-size: 13px; font-weight: 600; }
+  .lead-detail { font-size: 11px; color: var(--muted); margin-top: 2px; }
+  .lead-meta { display: flex; gap: 6px; margin-top: 6px; flex-wrap: wrap; }
+
+  .tag {
+    font-size: 10px; font-weight: 600; padding: 2px 7px;
+    border-radius: 4px; text-transform: uppercase; letter-spacing: 0.4px;
+  }
+
+  .tag.buyer { background: rgba(79,142,247,0.15); color: var(--accent); }
+  .tag.seller { background: rgba(245,158,11,0.15); color: var(--yellow); }
+  .tag.renter { background: rgba(124,58,237,0.15); color: #a78bfa; }
+  .tag.hot { background: rgba(239,68,68,0.15); color: var(--red); }
+  .tag.warm { background: rgba(245,158,11,0.1); color: var(--yellow); }
+  .tag.new { background: rgba(34,197,94,0.12); color: var(--green); }
+
+  .lead-assigned {
+    font-size: 11px; color: var(--muted); text-align: right; flex-shrink: 0;
+    line-height: 1.6;
+  }
+
+  .lead-assigned span { display: block; color: var(--accent); font-weight: 600; }
+
+  /* FOLLOW-UP TRACKER */
+  .followup-item {
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .followup-item:last-child { border-bottom: none; }
+
+  .followup-top {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 8px;
+  }
+
+  .followup-name { font-size: 13px; font-weight: 600; }
+  .followup-step { font-size: 11px; color: var(--muted); }
+
+  .sequence-steps {
+    display: flex; gap: 4px; align-items: center;
+  }
+
+  .step-dot {
+    width: 22px; height: 22px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 9px; font-weight: 700;
+  }
+
+  .step-dot.done { background: var(--green); color: #fff; }
+  .step-dot.active {
+    background: var(--accent); color: #fff;
+    box-shadow: 0 0 0 3px rgba(79,142,247,0.2);
+    animation: activePulse 2s ease-in-out infinite;
+  }
+  .step-dot.pending { background: var(--border); color: var(--muted); }
+
+  @keyframes activePulse {
+    0%, 100% { box-shadow: 0 0 0 3px rgba(79,142,247,0.2); }
+    50% { box-shadow: 0 0 0 6px rgba(79,142,247,0.08); }
+  }
+
+  .step-line { width: 14px; height: 2px; background: var(--border); border-radius: 1px; }
+  .step-line.done { background: var(--green); }
+
+  .followup-next {
+    margin-top: 6px; font-size: 11px; color: var(--muted);
+    display: flex; align-items: center; gap: 4px;
+  }
+
+  .followup-next .next-time { color: var(--yellow); font-weight: 600; }
+
+  /* AGENTS PANEL */
+  .agent-item {
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .agent-item:last-child { border-bottom: none; }
+
+  .agent-top {
+    display: flex; align-items: center; gap: 10px; margin-bottom: 8px;
+  }
+
+  .agent-avatar {
+    width: 32px; height: 32px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 700; color: #fff; flex-shrink: 0;
+  }
+
+  .agent-name { font-size: 13px; font-weight: 600; }
+  .agent-status { font-size: 10px; color: var(--muted); margin-top: 1px; }
+
+  .agent-status.online { color: var(--green); }
+
+  .agent-stats {
+    display: flex; gap: 14px;
+  }
+
+  .agent-stat { text-align: center; }
+  .agent-stat-val { font-size: 16px; font-weight: 700; }
+  .agent-stat-lbl { font-size: 9px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.4px; margin-top: 1px; }
+
+  .agent-bar-wrap { margin-top: 8px; }
+  .agent-bar-label { display: flex; justify-content: space-between; font-size: 10px; color: var(--muted); margin-bottom: 4px; }
+  .agent-bar { height: 4px; background: var(--border); border-radius: 2px; overflow: hidden; }
+  .agent-bar-fill { height: 100%; border-radius: 2px; transition: width 1s ease; }
+
+  /* NOTIFICATIONS */
+  .notif-item {
+    display: flex; align-items: flex-start; gap: 10px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+    animation: slideIn 0.3s ease;
+  }
+
+  .notif-item:last-child { border-bottom: none; }
+
+  .notif-icon {
+    width: 28px; height: 28px; border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; flex-shrink: 0;
+  }
+
+  .notif-icon.green { background: rgba(34,197,94,0.12); }
+  .notif-icon.blue { background: rgba(79,142,247,0.12); }
+  .notif-icon.yellow { background: rgba(245,158,11,0.12); }
+  .notif-icon.purple { background: rgba(124,58,237,0.12); }
+
+  .notif-text { font-size: 12px; line-height: 1.5; }
+  .notif-text strong { font-weight: 600; color: var(--text); }
+  .notif-time { font-size: 10px; color: var(--muted); margin-top: 2px; }
+
+  /* GRID LAYOUT */
+  .col-span-2 { grid-column: span 2; }
+
+  /* Responsive tweak */
+  @media (max-width: 900px) {
+    .main { grid-template-columns: 1fr; height: auto; }
+    .stats-bar { grid-template-columns: repeat(2, 1fr); }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="logo-group">
+    <div class="logo-icon">M</div>
+    <div class="logo-text">
+      <h1>Meridian Group</h1>
+      <p>AI Automation Dashboard</p>
+    </div>
+  </div>
+  <div class="header-right">
+    <div class="live-badge"><div class="live-dot"></div> Live</div>
+    <div class="header-time" id="clock"></div>
+  </div>
+</header>
+
+<!-- STATS BAR -->
+<div class="stats-bar">
+  <div class="stat-card">
+    <div class="stat-icon blue">📥</div>
+    <div>
+      <div class="stat-label">Leads This Week</div>
+      <div class="stat-value blue" id="stat-leads">38</div>
+      <div class="stat-delta">+12 vs last week</div>
+    </div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-icon green">⚡</div>
+    <div>
+      <div class="stat-label">Follow-Up Rate</div>
+      <div class="stat-value green">97%</div>
+      <div class="stat-delta">Up from 61% manually</div>
+    </div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-icon yellow">⏱</div>
+    <div>
+      <div class="stat-label">Avg Response Time</div>
+      <div class="stat-value yellow">4 min</div>
+      <div class="stat-delta">Was 6.5 hours</div>
+    </div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-icon purple">🏠</div>
+    <div>
+      <div class="stat-label">Deals in Pipeline</div>
+      <div class="stat-value purple" id="stat-deals">14</div>
+      <div class="stat-delta">3 closing this month</div>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN GRID -->
+<div class="main">
+
+  <!-- LEAD FEED -->
+  <div class="panel">
+    <div class="panel-header">
+      <div class="panel-title">Live Lead Feed</div>
+      <div class="panel-badge blue" id="lead-count">38 total</div>
+    </div>
+    <div class="panel-body" id="lead-feed"></div>
+  </div>
+
+  <!-- FOLLOW-UP TRACKER -->
+  <div class="panel">
+    <div class="panel-header">
+      <div class="panel-title">Follow-Up Sequences</div>
+      <div class="panel-badge green">Auto-running</div>
+    </div>
+    <div class="panel-body" id="followup-feed"></div>
+  </div>
+
+  <!-- NOTIFICATIONS -->
+  <div class="panel" style="grid-row: span 2;">
+    <div class="panel-header">
+      <div class="panel-title">Activity Feed</div>
+      <div class="panel-badge purple">Real-time</div>
+    </div>
+    <div class="panel-body" id="notif-feed"></div>
+  </div>
+
+  <!-- AGENTS PANEL -->
+  <div class="panel col-span-2">
+    <div class="panel-header">
+      <div class="panel-title">Agent Performance</div>
+      <div class="panel-badge blue">5 agents active</div>
+    </div>
+    <div class="panel-body" id="agent-feed" style="display:flex;gap:1px;flex-direction:row;flex-wrap:wrap;"></div>
+  </div>
+
+</div>
+
+<script>
+// ---- CLOCK ----
+function updateClock() {
+  const now = new Date();
+  document.getElementById('clock').textContent = now.toLocaleTimeString('en-US', {
+    hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true
+  });
+}
+setInterval(updateClock, 1000);
+updateClock();
+
+// ---- DATA ----
+const AGENTS = [
+  { name: 'Marcus Rivera', initials: 'MR', color: '#4f8ef7', leads: 11, closed: 2, responseRate: 95, status: 'online' },
+  { name: 'Priya Nair',    initials: 'PN', color: '#7c3aed', leads: 9,  closed: 1, responseRate: 98, status: 'online' },
+  { name: 'Jordan Lee',    initials: 'JL', color: '#22c55e', leads: 7,  closed: 3, responseRate: 91, status: 'online' },
+  { name: 'Sofia Reyes',   initials: 'SR', color: '#f59e0b', leads: 6,  closed: 1, responseRate: 88, status: 'away' },
+  { name: 'Devon Clarke',  initials: 'DC', color: '#ec4899', leads: 5,  closed: 0, responseRate: 82, status: 'online' },
+];
+
+const LEAD_POOL = [
+  { name: 'Jennifer Kim',    detail: '3BR Buyer · Lincoln Park · $650K budget', type: 'buyer',  temp: 'hot',  agent: 'Marcus Rivera' },
+  { name: 'David Okonkwo',   detail: 'Seller · Wicker Park · 4BR listed at $820K', type: 'seller', temp: 'warm', agent: 'Priya Nair' },
+  { name: 'Ashley Thompson', detail: '2BR Renter · Gold Coast · $2,400/mo', type: 'renter', temp: 'new',  agent: 'Jordan Lee' },
+  { name: 'Mike Nguyen',     detail: 'Buyer · Logan Square · $480K budget', type: 'buyer',  temp: 'warm', agent: 'Sofia Reyes' },
+  { name: 'Rachel Torres',   detail: 'Seller · Bucktown · condo $395K', type: 'seller', temp: 'hot',  agent: 'Devon Clarke' },
+  { name: 'Chris Patel',     detail: '1BR Renter · River North · $2,200/mo', type: 'renter', temp: 'new',  agent: 'Marcus Rivera' },
+  { name: 'Amanda Foster',   detail: 'Buyer · Evanston · $590K budget', type: 'buyer',  temp: 'hot',  agent: 'Priya Nair' },
+  { name: 'Tyler Brooks',    detail: 'Seller · Hyde Park · 3BR $540K', type: 'seller', temp: 'warm', agent: 'Jordan Lee' },
+  { name: 'Nicole Sanders',  detail: 'Buyer · Roscoe Village · $720K budget', type: 'buyer',  temp: 'new',  agent: 'Sofia Reyes' },
+  { name: 'James Wu',        detail: '2BR Renter · Lakeview · $2,800/mo', type: 'renter', temp: 'warm', agent: 'Devon Clarke' },
+  { name: 'Samantha Pierce', detail: 'Buyer · Oak Park · $435K budget', type: 'buyer',  temp: 'hot',  agent: 'Marcus Rivera' },
+  { name: 'Carlos Mendez',   detail: 'Seller · Pilsen · 2BR $310K', type: 'seller', temp: 'new',  agent: 'Priya Nair' },
+];
+
+const FOLLOW_UPS = [
+  { name: 'Jennifer Kim',    step: 3, totalSteps: 5, nextAction: 'Call', nextTime: '2:00 PM' },
+  { name: 'David Okonkwo',   step: 2, totalSteps: 5, nextAction: 'Email: listing checklist', nextTime: '4:30 PM' },
+  { name: 'Ashley Thompson', step: 1, totalSteps: 4, nextAction: 'Text: availability', nextTime: 'in 18 min' },
+  { name: 'Mike Nguyen',     step: 4, totalSteps: 5, nextAction: 'Showing scheduled', nextTime: 'Tomorrow 10am' },
+  { name: 'Rachel Torres',   step: 2, totalSteps: 5, nextAction: 'Email: comp analysis', nextTime: '6:00 PM' },
+  { name: 'Chris Patel',     step: 1, totalSteps: 4, nextAction: 'Text: intro + listings', nextTime: 'in 6 min' },
+  { name: 'Amanda Foster',   step: 3, totalSteps: 5, nextAction: 'Call: pre-approval check', nextTime: '3:15 PM' },
+  { name: 'Tyler Brooks',    step: 5, totalSteps: 5, nextAction: 'Contract review', nextTime: 'Tomorrow 2pm' },
+];
+
+const NOTIF_TEMPLATES = [
+  { icon: '📥', type: 'green', msg: (d) => `<strong>New lead</strong> from Zillow — <strong>${d.name}</strong> assigned to <strong>${d.agent}</strong>` },
+  { icon: '✉️', type: 'blue',  msg: (d) => `Follow-up email sent to <strong>${d.name}</strong> — Step ${d.step} of ${d.totalSteps}` },
+  { icon: '📱', type: 'yellow',msg: (d) => `Text delivered to <strong>${d.name}</strong> · Response rate 97%` },
+  { icon: '📞', type: 'blue',  msg: (d) => `<strong>${d.agent}</strong> completed call with <strong>${d.name}</strong> · Marked interested` },
+  { icon: '🏠', type: 'purple',msg: (d) => `Showing confirmed — <strong>${d.name}</strong> with <strong>${d.agent}</strong>` },
+  { icon: '⚡', type: 'green', msg: (d) => `<strong>${d.name}</strong> moved to <em>Hot</em> — follow-up sequence accelerated` },
+  { icon: '📋', type: 'yellow',msg: (d) => `Listing agreement sent to <strong>${d.name}</strong> for e-signature` },
+  { icon: '🎉', type: 'green', msg: (d) => `Offer accepted! <strong>${d.agent}</strong> closes deal with <strong>${d.name}</strong>` },
+];
+
+// ---- AVATAR COLORS ----
+const AVATAR_COLORS = ['#4f8ef7','#7c3aed','#22c55e','#f59e0b','#ec4899','#14b8a6','#f43f5e'];
+function avatarColor(name) {
+  let h = 0;
+  for (let c of name) h = (h * 31 + c.charCodeAt(0)) & 0xffff;
+  return AVATAR_COLORS[h % AVATAR_COLORS.length];
+}
+function initials(name) {
+  return name.split(' ').map(w => w[0]).join('').slice(0,2).toUpperCase();
+}
+
+// ---- RENDER LEADS ----
+function renderLeads() {
+  const feed = document.getElementById('lead-feed');
+  feed.innerHTML = '';
+  const displayed = [...LEAD_POOL].slice(0, 10);
+  displayed.forEach((lead, i) => {
+    const agentColor = (AGENTS.find(a => a.name === lead.agent) || {}).color || '#4f8ef7';
+    const el = document.createElement('div');
+    el.className = 'lead-item';
+    el.style.animationDelay = (i * 0.05) + 's';
+    el.innerHTML = `
+      <div class="lead-avatar" style="background:${avatarColor(lead.name)}">${initials(lead.name)}</div>
+      <div class="lead-info">
+        <div class="lead-name">${lead.name}</div>
+        <div class="lead-detail">${lead.detail}</div>
+        <div class="lead-meta">
+          <span class="tag ${lead.type}">${lead.type}</span>
+          <span class="tag ${lead.temp}">${lead.temp === 'hot' ? '🔥 Hot' : lead.temp === 'warm' ? 'Warm' : 'New'}</span>
+        </div>
+      </div>
+      <div class="lead-assigned">
+        Auto-routed<br><span style="color:${agentColor}">${lead.agent.split(' ')[0]}</span>
+      </div>
+    `;
+    feed.appendChild(el);
+  });
+}
+
+// ---- RENDER FOLLOW-UPS ----
+function renderFollowUps() {
+  const feed = document.getElementById('followup-feed');
+  feed.innerHTML = '';
+  FOLLOW_UPS.forEach(fu => {
+    const el = document.createElement('div');
+    el.className = 'followup-item';
+    let steps = '';
+    for (let i = 1; i <= fu.totalSteps; i++) {
+      if (i > 1) {
+        steps += `<div class="step-line ${i <= fu.step ? 'done' : ''}"></div>`;
+      }
+      const cls = i < fu.step ? 'done' : i === fu.step ? 'active' : 'pending';
+      const icon = cls === 'done' ? '✓' : i;
+      steps += `<div class="step-dot ${cls}">${icon}</div>`;
+    }
+    el.innerHTML = `
+      <div class="followup-top">
+        <div class="followup-name">${fu.name}</div>
+        <div class="followup-step">Step ${fu.step}/${fu.totalSteps}</div>
+      </div>
+      <div class="sequence-steps">${steps}</div>
+      <div class="followup-next">
+        Next: ${fu.nextAction} &nbsp;·&nbsp; <span class="next-time">${fu.nextTime}</span>
+      </div>
+    `;
+    feed.appendChild(el);
+  });
+}
+
+// ---- RENDER AGENTS ----
+function renderAgents() {
+  const feed = document.getElementById('agent-feed');
+  feed.innerHTML = '';
+  AGENTS.forEach(agent => {
+    const el = document.createElement('div');
+    el.style.cssText = 'flex:1;min-width:160px;padding:14px 16px;border-right:1px solid var(--border);';
+    el.innerHTML = `
+      <div class="agent-top">
+        <div class="agent-avatar" style="background:${agent.color}">${agent.initials}</div>
+        <div>
+          <div class="agent-name">${agent.name.split(' ')[0]} ${agent.name.split(' ')[1]}</div>
+          <div class="agent-status ${agent.status}">${agent.status === 'online' ? '● Online' : '○ Away'}</div>
+        </div>
+      </div>
+      <div class="agent-stats">
+        <div class="agent-stat">
+          <div class="agent-stat-val" style="color:${agent.color}">${agent.leads}</div>
+          <div class="agent-stat-lbl">Leads</div>
+        </div>
+        <div class="agent-stat">
+          <div class="agent-stat-val" style="color:var(--green)">${agent.closed}</div>
+          <div class="agent-stat-lbl">Closed</div>
+        </div>
+        <div class="agent-stat">
+          <div class="agent-stat-val" style="color:var(--yellow)">${agent.responseRate}%</div>
+          <div class="agent-stat-lbl">Response</div>
+        </div>
+      </div>
+      <div class="agent-bar-wrap">
+        <div class="agent-bar-label"><span>Sequence completion</span><span>${agent.responseRate}%</span></div>
+        <div class="agent-bar">
+          <div class="agent-bar-fill" style="width:${agent.responseRate}%;background:${agent.color};"></div>
+        </div>
+      </div>
+    `;
+    feed.appendChild(el);
+  });
+}
+
+// ---- NOTIFICATIONS ----
+let notifCount = 0;
+const notifFeed = document.getElementById('notif-feed');
+const MAX_NOTIFS = 30;
+let leadCountDisplay = 38;
+
+function timeAgo(n) {
+  if (n === 0) return 'just now';
+  if (n < 60) return `${n}s ago`;
+  return `${Math.floor(n/60)}m ago`;
+}
+
+let notifTimestamps = [];
+
+function addNotif() {
+  const template = NOTIF_TEMPLATES[Math.floor(Math.random() * NOTIF_TEMPLATES.length)];
+  const lead = LEAD_POOL[Math.floor(Math.random() * LEAD_POOL.length)];
+  const agent = AGENTS[Math.floor(Math.random() * AGENTS.length)];
+  const data = { ...lead, agent: agent.name, step: Math.ceil(Math.random()*4), totalSteps: 5 };
+
+  const el = document.createElement('div');
+  el.className = 'notif-item';
+
+  const now = Date.now();
+  notifTimestamps.unshift(now);
+
+  el.innerHTML = `
+    <div class="notif-icon ${template.type}">${template.icon}</div>
+    <div>
+      <div class="notif-text">${template.msg(data)}</div>
+      <div class="notif-time" data-ts="${now}">just now</div>
+    </div>
+  `;
+
+  notifFeed.insertBefore(el, notifFeed.firstChild);
+  notifCount++;
+
+  // Bump lead count occasionally
+  if (Math.random() > 0.65) {
+    leadCountDisplay++;
+    document.getElementById('stat-leads').textContent = leadCountDisplay;
+    document.getElementById('lead-count').textContent = leadCountDisplay + ' total';
+    // Add new lead to top of feed
+    const newLead = LEAD_POOL[Math.floor(Math.random() * LEAD_POOL.length)];
+    LEAD_POOL.unshift({...newLead, name: randomName()});
+    renderLeads();
+  }
+
+  // Trim old notifs
+  const items = notifFeed.querySelectorAll('.notif-item');
+  if (items.length > MAX_NOTIFS) {
+    items[items.length - 1].remove();
+  }
+}
+
+// Update timestamps
+setInterval(() => {
+  document.querySelectorAll('.notif-time[data-ts]').forEach(el => {
+    const ts = parseInt(el.dataset.ts);
+    const diff = Math.floor((Date.now() - ts) / 1000);
+    el.textContent = timeAgo(diff);
+  });
+}, 5000);
+
+// Random name generator for incoming leads
+const FIRST = ['Ryan','Hannah','Marco','Lisa','DeShawn','Emily','Raj','Kate','Luis','Megan','Evan','Zoe','Omar','Nina'];
+const LAST  = ['Johnson','Wang','Garcia','Smith','Williams','Brown','Miller','Davis','Anderson','Wilson'];
+function randomName() {
+  return FIRST[Math.floor(Math.random()*FIRST.length)] + ' ' + LAST[Math.floor(Math.random()*LAST.length)];
+}
+
+// ---- INIT ----
+renderLeads();
+renderFollowUps();
+renderAgents();
+
+// Seed a few initial notifs
+const initialNotifs = [
+  { icon: '📥', type: 'green', text: '<strong>New lead</strong> from Realtor.com — <strong>Jennifer Kim</strong> assigned to <strong>Marcus Rivera</strong>', ts: Date.now() - 90000 },
+  { icon: '✉️', type: 'blue',  text: 'Follow-up email sent to <strong>David Okonkwo</strong> — Step 2 of 5', ts: Date.now() - 240000 },
+  { icon: '📱', type: 'yellow',text: 'Text delivered to <strong>Ashley Thompson</strong> · Opened in 3 min', ts: Date.now() - 480000 },
+  { icon: '🏠', type: 'purple',text: 'Showing confirmed — <strong>Mike Nguyen</strong> with <strong>Sofia Reyes</strong> · Tomorrow 10am', ts: Date.now() - 720000 },
+  { icon: '⚡', type: 'green', text: '<strong>Rachel Torres</strong> moved to <em>Hot</em> — follow-up sequence accelerated', ts: Date.now() - 1200000 },
+  { icon: '📞', type: 'blue',  text: '<strong>Jordan Lee</strong> completed call with <strong>Tyler Brooks</strong> · Ready to list', ts: Date.now() - 1800000 },
+];
+
+initialNotifs.forEach(n => {
+  const el = document.createElement('div');
+  el.className = 'notif-item';
+  el.style.animation = 'none';
+  const diff = Math.floor((Date.now() - n.ts) / 1000);
+  el.innerHTML = `
+    <div class="notif-icon ${n.type}">${n.icon}</div>
+    <div>
+      <div class="notif-text">${n.text}</div>
+      <div class="notif-time" data-ts="${n.ts}">${timeAgo(diff)}</div>
+    </div>
+  `;
+  notifFeed.appendChild(el);
+});
+
+// Fire new notifications on a varied interval
+function scheduleNextNotif() {
+  const delay = 4000 + Math.random() * 7000;
+  setTimeout(() => {
+    addNotif();
+    scheduleNextNotif();
+  }, delay);
+}
+scheduleNextNotif();
+
+// Periodically animate agent bar updates
+setInterval(() => {
+  const idx = Math.floor(Math.random() * AGENTS.length);
+  const delta = Math.floor(Math.random() * 3) - 1;
+  AGENTS[idx].leads = Math.max(0, AGENTS[idx].leads + Math.max(0, delta));
+  renderAgents();
+}, 12000);
+
+</script>
+</body>
+</html>

@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Automation Dashboard</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <div class="dashboard">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <h1>Automation Dashboard</h1>
+                <div class="header-actions">
+                    <button id="refresh-btn" class="btn btn-primary">Refresh</button>
+                    <span id="last-updated" class="last-updated"></span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Stats Section -->
+            <section class="stats-section">
+                <div class="stats-grid">
+                    <div class="stat-card" id="stat-workflows">
+                        <div class="stat-label">Total Workflows</div>
+                        <div class="stat-value">-</div>
+                    </div>
+                    <div class="stat-card" id="stat-active">
+                        <div class="stat-label">Active Workflows</div>
+                        <div class="stat-value">-</div>
+                    </div>
+                    <div class="stat-card" id="stat-executions">
+                        <div class="stat-label">Total Executions</div>
+                        <div class="stat-value">-</div>
+                    </div>
+                    <div class="stat-card" id="stat-success">
+                        <div class="stat-label">Success Rate</div>
+                        <div class="stat-value">-</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Tabs -->
+            <section class="tabs-section">
+                <div class="tabs">
+                    <button class="tab-btn active" data-tab="workflows">Workflows</button>
+                    <button class="tab-btn" data-tab="executions">Executions</button>
+                    <button class="tab-btn" data-tab="details">Details</button>
+                </div>
+
+                <!-- Workflows Tab -->
+                <div id="workflows-tab" class="tab-content active">
+                    <div class="section-header">
+                        <h2>All Workflows</h2>
+                        <button class="btn btn-sm" id="new-workflow-btn">+ New Workflow</button>
+                    </div>
+                    <div id="workflows-error" class="error-message" style="display:none;"></div>
+                    <div id="workflows-loading" class="loading">Loading workflows...</div>
+                    <table class="data-table" id="workflows-table" style="display:none;">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Type</th>
+                                <th>Status</th>
+                                <th>Created</th>
+                                <th>Updated</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="workflows-tbody"></tbody>
+                    </table>
+                </div>
+
+                <!-- Executions Tab -->
+                <div id="executions-tab" class="tab-content">
+                    <div class="section-header">
+                        <h2>Execution History</h2>
+                        <div class="filters">
+                            <select id="status-filter" class="filter-select">
+                                <option value="">All Statuses</option>
+                                <option value="completed">Completed</option>
+                                <option value="pending">Pending</option>
+                                <option value="failed">Failed</option>
+                                <option value="running">Running</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div id="executions-error" class="error-message" style="display:none;"></div>
+                    <div id="executions-loading" class="loading">Loading executions...</div>
+                    <table class="data-table" id="executions-table" style="display:none;">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Workflow</th>
+                                <th>Status</th>
+                                <th>Started</th>
+                                <th>Duration</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="executions-tbody"></tbody>
+                    </table>
+                </div>
+
+                <!-- Details Tab -->
+                <div id="details-tab" class="tab-content">
+                    <div class="section-header">
+                        <h2>Execution Details</h2>
+                    </div>
+                    <div id="details-content">
+                        <p class="placeholder-text">Select an execution to view details</p>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Modal for execution details -->
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modal-title">Execution Details</h2>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body" id="modal-body">
+                <div class="loading">Loading...</div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="modal-close-btn">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="/static/js/api.js"></script>
+    <script src="/static/js/dashboard.js"></script>
+</body>
+</html>

@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Real Estate Receptionist</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            padding: 40px;
+            max-width: 600px;
+            text-align: center;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 32px;
+        }
+
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 16px;
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .feature {
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            text-align: left;
+        }
+
+        .feature-icon {
+            font-size: 24px;
+            margin-bottom: 8px;
+        }
+
+        .feature-title {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 4px;
+        }
+
+        .feature-desc {
+            font-size: 13px;
+            color: #666;
+        }
+
+        .cta {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 30px;
+            border-radius: 8px;
+            border: none;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            margin: 20px 0;
+            transition: transform 0.2s;
+        }
+
+        .cta:hover {
+            transform: translateY(-2px);
+        }
+
+        .info {
+            background: #f0f4ff;
+            border-left: 4px solid #667eea;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+            text-align: left;
+            font-size: 14px;
+            color: #333;
+        }
+
+        .footer {
+            color: #999;
+            font-size: 12px;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+
+            .features {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎤 Real Estate Receptionist</h1>
+        <p class="subtitle">AI-powered voice assistant for property inquiries</p>
+
+        <div class="features">
+            <div class="feature">
+                <div class="feature-icon">📅</div>
+                <div class="feature-title">Schedule Showings</div>
+                <div class="feature-desc">Book property viewings instantly</div>
+            </div>
+
+            <div class="feature">
+                <div class="feature-icon">🎯</div>
+                <div class="feature-title">Qualify Leads</div>
+                <div class="feature-desc">Score and capture buyer info</div>
+            </div>
+
+            <div class="feature">
+                <div class="feature-icon">💬</div>
+                <div class="feature-title">Take Messages</div>
+                <div class="feature-desc">Capture important inquiries</div>
+            </div>
+
+            <div class="feature">
+                <div class="feature-icon">🔊</div>
+                <div class="feature-title">Voice AI</div>
+                <div class="feature-desc">Natural conversations</div>
+            </div>
+        </div>
+
+        <div class="info">
+            <strong>How to use:</strong> Click the button in the bottom right corner, then click the microphone icon to speak. Ask about properties, schedule showings, or leave messages.
+        </div>
+
+        <p class="footer">
+            Powered by Claude AI + Vapi<br>
+            Built for Eitan Adar's automation agency
+        </p>
+    </div>
+
+    <!-- Vapi Web Widget -->
+    <script src="https://cdn.vapi.ai/web.js"></script>
+    <script>
+        // IMPORTANT: Replace with your actual Vapi Assistant ID
+        // Get from: Vapi Dashboard → Your Assistant → Settings → Copy Assistant ID
+        const ASSISTANT_ID = "YOUR_ASSISTANT_ID_HERE";
+
+        if (ASSISTANT_ID === "YOUR_ASSISTANT_ID_HERE") {
+            console.warn("⚠️  Update ASSISTANT_ID in index.html with your Vapi Assistant ID");
+        }
+
+        Vapi.setWebCallButton({
+            assistantId: ASSISTANT_ID,
+            buttonPosition: "bottom-right",
+            buttonColor: "#667eea",
+            buttonBorderRadius: "50%"
+        });
+    </script>
+</body>
+</html>

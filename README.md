@@ -1,4 +1,4 @@
-# Woodworks OS
+# Adar Realty Studio
 
 A Claude Code starter for builders. Clone, open in VS Code, run `/onboard`, and you have a personalized executive assistant with a persistent second brain.
 

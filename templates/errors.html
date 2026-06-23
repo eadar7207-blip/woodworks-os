@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+
+{% block title %}Error Recovery - Adar Realty Studio{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <!-- Header -->
+    <div class="row mb-4">
+        <div class="col">
+            <h1 class="display-5">Error Recovery</h1>
+            <p class="text-muted">Failed executions and recovery options</p>
+        </div>
+        <div class="col-auto">
+            <button class="btn btn-primary" onclick="location.reload()">
+                <i class="fas fa-sync"></i> Refresh
+            </button>
+        </div>
+    </div>
+
+    <!-- Failed Executions -->
+    {% if failed_executions %}
+        <div class="row g-4">
+            {% for execution in failed_executions %}
+                <div class="col-lg-6">
+                    <div class="card border-danger">
+                        <div class="card-header bg-danger text-white">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <h6 class="mb-1">{{ execution.name }}</h6>
+                                    <small class="text-light">
+                                        <code>{{ execution.id[:12] }}...</code>
+                                    </small>
+                                </div>
+                                <span class="badge bg-light text-danger">Failed</span>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <dl class="row small mb-3">
+                                <dt class="col-sm-4">Workflow:</dt>
+                                <dd class="col-sm-8">{{ execution.name }}</dd>
+
+                                <dt class="col-sm-4">Error Step:</dt>
+                                <dd class="col-sm-8">{{ execution.failed_step or 'Unknown' }}</dd>
+
+                                <dt class="col-sm-4">When:</dt>
+                                <dd class="col-sm-8">{{ execution.completed_at[:10] }} {{ execution.completed_at[11:16] }}</dd>
+                            </dl>
+
+                            {% if execution.error_message or execution.error_detail %}
+                                <div class="alert alert-danger alert-sm mb-3" role="alert">
+                                    <strong>Error Message:</strong>
+                                    <pre class="mb-0 mt-2"><small>{{ execution.error_message or execution.error_detail }}</small></pre>
+                                </div>
+                            {% endif %}
+
+                            <div class="alert alert-info alert-sm mb-3">
+                                <strong>Recovery Options:</strong>
+                                <ul class="mb-0 mt-2 ps-3">
+                                    <li>Retry with exponential backoff</li>
+                                    <li>Skip failed step and continue</li>
+                                    <li>Reduce scope and re-run</li>
+                                    <li>Manual intervention</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="card-footer bg-light">
+                            <button class="btn btn-sm btn-warning" onclick="retryExecution('{{ execution.id }}')">
+                                <i class="fas fa-redo"></i> Retry
+                            </button>
+                            <a href="/execution/{{ execution.id }}" class="btn btn-sm btn-outline-primary">
+                                <i class="fas fa-eye"></i> View Details
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="alert alert-success">
+            <i class="fas fa-check-circle"></i>
+            Great news! No failed executions to recover. All workflows are running smoothly.
+        </div>
+    {% endif %}
+</div>
+
+<script>
+function retryExecution(executionId) {
+    if (confirm('Retry this execution?')) {
+        fetch('/api/executions/' + executionId + '/retry', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'}
+        })
+        .then(r => r.json())
+        .then(data => {
+            alert('Retry initiated for execution: ' + data.execution_id);
+            location.reload();
+        })
+        .catch(e => alert('Error: ' + e.message));
+    }
+}
+</script>
+{% endblock %}

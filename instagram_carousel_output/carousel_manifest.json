@@ -1,0 +1,76 @@
+{
+  "slides": [
+    {
+      "slide": 1,
+      "image": "slide_01_hook.png",
+      "title": "Why agents lose leads before follow-up",
+      "body": "Most leads go cold when the first reply is delayed, generic, or lost in the system.",
+      "visualNotes": "Hook slide with branded headline and simple layout."
+    },
+    {
+      "slide": 2,
+      "image": "slide_02_slow_followup.png",
+      "title": "Slow follow-up kills interest",
+      "body": "Leads expect a response fast. Delayed replies let competitors step in.",
+      "visualNotes": "Show a clock or timing visual."
+    },
+    {
+      "slide": 3,
+      "image": "slide_03_generic_messages.png",
+      "title": "Generic replies feel robotic",
+      "body": "Personalization is the difference between a lead and a lost contact.",
+      "visualNotes": "Compare generic vs tailored messaging visually."
+    },
+    {
+      "slide": 4,
+      "image": "slide_04_no_tracking.png",
+      "title": "Leads disappear without tracking",
+      "body": "When follow-ups are untagged, nobody owns the lead and it falls through cracks.",
+      "visualNotes": "Show a CRM pipeline or lead list gone missing."
+    },
+    {
+      "slide": 5,
+      "image": "slide_05_one_channel.png",
+      "title": "One channel is not enough",
+      "body": "Relying on a single contact method means one missed message can lose the deal.",
+      "visualNotes": "Use phone + email + text icon cluster."
+    },
+    {
+      "slide": 6,
+      "image": "slide_06_quick_fixes.png",
+      "title": "Fix it with four simple habits",
+      "body": "Fast response, tailored follow-up, lead tagging, and multi-channel reach.",
+      "visualNotes": "Checklist style layout."
+    },
+    {
+      "slide": 7,
+      "image": "slide_07_proof.png",
+      "title": "Faster follow-up wins more deals",
+      "body": "Agents who improve response time see better lead conversion and stronger pipeline control.",
+      "visualNotes": "Stat card with percentage improvement."
+    },
+    {
+      "slide": 8,
+      "image": "slide_08_brand_awareness.png",
+      "title": "Build trust before the first meeting",
+      "body": "Consistent, confident lead handling makes you the obvious choice.",
+      "visualNotes": "Strong closing statement without CTA."
+    }
+  ],
+  "caption": "Agents are losing leads in plain sight. Swipe through the 8 common breakdowns and learn the quick fixes that keep more conversations alive.",
+  "hashtags": [
+    "#RealEstateAgents",
+    "#LeadFollowUp",
+    "#LeadLoss",
+    "#AgentGrowth",
+    "#CRM",
+    "#SalesOps",
+    "#MarketingForAgents",
+    "#LeadManagement",
+    "#RealEstateMarketing",
+    "#AgentTips"
+  ],
+  "style": "clean",
+  "accent_color": "#0A74FF",
+  "note": "No CTA included"
+}

@@ -1,0 +1,1795 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>McDonald's /// 2045 — The Future Tastes Good</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ─── Reset ─────────────────────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    /* ─── Design Tokens ──────────────────────────────────────────────────── */
+    :root {
+      --bg:           #050507;
+      --gold:         #FFD700;
+      --gold-glow:    rgba(255,215,0,0.15);
+      --gold-border:  rgba(255,215,0,0.12);
+      --gold-bright:  rgba(255,215,0,0.4);
+      --neon-red:     #FF2D1A;
+      --cyan:         #00D4FF;
+      --cyan-dim:     rgba(0,212,255,0.15);
+      --purple:       #8B5CF6;
+      --surface:      rgba(255,255,255,0.03);
+      --glass:        rgba(255,255,255,0.05);
+      --border:       rgba(255,215,0,0.12);
+      --text:         #E8EFF5;
+      --muted:        #5A6A7A;
+      --grid-line:    rgba(0,212,255,0.05);
+      --radius:       24px;
+      --transition:   0.4s cubic-bezier(0.4,0,0.2,1);
+      --font-mono:    'Courier New', 'Courier', monospace;
+    }
+
+    /* ─── Scrollbar ──────────────────────────────────────────────────────── */
+    ::-webkit-scrollbar { width: 3px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: rgba(255,215,0,0.25); border-radius: 2px; }
+
+    /* ─── Body + Grid Background ─────────────────────────────────────────── */
+    body {
+      background-color: var(--bg);
+      background-image:
+        linear-gradient(var(--grid-line) 1px, transparent 1px),
+        linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+      background-size: 60px 60px;
+      color: var(--text);
+      font-family: 'Inter', system-ui, sans-serif;
+      font-size: 16px;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    /* ─── Nebula / Floating Orbs ─────────────────────────────────────────── */
+    .orb {
+      position: fixed;
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: -1;
+      filter: blur(80px);
+      animation: drift linear infinite;
+    }
+    .orb-1 {
+      width: 500px; height: 500px;
+      background: radial-gradient(circle, rgba(255,215,0,0.08) 0%, transparent 70%);
+      top: -100px; right: -100px;
+      animation-duration: 30s;
+    }
+    .orb-2 {
+      width: 400px; height: 400px;
+      background: radial-gradient(circle, rgba(0,212,255,0.07) 0%, transparent 70%);
+      bottom: 30%; left: -80px;
+      animation-duration: 45s;
+      animation-direction: reverse;
+    }
+    .orb-3 {
+      width: 300px; height: 300px;
+      background: radial-gradient(circle, rgba(139,92,246,0.06) 0%, transparent 70%);
+      top: 60%; right: 10%;
+      animation-duration: 55s;
+    }
+    @keyframes drift {
+      0%   { transform: translate(0, 0) scale(1); }
+      33%  { transform: translate(30px, -20px) scale(1.05); }
+      66%  { transform: translate(-20px, 30px) scale(0.97); }
+      100% { transform: translate(0, 0) scale(1); }
+    }
+
+    /* ─── Nebula behind hero ─────────────────────────────────────────────── */
+    .nebula {
+      position: absolute;
+      top: -200px; right: -200px;
+      width: 900px; height: 900px;
+      background: radial-gradient(ellipse at center,
+        rgba(0,212,255,0.06) 0%,
+        rgba(139,92,246,0.04) 40%,
+        transparent 70%);
+      border-radius: 50%;
+      pointer-events: none;
+      animation: nebula-pulse 12s ease-in-out infinite;
+    }
+    @keyframes nebula-pulse {
+      0%, 100% { transform: scale(1) rotate(0deg); opacity: 0.8; }
+      50% { transform: scale(1.1) rotate(15deg); opacity: 1; }
+    }
+
+    /* ─── Utility ────────────────────────────────────────────────────────── */
+    .container { max-width: 1280px; margin: 0 auto; padding: 0 32px; }
+    .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0,0,0,0); }
+
+    /* ─── Nav ────────────────────────────────────────────────────────────── */
+    #nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: 60px;
+      z-index: 1000;
+      transition: background var(--transition), border-color var(--transition);
+      border-bottom: 1px solid transparent;
+    }
+    #nav.scrolled {
+      background: rgba(5,5,7,0.92);
+      backdrop-filter: blur(40px);
+      -webkit-backdrop-filter: blur(40px);
+      border-bottom-color: rgba(255,215,0,0.15);
+    }
+    .nav-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 60px;
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 32px;
+    }
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+    }
+    .nav-logo svg {
+      filter: drop-shadow(0 0 12px #FFD700) drop-shadow(0 0 24px rgba(255,215,0,0.5));
+      transition: filter var(--transition);
+    }
+    .nav-logo:hover svg {
+      filter: drop-shadow(0 0 20px #FFD700) drop-shadow(0 0 40px rgba(255,215,0,0.6));
+    }
+    .nav-logo-text {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      color: var(--gold);
+      text-transform: uppercase;
+      opacity: 0.7;
+    }
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 40px;
+      list-style: none;
+    }
+    .nav-links a {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--muted);
+      text-decoration: none;
+      position: relative;
+      padding-bottom: 4px;
+      transition: color var(--transition);
+    }
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0;
+      width: 0; height: 1px;
+      background: var(--gold);
+      transition: width 0.3s ease;
+    }
+    .nav-links a:hover { color: var(--gold); }
+    .nav-links a:hover::after,
+    .nav-links a.active::after { width: 100%; }
+    .nav-links a.active { color: var(--gold); }
+
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+    .nav-location {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 0.15em;
+      color: var(--cyan);
+      text-transform: uppercase;
+    }
+    .nav-location svg { animation: pin-pulse 2s ease-in-out infinite; }
+    @keyframes pin-pulse {
+      0%, 100% { filter: drop-shadow(0 0 4px var(--cyan)); }
+      50% { filter: drop-shadow(0 0 10px var(--cyan)); }
+    }
+    .nav-signin {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--text);
+      background: none;
+      border: none;
+      cursor: pointer;
+      transition: color var(--transition);
+    }
+    .nav-signin:hover { color: var(--gold); }
+    .btn-nav-order {
+      position: relative;
+      padding: 8px 20px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--gold);
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      overflow: hidden;
+    }
+    .btn-nav-order::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border: 1px solid var(--gold);
+      border-radius: 4px;
+      animation: border-trace 3s linear infinite;
+      background: linear-gradient(var(--bg), var(--bg)) padding-box,
+                  linear-gradient(90deg, var(--gold) 0%, transparent 50%, var(--gold) 100%) border-box;
+    }
+    @keyframes border-trace {
+      0% { clip-path: inset(0 100% 0 0); }
+      25% { clip-path: inset(0 0 0 0); }
+      100% { clip-path: inset(0 0 0 0); }
+    }
+    .btn-nav-order:hover { background: var(--gold-glow); }
+
+    /* Hamburger */
+    .nav-hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 4px;
+    }
+    .nav-hamburger span {
+      display: block;
+      width: 24px; height: 1px;
+      background: var(--gold);
+      transition: var(--transition);
+    }
+    .mobile-menu {
+      display: none;
+      position: fixed;
+      top: 60px; left: 0; right: 0;
+      background: rgba(5,5,7,0.98);
+      backdrop-filter: blur(40px);
+      padding: 24px 32px;
+      border-bottom: 1px solid var(--border);
+      z-index: 999;
+      flex-direction: column;
+      gap: 24px;
+    }
+    .mobile-menu.open { display: flex; }
+    .mobile-menu a {
+      font-family: var(--font-mono);
+      font-size: 13px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--text);
+      text-decoration: none;
+      padding: 8px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    /* ─── Hero ───────────────────────────────────────────────────────────── */
+    #hero {
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      overflow: hidden;
+      padding-top: 60px;
+    }
+    .hero-inner {
+      display: grid;
+      grid-template-columns: 60% 40%;
+      align-items: center;
+      gap: 40px;
+      width: 100%;
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 80px 32px;
+    }
+    .hero-overline {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.3em;
+      color: var(--cyan);
+      text-transform: uppercase;
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .hero-overline::before {
+      content: '';
+      display: inline-block;
+      width: 40px; height: 1px;
+      background: var(--cyan);
+      opacity: 0.5;
+    }
+    .hero-headline {
+      font-size: clamp(64px, 9vw, 120px);
+      font-weight: 900;
+      line-height: 0.9;
+      letter-spacing: -0.03em;
+      margin-bottom: 28px;
+    }
+    .headline-line-1 {
+      display: block;
+      background: linear-gradient(135deg, #FFD700 0%, #FFF5AA 40%, #FFD700 60%, #C8970A 100%);
+      background-size: 200% 200%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: gold-shimmer 4s ease infinite;
+    }
+    .headline-line-2 {
+      display: block;
+      color: var(--text);
+    }
+    @keyframes gold-shimmer {
+      0%   { background-position: 0% 50%; }
+      50%  { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    .hero-sub {
+      font-size: 18px;
+      color: var(--muted);
+      font-weight: 300;
+      letter-spacing: 0.02em;
+      margin-bottom: 40px;
+      max-width: 480px;
+    }
+    .hero-ctas {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 48px;
+    }
+    .btn-primary {
+      padding: 14px 32px;
+      background: var(--gold);
+      color: #050507;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      font-weight: 700;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      position: relative;
+      transition: var(--transition);
+      box-shadow: 0 0 30px rgba(255,215,0,0.3), 0 0 60px rgba(255,215,0,0.1);
+      animation: pulse-gold 3s ease-in-out infinite;
+    }
+    .btn-primary:hover {
+      box-shadow: 0 0 50px rgba(255,215,0,0.5), 0 0 100px rgba(255,215,0,0.2);
+      transform: translateY(-2px);
+    }
+    @keyframes pulse-gold {
+      0%, 100% { box-shadow: 0 0 30px rgba(255,215,0,0.3), 0 0 60px rgba(255,215,0,0.1); }
+      50% { box-shadow: 0 0 50px rgba(255,215,0,0.5), 0 0 80px rgba(255,215,0,0.2); }
+    }
+    .btn-ghost {
+      padding: 14px 32px;
+      background: transparent;
+      color: var(--cyan);
+      font-family: var(--font-mono);
+      font-size: 12px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      font-weight: 500;
+      border: 1px solid var(--cyan);
+      border-radius: 4px;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+    .btn-ghost:hover {
+      background: var(--cyan-dim);
+      box-shadow: 0 0 20px rgba(0,212,255,0.2);
+    }
+    .hero-stats {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .stat-chip {
+      padding: 6px 14px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 100px;
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .stat-divider { color: rgba(255,215,0,0.2); font-size: 10px; }
+
+    /* Hero visual */
+    .hero-visual {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .hero-halo {
+      position: absolute;
+      width: 460px; height: 460px;
+      border-radius: 50%;
+      background: radial-gradient(circle,
+        rgba(255,215,0,0.12) 0%,
+        rgba(255,215,0,0.04) 40%,
+        transparent 70%);
+      animation: halo-spin 20s linear infinite;
+    }
+    .hero-halo::before {
+      content: '';
+      position: absolute;
+      inset: 20px;
+      border-radius: 50%;
+      border: 1px solid rgba(255,215,0,0.08);
+    }
+    .hero-halo::after {
+      content: '';
+      position: absolute;
+      inset: 50px;
+      border-radius: 50%;
+      border: 1px solid rgba(255,215,0,0.05);
+    }
+    @keyframes halo-spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+    .hero-img-wrap {
+      position: relative;
+      z-index: 2;
+      animation: float 6s ease-in-out infinite;
+    }
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-18px); }
+    }
+    .hero-img-wrap img {
+      width: 420px;
+      max-width: 100%;
+      filter: drop-shadow(0 20px 60px rgba(255,215,0,0.4)) drop-shadow(0 0 120px rgba(255,215,0,0.15));
+    }
+    .hero-img-wrap::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        rgba(0,212,255,0.025) 2px,
+        rgba(0,212,255,0.025) 4px
+      );
+      pointer-events: none;
+      border-radius: 8px;
+    }
+
+    /* ─── Section scaffold ───────────────────────────────────────────────── */
+    section { padding: 120px 0; }
+    .section-overline {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--cyan);
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .section-overline::before {
+      content: '';
+      width: 32px; height: 1px;
+      background: var(--cyan);
+      opacity: 0.5;
+      flex-shrink: 0;
+    }
+    .section-title {
+      font-size: clamp(32px, 4vw, 56px);
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      line-height: 1.05;
+      margin-bottom: 60px;
+    }
+
+    /* Scroll reveal */
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .reveal { opacity: 1; transform: none; }
+    }
+
+    /* ─── Featured Menu Section ──────────────────────────────────────────── */
+    #menu-featured {
+      padding-top: 80px;
+    }
+    .terminal-title {
+      font-family: var(--font-mono);
+      font-size: clamp(18px, 2.5vw, 28px);
+      color: var(--gold);
+      margin-bottom: 60px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .terminal-cursor {
+      display: inline-block;
+      width: 10px; height: 1.1em;
+      background: var(--gold);
+      vertical-align: text-bottom;
+      animation: blink 1s step-end infinite;
+      margin-left: 2px;
+    }
+    @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+
+    .menu-cards-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+
+    /* ─── Menu Card ──────────────────────────────────────────────────────── */
+    .menu-card {
+      position: relative;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,215,0,0.1);
+      border-radius: var(--radius);
+      padding: 32px 24px 28px;
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      cursor: pointer;
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+      transform-style: preserve-3d;
+      perspective: 1000px;
+      will-change: transform;
+    }
+    .menu-card:hover {
+      border-color: rgba(255,215,0,0.4);
+      box-shadow: 0 8px 40px rgba(255,215,0,0.12), 0 0 0 1px rgba(255,215,0,0.08) inset;
+    }
+    .menu-card-img-wrap {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 200px;
+      margin-bottom: 24px;
+    }
+    .menu-card-img-wrap img {
+      width: 200px;
+      height: 200px;
+      object-fit: contain;
+      filter: drop-shadow(0 8px 24px rgba(255,215,0,0.3));
+      transition: filter 0.3s ease, transform 0.3s ease;
+    }
+    .menu-card:hover .menu-card-img-wrap img {
+      filter: drop-shadow(0 12px 36px rgba(255,215,0,0.5));
+      transform: scale(1.05);
+    }
+    .menu-card-name {
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text);
+      margin-bottom: 10px;
+    }
+    .menu-card-price {
+      font-family: var(--font-mono);
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--gold);
+      margin-bottom: 8px;
+    }
+    .menu-card-price span {
+      font-size: 12px;
+      color: rgba(255,215,0,0.4);
+      letter-spacing: 0.1em;
+    }
+    .menu-card-nutrition {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--cyan);
+      margin-bottom: 20px;
+    }
+    .menu-card-add {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-top: 16px;
+      border-top: 1px solid rgba(255,215,0,0.08);
+    }
+    .btn-add {
+      padding: 8px 20px;
+      background: transparent;
+      border: 1px solid rgba(255,215,0,0.3);
+      border-radius: 4px;
+      color: var(--gold);
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+    .btn-add:hover {
+      background: var(--gold-glow);
+      border-color: var(--gold);
+    }
+    .menu-card-badge {
+      font-family: var(--font-mono);
+      font-size: 9px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    /* ─── Menu Categories Section ────────────────────────────────────────── */
+    #menu-categories {
+      padding-top: 0;
+      padding-bottom: 120px;
+    }
+    .category-pills {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 48px;
+    }
+    .pill {
+      padding: 8px 20px;
+      border-radius: 100px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: var(--transition);
+      border: 1px solid var(--cyan);
+      color: var(--cyan);
+      background: transparent;
+    }
+    .pill:hover,
+    .pill.active {
+      background: var(--gold);
+      border-color: var(--gold);
+      color: #050507;
+    }
+
+    .all-menu-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+    }
+    .all-menu-grid .menu-card {
+      padding: 24px 18px 20px;
+      transition: border-color 0.3s ease, box-shadow 0.3s ease, opacity 0.3s ease, transform 0.3s ease;
+    }
+    .all-menu-grid .menu-card.hidden {
+      opacity: 0;
+      pointer-events: none;
+      transform: scale(0.95);
+    }
+    .all-menu-grid .menu-card-img-wrap {
+      height: 160px;
+    }
+    .all-menu-grid .menu-card-img-wrap img {
+      width: 160px; height: 160px;
+    }
+
+    /* ─── Deals Section ──────────────────────────────────────────────────── */
+    #deals {
+      background: rgba(5,5,7,0.8);
+      border-left: 3px solid var(--neon-red);
+      position: relative;
+      overflow: hidden;
+    }
+    #deals::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at left center, rgba(255,45,26,0.05) 0%, transparent 60%);
+      pointer-events: none;
+    }
+    .deals-title {
+      font-family: var(--font-mono);
+      font-size: clamp(20px, 3vw, 36px);
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 48px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .red-cursor {
+      display: inline-block;
+      width: 10px; height: 1.1em;
+      background: var(--neon-red);
+      vertical-align: text-bottom;
+      animation: blink 0.8s step-end infinite;
+      box-shadow: 0 0 8px var(--neon-red);
+    }
+    .deals-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+    .deal-card {
+      background: rgba(255,45,26,0.04);
+      border: 1px solid rgba(255,45,26,0.15);
+      border-radius: var(--radius);
+      padding: 28px;
+      position: relative;
+      transition: border-color var(--transition), box-shadow var(--transition);
+    }
+    .deal-card:hover {
+      border-color: rgba(255,45,26,0.4);
+      box-shadow: 0 8px 40px rgba(255,45,26,0.1);
+    }
+    .deal-active-badge {
+      position: absolute;
+      top: 20px; right: 20px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-family: var(--font-mono);
+      font-size: 9px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--neon-red);
+    }
+    .deal-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--neon-red);
+      box-shadow: 0 0 6px var(--neon-red);
+      animation: blink 1s ease-in-out infinite;
+    }
+    .deal-name {
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      color: var(--text);
+      margin-bottom: 10px;
+      margin-top: 8px;
+    }
+    .deal-desc {
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 20px;
+      line-height: 1.5;
+    }
+    .deal-timer {
+      font-family: var(--font-mono);
+      font-size: 22px;
+      color: var(--neon-red);
+      letter-spacing: 0.05em;
+      margin-bottom: 20px;
+      text-shadow: 0 0 12px rgba(255,45,26,0.4);
+    }
+    .deal-timer-label {
+      font-family: var(--font-mono);
+      font-size: 9px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 4px;
+    }
+    .btn-claim {
+      display: inline-block;
+      padding: 10px 24px;
+      background: transparent;
+      border: 1px solid var(--neon-red);
+      border-radius: 4px;
+      color: var(--neon-red);
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+    .btn-claim:hover {
+      background: rgba(255,45,26,0.1);
+      box-shadow: 0 0 20px rgba(255,45,26,0.2);
+    }
+
+    /* ─── Brand Moment ───────────────────────────────────────────────────── */
+    #brand-moment {
+      text-align: center;
+      background: linear-gradient(180deg, transparent 0%, rgba(255,215,0,0.02) 50%, transparent 100%);
+      position: relative;
+      overflow: hidden;
+    }
+    #brand-moment::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(var(--grid-line) 1px, transparent 1px),
+        linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+      background-size: 40px 40px;
+      opacity: 0.5;
+      pointer-events: none;
+    }
+    .big-stat {
+      font-size: clamp(60px, 12vw, 160px);
+      font-weight: 900;
+      letter-spacing: -0.04em;
+      line-height: 1;
+      background: linear-gradient(135deg, #FFD700 0%, #FFF5AA 40%, #FFD700 60%, #C8970A 100%);
+      background-size: 200% 200%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: gold-shimmer 4s ease infinite;
+      margin-bottom: 16px;
+    }
+    .big-stat-label {
+      font-family: var(--font-mono);
+      font-size: 14px;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: var(--cyan);
+      margin-bottom: 16px;
+    }
+    .big-stat-sub {
+      font-size: 15px;
+      color: var(--muted);
+      max-width: 480px;
+      margin: 0 auto;
+      font-weight: 300;
+    }
+
+    /* ─── App Section ────────────────────────────────────────────────────── */
+    #app-section {
+      overflow: hidden;
+    }
+    .app-inner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: center;
+    }
+    .app-text .section-title { margin-bottom: 24px; }
+    .app-text p {
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.7;
+      margin-bottom: 32px;
+    }
+    .app-features {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      margin-bottom: 36px;
+    }
+    .app-feature {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text);
+    }
+    .app-feature-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--cyan);
+      box-shadow: 0 0 8px var(--cyan);
+      flex-shrink: 0;
+    }
+
+    /* CSS Phone */
+    .phone-wrap {
+      display: flex;
+      justify-content: center;
+    }
+    .phone {
+      width: 260px;
+      height: 520px;
+      background: rgba(10,10,15,0.9);
+      border: 2px solid rgba(255,215,0,0.2);
+      border-radius: 40px;
+      padding: 20px 16px;
+      position: relative;
+      box-shadow:
+        0 0 60px rgba(255,215,0,0.08),
+        0 40px 80px rgba(0,0,0,0.6),
+        inset 0 1px 0 rgba(255,255,255,0.05);
+      overflow: hidden;
+    }
+    .phone::before {
+      content: '';
+      position: absolute;
+      top: 14px; left: 50%;
+      transform: translateX(-50%);
+      width: 80px; height: 4px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 2px;
+    }
+    .phone-screen {
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      padding-top: 16px;
+    }
+    .phone-header {
+      font-family: var(--font-mono);
+      font-size: 8px;
+      letter-spacing: 0.15em;
+      color: var(--muted);
+      text-align: center;
+      text-transform: uppercase;
+    }
+    .phone-order-card {
+      background: rgba(255,215,0,0.06);
+      border: 1px solid rgba(255,215,0,0.15);
+      border-radius: 12px;
+      padding: 14px;
+    }
+    .phone-order-name {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 4px;
+    }
+    .phone-order-price {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--gold);
+    }
+    .phone-ready {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 14px;
+      background: rgba(0,212,100,0.06);
+      border: 1px solid rgba(0,212,100,0.15);
+      border-radius: 10px;
+    }
+    .phone-ready-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: #00D464;
+      box-shadow: 0 0 8px #00D464;
+      animation: blink 1.5s ease-in-out infinite;
+      flex-shrink: 0;
+    }
+    .phone-ready-text {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #00D464;
+    }
+    .phone-progress-wrap {
+      padding: 0 2px;
+    }
+    .phone-progress-label {
+      font-family: var(--font-mono);
+      font-size: 8px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+    .phone-progress-bar {
+      height: 3px;
+      background: rgba(255,255,255,0.07);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+    .phone-progress-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--gold), var(--cyan));
+      border-radius: 2px;
+      animation: progress-fill 3s ease forwards 1s;
+    }
+    @keyframes progress-fill {
+      to { width: 70%; }
+    }
+    .phone-items {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .phone-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 10px;
+      background: var(--surface);
+      border-radius: 8px;
+      font-size: 11px;
+    }
+    .phone-item-name { color: var(--text); }
+    .phone-item-price {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      color: var(--gold);
+    }
+    .phone-total {
+      padding: 12px 10px;
+      background: var(--gold-glow);
+      border: 1px solid var(--gold-border);
+      border-radius: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .phone-total-label {
+      font-family: var(--font-mono);
+      font-size: 9px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .phone-total-amount {
+      font-family: var(--font-mono);
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--gold);
+    }
+
+    /* ─── Footer ─────────────────────────────────────────────────────────── */
+    footer {
+      padding: 60px 0 40px;
+      border-top: 1px solid var(--border);
+      background:
+        linear-gradient(var(--grid-line) 1px, transparent 1px),
+        linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+      background-size: 60px 60px;
+    }
+    .footer-inner {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 48px;
+      flex-wrap: wrap;
+      margin-bottom: 48px;
+    }
+    .footer-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .footer-brand svg {
+      filter: drop-shadow(0 0 8px rgba(255,215,0,0.4));
+    }
+    .footer-nav {
+      display: flex;
+      gap: 40px;
+      flex-wrap: wrap;
+    }
+    .footer-nav-col { display: flex; flex-direction: column; gap: 12px; }
+    .footer-nav-label {
+      font-family: var(--font-mono);
+      font-size: 9px;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 4px;
+    }
+    .footer-nav a {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: rgba(232,239,245,0.5);
+      text-decoration: none;
+      transition: color var(--transition);
+    }
+    .footer-nav a:hover { color: var(--gold); }
+    .footer-social {
+      display: flex;
+      gap: 16px;
+    }
+    .footer-social a {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      text-decoration: none;
+      transition: color var(--transition);
+    }
+    .footer-social a:hover { color: var(--cyan); }
+    .footer-bottom {
+      padding-top: 32px;
+      border-top: 1px solid rgba(255,255,255,0.04);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+    .footer-copy {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+    }
+    .footer-legal {
+      display: flex;
+      gap: 24px;
+    }
+    .footer-legal a {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      text-decoration: none;
+      transition: color var(--transition);
+    }
+    .footer-legal a:hover { color: var(--text); }
+
+    /* ─── Responsive ─────────────────────────────────────────────────────── */
+    @media (max-width: 1024px) {
+      .all-menu-grid { grid-template-columns: repeat(3, 1fr); }
+      .app-inner { grid-template-columns: 1fr; gap: 48px; }
+      .phone-wrap { justify-content: flex-start; }
+    }
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      .nav-hamburger { display: flex; }
+      .nav-location { display: none; }
+      .hero-inner { grid-template-columns: 1fr; gap: 48px; padding: 80px 24px; }
+      .hero-visual { order: -1; }
+      .hero-img-wrap img { width: 260px; }
+      .hero-halo { width: 300px; height: 300px; }
+      .menu-cards-grid { grid-template-columns: 1fr; }
+      .all-menu-grid { grid-template-columns: repeat(2, 1fr); }
+      .deals-grid { grid-template-columns: 1fr; }
+      .footer-inner { flex-direction: column; }
+      .footer-bottom { flex-direction: column; align-items: flex-start; }
+      section { padding: 80px 0; }
+    }
+    @media (max-width: 480px) {
+      .container { padding: 0 20px; }
+      .all-menu-grid { grid-template-columns: 1fr; }
+      .hero-ctas { flex-direction: column; align-items: flex-start; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .menu-card, .hero-img-wrap, .orb, .nebula, .phone-progress-fill {
+        animation: none !important;
+        transition: none !important;
+      }
+      .big-stat { animation: none !important; }
+      .headline-line-1 { animation: none !important; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Floating orbs -->
+<div class="orb orb-1" aria-hidden="true"></div>
+<div class="orb orb-2" aria-hidden="true"></div>
+<div class="orb orb-3" aria-hidden="true"></div>
+
+<!-- ─── NAV ──────────────────────────────────────────────────────────────── -->
+<nav id="nav" role="navigation" aria-label="Main navigation">
+  <div class="nav-inner">
+    <!-- Logo -->
+    <a href="#" class="nav-logo" aria-label="McDonald's 2045 Home">
+      <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <path d="M6 30V10C6 7 8.5 5 11 5C13.5 5 15 6.5 18 12C21 6.5 22.5 5 25 5C27.5 5 30 7 30 10V30" stroke="#FFD700" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M6 24H30" stroke="#FFD700" stroke-width="1.5" stroke-opacity="0.3" stroke-dasharray="2 4"/>
+      </svg>
+      <span class="nav-logo-text">McD /// 2045</span>
+    </a>
+
+    <!-- Center nav -->
+    <ul class="nav-links" role="list">
+      <li><a href="#menu-featured" class="active" aria-current="page">Menu</a></li>
+      <li><a href="#deals">Deals</a></li>
+      <li><a href="#app-section">App</a></li>
+      <li><a href="#menu-categories">Explore</a></li>
+    </ul>
+
+    <!-- Right -->
+    <div class="nav-right">
+      <span class="nav-location" aria-label="Current location">
+        <svg width="12" height="14" viewBox="0 0 12 14" fill="none" aria-hidden="true">
+          <path d="M6 1C3.79 1 2 2.79 2 5C2 8 6 13 6 13C6 13 10 8 10 5C10 2.79 8.21 1 6 1Z" stroke="#00D4FF" stroke-width="1.5" fill="none"/>
+          <circle cx="6" cy="5" r="1.5" fill="#00D4FF"/>
+        </svg>
+        NEW YORK
+      </span>
+      <button class="nav-signin" aria-label="Sign in">SIGN IN</button>
+      <button class="btn-nav-order" aria-label="Order now">ORDER NOW</button>
+      <button class="nav-hamburger" aria-label="Toggle mobile menu" id="hamburgerBtn" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<!-- Mobile Menu -->
+<div class="mobile-menu" id="mobileMenu" role="dialog" aria-label="Mobile navigation">
+  <a href="#menu-featured">Menu</a>
+  <a href="#deals">Deals</a>
+  <a href="#app-section">App</a>
+  <a href="#menu-categories">Explore</a>
+  <a href="#">Sign In</a>
+</div>
+
+<!-- ─── HERO ──────────────────────────────────────────────────────────────── -->
+<section id="hero" aria-labelledby="hero-headline">
+  <div class="nebula" aria-hidden="true"></div>
+  <div class="hero-inner container">
+    <!-- Left: copy -->
+    <div class="hero-copy reveal">
+      <p class="hero-overline" aria-label="McDonald's 2045">MCDONALD'S /// 2045</p>
+      <h1 class="hero-headline" id="hero-headline">
+        <span class="headline-line-1">THE FUTURE</span>
+        <span class="headline-line-2">TASTES GOOD.</span>
+      </h1>
+      <p class="hero-sub">Precision-crafted. Instantly delivered. Always iconic.</p>
+      <div class="hero-ctas">
+        <button class="btn-primary" onclick="document.getElementById('menu-featured').scrollIntoView({behavior:'smooth'})">ORDER NOW</button>
+        <button class="btn-ghost" onclick="document.getElementById('menu-categories').scrollIntoView({behavior:'smooth'})">EXPLORE MENU</button>
+      </div>
+      <div class="hero-stats" role="list" aria-label="McDonald's key stats">
+        <div class="stat-chip" role="listitem">2B+ Daily Orders</div>
+        <div class="stat-divider" aria-hidden="true">/</div>
+        <div class="stat-chip" role="listitem">100+ Countries</div>
+        <div class="stat-divider" aria-hidden="true">/</div>
+        <div class="stat-chip" role="listitem">70 Years Iconic</div>
+      </div>
+    </div>
+
+    <!-- Right: image -->
+    <div class="hero-visual reveal">
+      <div class="hero-halo" aria-hidden="true"></div>
+      <div class="hero-img-wrap">
+        <img
+          src="https://s7d1.scene7.com/is/image/mcdonaldsstage/DC_202302_0005-999_BigMac_1564x1564?wid=600&fmt=png-alpha"
+          alt="McDonald's Big Mac"
+          loading="eager"
+          onerror="this.style.background='rgba(255,215,0,0.1)';this.style.borderRadius='12px'"
+        />
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── FEATURED MENU ──────────────────────────────────────────────────────── -->
+<section id="menu-featured" aria-labelledby="featured-menu-title">
+  <div class="container">
+    <h2 class="terminal-title" id="featured-menu-title">
+      <span id="terminal-text">&gt; LOADING MENU FOR MORNING_</span>
+      <span class="terminal-cursor" aria-hidden="true"></span>
+    </h2>
+    <div class="menu-cards-grid" id="featuredGrid" role="list">
+      <!-- Cards injected by JS -->
+    </div>
+  </div>
+</section>
+
+<!-- ─── MENU CATEGORIES ──────────────────────────────────────────────────── -->
+<section id="menu-categories" aria-labelledby="categories-title">
+  <div class="container">
+    <p class="section-overline reveal">// Full Menu</p>
+    <h2 class="section-title reveal" id="categories-title">
+      <span class="headline-line-1" style="font-size:inherit;background:linear-gradient(135deg,#FFD700 0%,#FFF5AA 40%,#FFD700 60%,#C8970A 100%);background-size:200%;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:gold-shimmer 4s ease infinite;">EXPLORE<br>THE CLASSICS</span>
+    </h2>
+    <nav class="category-pills reveal" aria-label="Menu categories" role="navigation">
+      <button class="pill active" data-cat="featured" aria-pressed="true">Featured</button>
+      <button class="pill" data-cat="burgers" aria-pressed="false">Burgers</button>
+      <button class="pill" data-cat="chicken" aria-pressed="false">Chicken</button>
+      <button class="pill" data-cat="fries" aria-pressed="false">Fries &amp; Sides</button>
+      <button class="pill" data-cat="breakfast" aria-pressed="false">Breakfast</button>
+      <button class="pill" data-cat="desserts" aria-pressed="false">Desserts</button>
+      <button class="pill" data-cat="drinks" aria-pressed="false">Drinks</button>
+      <button class="pill" data-cat="value" aria-pressed="false">Value</button>
+    </nav>
+    <div class="all-menu-grid" id="allMenuGrid" role="list">
+      <!-- Cards injected by JS -->
+    </div>
+  </div>
+</section>
+
+<!-- ─── DEALS ──────────────────────────────────────────────────────────────── -->
+<section id="deals" aria-labelledby="deals-title">
+  <div class="container">
+    <h2 class="deals-title reveal" id="deals-title">
+      TODAY'S INTEL
+      <span class="red-cursor" aria-hidden="true"></span>
+    </h2>
+    <div class="deals-grid">
+      <div class="deal-card reveal" role="article">
+        <div class="deal-active-badge" aria-label="Deal active"><div class="deal-dot"></div>ACTIVE</div>
+        <div class="deal-name">McDouble + Fries</div>
+        <div class="deal-desc">Two beef patties, special sauce. Classic in 2045.</div>
+        <div class="deal-timer-label">EXPIRES IN</div>
+        <div class="deal-timer" id="timer1" aria-live="polite">--:--:--</div>
+        <button class="btn-claim">CLAIM</button>
+      </div>
+      <div class="deal-card reveal" role="article">
+        <div class="deal-active-badge" aria-label="Deal active"><div class="deal-dot"></div>ACTIVE</div>
+        <div class="deal-name">McNuggets 20pc</div>
+        <div class="deal-desc">20 pieces, four sauce choices. Share-worthy haul.</div>
+        <div class="deal-timer-label">EXPIRES IN</div>
+        <div class="deal-timer" id="timer2" aria-live="polite">--:--:--</div>
+        <button class="btn-claim">CLAIM</button>
+      </div>
+      <div class="deal-card reveal" role="article">
+        <div class="deal-active-badge" aria-label="Deal active"><div class="deal-dot"></div>ACTIVE</div>
+        <div class="deal-name">McFlurry BOGO</div>
+        <div class="deal-desc">Buy one Oreo McFlurry, get one free. Zero regrets.</div>
+        <div class="deal-timer-label">EXPIRES IN</div>
+        <div class="deal-timer" id="timer3" aria-live="polite">--:--:--</div>
+        <button class="btn-claim">CLAIM</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── BRAND MOMENT ──────────────────────────────────────────────────────── -->
+<section id="brand-moment" aria-labelledby="brand-stat">
+  <div class="container" style="text-align:center;">
+    <p class="section-overline reveal" style="justify-content:center;">// Impact</p>
+    <div class="big-stat reveal" id="countUpStat" role="heading" aria-level="2" aria-label="2 billion plus served daily">0</div>
+    <p class="big-stat-label reveal">SERVED DAILY</p>
+    <p class="big-stat-sub reveal">The most-visited restaurant brand on Earth. Since 1955. Through 2045. And beyond.</p>
+  </div>
+</section>
+
+<!-- ─── APP SECTION ───────────────────────────────────────────────────────── -->
+<section id="app-section" aria-labelledby="app-title">
+  <div class="container">
+    <div class="app-inner">
+      <div class="app-text reveal">
+        <p class="section-overline">// Mobile Experience</p>
+        <h2 class="section-title" id="app-title">ORDER FROM<br>THE FUTURE</h2>
+        <p>Skip the queue. Customize everything. Your order is ready before you arrive — powered by predictive AI that knows what you want before you do.</p>
+        <div class="app-features" role="list">
+          <div class="app-feature" role="listitem"><div class="app-feature-dot"></div>AI-powered personalized recommendations</div>
+          <div class="app-feature" role="listitem"><div class="app-feature-dot"></div>Real-time prep tracking, to the second</div>
+          <div class="app-feature" role="listitem"><div class="app-feature-dot"></div>Exclusive app-only deals and early access</div>
+          <div class="app-feature" role="listitem"><div class="app-feature-dot"></div>Contactless pick-up or drone delivery</div>
+        </div>
+        <button class="btn-primary">DOWNLOAD APP</button>
+      </div>
+      <div class="phone-wrap reveal">
+        <div class="phone" role="img" aria-label="McDonald's app mock showing order confirmation with 3 minute prep time">
+          <div class="phone-screen">
+            <div class="phone-header">ORDER #7421 /// CONFIRMED</div>
+            <div class="phone-order-card">
+              <div class="phone-order-name">Big Mac Meal</div>
+              <div class="phone-order-price">$11.49 ///</div>
+            </div>
+            <div class="phone-ready">
+              <div class="phone-ready-dot"></div>
+              <div class="phone-ready-text">READY IN 3 MIN</div>
+            </div>
+            <div class="phone-progress-wrap">
+              <div class="phone-progress-label">Prep Progress</div>
+              <div class="phone-progress-bar">
+                <div class="phone-progress-fill"></div>
+              </div>
+            </div>
+            <div class="phone-items">
+              <div class="phone-item">
+                <span class="phone-item-name">Big Mac</span>
+                <span class="phone-item-price">$6.49</span>
+              </div>
+              <div class="phone-item">
+                <span class="phone-item-name">Med Fries</span>
+                <span class="phone-item-price">$2.99</span>
+              </div>
+              <div class="phone-item">
+                <span class="phone-item-name">Med Coke</span>
+                <span class="phone-item-price">$1.99</span>
+              </div>
+            </div>
+            <div class="phone-total">
+              <span class="phone-total-label">Total</span>
+              <span class="phone-total-amount">$11.47</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── FOOTER ────────────────────────────────────────────────────────────── -->
+<footer role="contentinfo">
+  <div class="container">
+    <div class="footer-inner">
+      <div>
+        <div class="footer-brand">
+          <svg width="32" height="32" viewBox="0 0 36 36" fill="none" aria-hidden="true">
+            <path d="M6 30V10C6 7 8.5 5 11 5C13.5 5 15 6.5 18 12C21 6.5 22.5 5 25 5C27.5 5 30 7 30 10V30" stroke="#FFD700" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+      </div>
+      <nav class="footer-nav" aria-label="Footer navigation">
+        <div class="footer-nav-col">
+          <span class="footer-nav-label">Menu</span>
+          <a href="#">Burgers</a>
+          <a href="#">Chicken</a>
+          <a href="#">Breakfast</a>
+          <a href="#">Desserts</a>
+        </div>
+        <div class="footer-nav-col">
+          <span class="footer-nav-label">Company</span>
+          <a href="#">About</a>
+          <a href="#">Careers</a>
+          <a href="#">Sustainability</a>
+          <a href="#">Investors</a>
+        </div>
+        <div class="footer-nav-col">
+          <span class="footer-nav-label">Support</span>
+          <a href="#">Contact</a>
+          <a href="#">FAQ</a>
+          <a href="#">Franchising</a>
+          <a href="#">Accessibility</a>
+        </div>
+      </nav>
+      <div>
+        <p class="footer-nav-label">Follow</p>
+        <div class="footer-social" role="list">
+          <a href="#" role="listitem">X</a>
+          <a href="#" role="listitem">IG</a>
+          <a href="#" role="listitem">FB</a>
+          <a href="#" role="listitem">TK</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p class="footer-copy">© 2045 McDonald's Corporation. All rights reserved.</p>
+      <div class="footer-legal">
+        <a href="#">Privacy</a>
+        <a href="#">Terms</a>
+        <a href="#">Cookies</a>
+        <a href="#">Nutrition</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function() {
+  'use strict';
+
+  /* ─── Reduced motion check ─── */
+  const noMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ─── Data ─── */
+  const ALL_ITEMS = [
+    {
+      id: 'bigmac',
+      name: 'Big Mac',
+      price: '$6.49',
+      nutrition: '550 CAL · 25G PROTEIN',
+      img: 'https://s7d1.scene7.com/is/image/mcdonaldsstage/DC_202302_0005-999_BigMac_1564x1564?wid=600&fmt=png-alpha',
+      cats: ['featured', 'burgers'],
+      badge: 'ICONIC'
+    },
+    {
+      id: 'fries',
+      name: 'French Fries',
+      price: '$2.99',
+      nutrition: '320 CAL · 4G PROTEIN',
+      img: 'https://s7d1.scene7.com/is/image/mcdonaldsstage/DC_202002_8932_MediumFries_1564x1564?wid=600&fmt=png-alpha',
+      cats: ['featured', 'fries', 'value'],
+      badge: 'ESSENTIAL'
+    },
+    {
+      id: 'mcmuffin',
+      name: 'Egg McMuffin',
+      price: '$4.49',
+      nutrition: '300 CAL · 17G PROTEIN',
+      img: 'https://s7d1.scene7.com/is/image/mcdonalds/DC_202602_0046_EggMcMuffin_Protein_1564x1564?wid=600&fmt=png-alpha',
+      cats: ['featured', 'breakfast'],
+      badge: 'AM ONLY'
+    },
+    {
+      id: 'mcflurry',
+      name: 'McFlurry Oreo',
+      price: '$4.29',
+      nutrition: '510 CAL · 12G PROTEIN',
+      img: 'https://s7d1.scene7.com/is/image/mcdonaldsstage/DC_202002_3832_OREOMcFlurry_1564x1564?wid=600&fmt=png-alpha',
+      cats: ['featured', 'desserts'],
+      badge: 'FAN FAVE'
+    },
+    {
+      id: 'qpc',
+      name: 'Quarter Pounder',
+      price: '$7.19',
+      nutrition: '520 CAL · 30G PROTEIN',
+      img: 'https://s7d1.scene7.com/is/image/mcdonaldsstage/DC_202201_0007-005_QuarterPounderwithCheese_1564x1564?wid=600&fmt=png-alpha',
+      cats: ['featured', 'burgers'],
+      badge: '1/4 LB BEEF'
+    },
+    {
+      id: 'crispy',
+      name: 'McCrispy Chicken',
+      price: '$6.79',
+      nutrition: '470 CAL · 27G PROTEIN',
+      img: 'https://s7d1.scene7.com/is/image/mcdonaldsstage/DC_202012_0383_CrispyChickenSandwich_PotatoBun_1564x1564?wid=600&fmt=png-alpha',
+      cats: ['featured', 'chicken'],
+      badge: 'CRISPY'
+    },
+    {
+      id: 'nuggets',
+      name: 'McNuggets 10pc',
+      price: '$5.79',
+      nutrition: '440 CAL · 23G PROTEIN',
+      img: 'https://s7d1.scene7.com/is/image/mcdonalds/DC_202208_5280_10McNuggets_Stacked_Protein_1564x1564?wid=600&fmt=png-alpha',
+      cats: ['featured', 'chicken', 'value'],
+      badge: '10 PIECES'
+    },
+    {
+      id: 'latte',
+      name: 'McCafe Latte',
+      price: '$3.49',
+      nutrition: '180 CAL · 9G PROTEIN',
+      img: 'https://s7d1.scene7.com/is/image/mcdonalds/DC_202601_2698_MediumLatte_HL_1564x1564-1?wid=600&fmt=png-alpha',
+      cats: ['featured', 'drinks', 'breakfast'],
+      badge: 'MCCAFE'
+    }
+  ];
+
+  /* ─── Time of day ─── */
+  function getTimeOfDay() {
+    const h = new Date().getHours();
+    if (h >= 5 && h < 11) return 'MORNING';
+    if (h >= 11 && h < 18) return 'AFTERNOON';
+    return 'NIGHT';
+  }
+
+  const TIME_FEATURED = {
+    MORNING: ['mcmuffin', 'latte', 'bigmac'],
+    AFTERNOON: ['bigmac', 'crispy', 'qpc'],
+    NIGHT: ['mcflurry', 'fries', 'nuggets']
+  };
+
+  /* ─── Render card ─── */
+  function buildCard(item, small) {
+    const div = document.createElement('div');
+    div.className = 'menu-card';
+    div.setAttribute('role', 'listitem');
+    div.setAttribute('data-cat', item.cats.join(' '));
+    div.innerHTML = `
+      <div class="menu-card-img-wrap">
+        <img
+          src="${item.img}"
+          alt="${item.name}"
+          loading="lazy"
+          onerror="this.parentElement.style.background='rgba(255,215,0,0.05)';this.style.display='none'"
+        />
+      </div>
+      <div class="menu-card-name">${item.name}</div>
+      <div class="menu-card-price">${item.price} <span>///</span></div>
+      <div class="menu-card-nutrition">${item.nutrition}</div>
+      <div class="menu-card-add">
+        <button class="btn-add" aria-label="Add ${item.name} to order">ADD +</button>
+        <span class="menu-card-badge">${item.badge}</span>
+      </div>
+    `;
+
+    /* 3D tilt */
+    if (!noMotion) {
+      div.addEventListener('mousemove', function(e) {
+        const rect = this.getBoundingClientRect();
+        const x = (e.clientX - rect.left) / rect.width - 0.5;
+        const y = (e.clientY - rect.top) / rect.height - 0.5;
+        this.style.transform = `perspective(1000px) rotateY(${x * 16}deg) rotateX(${-y * 16}deg) scale(1.02)`;
+      });
+      div.addEventListener('mouseleave', function() {
+        this.style.transform = 'perspective(1000px) rotateY(0deg) rotateX(0deg) scale(1)';
+        this.style.transition = 'transform 0.5s cubic-bezier(0.4,0,0.2,1)';
+        setTimeout(() => { this.style.transition = ''; }, 500);
+      });
+    }
+
+    return div;
+  }
+
+  /* ─── Populate featured grid ─── */
+  const tod = getTimeOfDay();
+  const terminalEl = document.getElementById('terminal-text');
+  if (terminalEl) terminalEl.textContent = '> LOADING MENU FOR ' + tod + '_';
+
+  const featuredGrid = document.getElementById('featuredGrid');
+  if (featuredGrid) {
+    TIME_FEATURED[tod].forEach(id => {
+      const item = ALL_ITEMS.find(i => i.id === id);
+      if (item) featuredGrid.appendChild(buildCard(item));
+    });
+  }
+
+  /* ─── Populate all menu grid ─── */
+  const allMenuGrid = document.getElementById('allMenuGrid');
+  if (allMenuGrid) {
+    ALL_ITEMS.forEach(item => {
+      allMenuGrid.appendChild(buildCard(item, true));
+    });
+  }
+
+  /* ─── Category pills filter ─── */
+  const pills = document.querySelectorAll('.pill');
+  pills.forEach(pill => {
+    pill.addEventListener('click', function() {
+      pills.forEach(p => { p.classList.remove('active'); p.setAttribute('aria-pressed', 'false'); });
+      this.classList.add('active');
+      this.setAttribute('aria-pressed', 'true');
+      const cat = this.dataset.cat;
+      const cards = allMenuGrid ? allMenuGrid.querySelectorAll('.menu-card') : [];
+      cards.forEach(card => {
+        const cardCats = card.getAttribute('data-cat') || '';
+        if (cat === 'featured' || cardCats.includes(cat)) {
+          card.classList.remove('hidden');
+        } else {
+          card.classList.add('hidden');
+        }
+      });
+    });
+  });
+
+  /* ─── Nav scroll ─── */
+  const nav = document.getElementById('nav');
+  function onScroll() {
+    if (window.scrollY > 20) {
+      nav.classList.add('scrolled');
+    } else {
+      nav.classList.remove('scrolled');
+    }
+  }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+
+  /* ─── Hamburger ─── */
+  const hamburgerBtn = document.getElementById('hamburgerBtn');
+  const mobileMenu = document.getElementById('mobileMenu');
+  if (hamburgerBtn && mobileMenu) {
+    hamburgerBtn.addEventListener('click', function() {
+      const isOpen = mobileMenu.classList.toggle('open');
+      this.setAttribute('aria-expanded', String(isOpen));
+    });
+    mobileMenu.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => {
+        mobileMenu.classList.remove('open');
+        hamburgerBtn.setAttribute('aria-expanded', 'false');
+      });
+    });
+  }
+
+  /* ─── Scroll reveal ─── */
+  if (!noMotion && 'IntersectionObserver' in window) {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.15 });
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+  } else {
+    document.querySelectorAll('.reveal').forEach(el => el.classList.add('visible'));
+  }
+
+  /* ─── Countdown timers ─── */
+  function buildExpiry(hoursFromNow) {
+    const d = new Date();
+    d.setHours(d.getHours() + hoursFromNow);
+    return d;
+  }
+
+  const deals = [
+    { el: document.getElementById('timer1'), expiry: buildExpiry(3) },
+    { el: document.getElementById('timer2'), expiry: buildExpiry(7) },
+    { el: document.getElementById('timer3'), expiry: buildExpiry(1) }
+  ];
+
+  function pad(n) { return String(n).padStart(2, '0'); }
+
+  function updateTimers() {
+    const now = new Date();
+    deals.forEach(deal => {
+      if (!deal.el) return;
+      const diff = deal.expiry - now;
+      if (diff <= 0) {
+        deal.el.textContent = '00:00:00';
+        return;
+      }
+      const h = Math.floor(diff / 3600000);
+      const m = Math.floor((diff % 3600000) / 60000);
+      const s = Math.floor((diff % 60000) / 1000);
+      deal.el.textContent = pad(h) + ':' + pad(m) + ':' + pad(s);
+    });
+  }
+
+  updateTimers();
+  setInterval(updateTimers, 1000);
+
+  /* ─── Count-up animation ─── */
+  const countEl = document.getElementById('countUpStat');
+  let countStarted = false;
+
+  function animateCount() {
+    if (countStarted || noMotion) {
+      if (countEl) countEl.textContent = '2,000,000,000+';
+      return;
+    }
+    countStarted = true;
+    const target = 2000000000;
+    const duration = 2000;
+    const start = performance.now();
+
+    function step(now) {
+      const elapsed = now - start;
+      const progress = Math.min(elapsed / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      const val = Math.floor(eased * target);
+      if (countEl) {
+        countEl.textContent = val.toLocaleString() + (progress >= 1 ? '+' : '');
+      }
+      if (progress < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  }
+
+  if ('IntersectionObserver' in window && countEl) {
+    const countObserver = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          animateCount();
+          countObserver.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.3 });
+    countObserver.observe(countEl);
+  }
+
+})();
+</script>
+</body>
+</html>

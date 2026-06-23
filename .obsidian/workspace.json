@@ -1,0 +1,194 @@
+{
+  "main": {
+    "id": "71983c3b9aea2608",
+    "type": "split",
+    "children": [
+      {
+        "id": "890222e5783087ab",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "a2b371f0ffbe4639",
+            "type": "leaf",
+            "state": {
+              "type": "graph",
+              "state": {},
+              "icon": "lucide-git-fork",
+              "title": "Graph view"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "7cebd90a3516f083",
+    "type": "split",
+    "children": [
+      {
+        "id": "f7ae979adfcb5489",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "2a6485cf64f576a4",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical",
+                "autoReveal": false
+              },
+              "icon": "lucide-folder-closed",
+              "title": "Files"
+            }
+          },
+          {
+            "id": "b2bbb3f812caa261",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              },
+              "icon": "lucide-search",
+              "title": "Search"
+            }
+          },
+          {
+            "id": "f9e8f92259afe700",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {},
+              "icon": "lucide-bookmark",
+              "title": "Bookmarks"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "right": {
+    "id": "29e08a71778072c9",
+    "type": "split",
+    "children": [
+      {
+        "id": "a743b9ab2b4c8014",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "7b414a003a89e1c0",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-coming-in",
+              "title": "Backlinks"
+            }
+          },
+          {
+            "id": "9f6cddaf660a4281",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-going-out",
+              "title": "Outgoing links"
+            }
+          },
+          {
+            "id": "b1159aa6f15bed23",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-tags",
+              "title": "Tags"
+            }
+          },
+          {
+            "id": "29f6828692bdfa5c",
+            "type": "leaf",
+            "state": {
+              "type": "all-properties",
+              "state": {
+                "sortOrder": "frequency",
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-archive",
+              "title": "All properties"
+            }
+          },
+          {
+            "id": "b3d66b89f3a8e2c4",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "followCursor": false,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-list",
+              "title": "Outline"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:Open quick switcher": false,
+      "graph:Open graph view": false,
+      "canvas:Create new canvas": false,
+      "daily-notes:Open today's daily note": false,
+      "templates:Insert template": false,
+      "command-palette:Open command palette": false,
+      "bases:Create new base": false
+    }
+  },
+  "active": "a2b371f0ffbe4639",
+  "lastOpenFiles": [
+    "wiki/synthesis/competitor-landscape.md",
+    "wiki/synthesis/business-plan-2026.md",
+    "projects/ai-playbook/AI_PLAYBOOK_FOR_REALTORS.md",
+    "Eitan Adar.md",
+    "wiki/synthesis/sohail-shadowing-plan.md",
+    "wiki/invoices.md",
+    "wiki/entities/voice-receptionist-product.md",
+    "AI Voice Receptionist.md",
+    "Sohail Real Estate Group.md",
+    "wiki/index.md",
+    "wiki/entities/eden-adar-systems-tech.md",
+    "wiki/concepts/automation-framework.md"
+  ]
+}

@@ -1,0 +1,35 @@
+id: recovery_test
+name: "Error Recovery Test"
+description: "Intentionally fail once, then succeed - test error recovery"
+version: 1.0
+
+steps:
+  - name: working_step
+    action: http
+    config:
+      method: POST
+      url: "https://httpbin.org/post"
+      headers:
+        Content-Type: application/json
+      body:
+        status: "working"
+
+  - name: recover_test
+    action: http
+    config:
+      method: POST
+      url: "https://httpbin.org/delay/1"
+      headers:
+        Content-Type: application/json
+      body:
+        status: "this will succeed on retry"
+
+  - name: final_step
+    action: http
+    config:
+      method: POST
+      url: "https://httpbin.org/post"
+      headers:
+        Content-Type: application/json
+      body:
+        status: "completed"

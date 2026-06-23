@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Execution Details</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Header with back button -->
+        <header class="dashboard-header">
+            <div class="header-content">
+                <div class="header-left">
+                    <a href="/" class="back-link">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path d="M19 12H5M12 19l-7-7 7-7"/>
+                        </svg>
+                        <span>Back to Dashboard</span>
+                    </a>
+                    <h1 class="dashboard-title">Execution Details</h1>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="dashboard-main execution-detail-main">
+            <!-- Execution Header -->
+            <section class="execution-header-section">
+                <div class="execution-header-top">
+                    <div class="execution-title-block">
+                        <h2 id="executionTitle">Workflow Name</h2>
+                        <p class="execution-id" id="executionId">ID: execution-123456</p>
+                    </div>
+                    <div class="execution-status-badge" id="executionStatusBadge">
+                        <span class="status-dot"></span>
+                        <span class="status-text">Running</span>
+                    </div>
+                </div>
+
+                <div class="execution-stats">
+                    <div class="exec-stat">
+                        <p class="stat-label">Started</p>
+                        <p class="stat-value" id="executionStarted">--</p>
+                    </div>
+                    <div class="exec-stat">
+                        <p class="stat-label">Duration</p>
+                        <p class="stat-value" id="executionDuration">--</p>
+                    </div>
+                    <div class="exec-stat">
+                        <p class="stat-label">Progress</p>
+                        <p class="stat-value" id="executionProgressPct">0%</p>
+                    </div>
+                    <div class="exec-stat">
+                        <p class="stat-label">Success Rate</p>
+                        <p class="stat-value" id="executionSuccessRate">--</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Progress Bar -->
+            <section class="progress-section">
+                <div class="progress-header">
+                    <h3>Overall Progress</h3>
+                    <span class="progress-percentage" id="progressPercentage">0%</span>
+                </div>
+                <div class="progress-bar-container">
+                    <div class="progress-bar-fill" id="progressBarFill"></div>
+                </div>
+                <div class="progress-details">
+                    <span class="progress-detail" id="stepsCompleted">0 of 0 steps completed</span>
+                </div>
+            </section>
+
+            <!-- Execution Steps/Timeline -->
+            <section class="execution-timeline">
+                <h3>Execution Steps</h3>
+                <div class="timeline-container" id="timelineContainer">
+                    <!-- Steps will be populated here -->
+                </div>
+            </section>
+
+            <!-- Error Recovery Information -->
+            <section class="recovery-info-section" id="recoveryInfoSection" style="display: none;">
+                <div class="recovery-info-header">
+                    <svg viewBox="0 0 24 24" fill="currentColor" class="alert-icon">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m1 15h-2v-2h2v2m0-4h-2V7h2v6z"/>
+                    </svg>
+                    <div>
+                        <h3>Error Recovery Active</h3>
+                        <p>This execution encountered errors and recovery strategies are being attempted.</p>
+                    </div>
+                </div>
+                <div class="recovery-strategies" id="recoveryStrategies">
+                    <!-- Recovery strategies will be populated here -->
+                </div>
+            </section>
+
+            <!-- Logs/Output -->
+            <section class="logs-section">
+                <div class="logs-header">
+                    <h3>Execution Logs</h3>
+                    <div class="log-controls">
+                        <button class="btn btn-small" id="refreshLogsBtn">Refresh</button>
+                        <button class="btn btn-small" id="downloadLogsBtn">Download</button>
+                    </div>
+                </div>
+                <div class="logs-container" id="logsContainer">
+                    <pre id="logsContent">No logs available yet</pre>
+                </div>
+            </section>
+
+            <!-- Actions -->
+            <section class="execution-actions">
+                <button class="btn btn-secondary" id="pauseBtn">Pause</button>
+                <button class="btn btn-secondary" id="resumeBtn" style="display: none;">Resume</button>
+                <button class="btn btn-danger" id="cancelBtn">Cancel Execution</button>
+                <button class="btn btn-primary" id="retryBtn" style="display: none;">Retry Failed Steps</button>
+            </section>
+        </main>
+    </div>
+
+    <script src="{{ url_for('static', filename='execution-detail.js') }}"></script>
+</body>
+</html>

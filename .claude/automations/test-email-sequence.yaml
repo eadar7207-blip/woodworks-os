@@ -1,0 +1,51 @@
+id: test_email_sequence
+name: "Email Automation Test"
+description: "Test workflow without skill dependencies - just HTTP + email"
+version: 1.0
+
+steps:
+  # Step 1: Log to webhook
+  - name: log_lead_received
+    action: http
+    config:
+      method: POST
+      url: "https://webhook.site/{{webhook_id}}"
+      headers:
+        Content-Type: application/json
+      body:
+        event: "lead_received"
+        lead_name: "{{lead_name}}"
+        lead_email: "{{lead_email}}"
+        timestamp: "{{now}}"
+
+  # Step 2: Send welcome email
+  - name: send_welcome_email
+    action: email
+    config:
+      to: "{{lead_email}}"
+      subject: "Welcome {{lead_name}} - Real Estate Automation"
+      html: |
+        <h2>Welcome, {{lead_name}}!</h2>
+        <p>Thank you for reaching out to Adar Realty Studio.</p>
+        <p>We specialize in automating real estate workflows for agents and teams.</p>
+        <p>Your information:</p>
+        <ul>
+          <li><strong>Company:</strong> {{lead_company}}</li>
+          <li><strong>Email:</strong> {{lead_email}}</li>
+        </ul>
+        <p>Someone from our team will follow up with you shortly.</p>
+        <p>Best regards,<br>Eitan Adar<br>Adar Realty Studio</p>
+
+  # Step 3: Log completion
+  - name: log_sequence_complete
+    action: http
+    config:
+      method: POST
+      url: "https://webhook.site/{{webhook_id}}"
+      headers:
+        Content-Type: application/json
+      body:
+        event: "automation_complete"
+        lead_name: "{{lead_name}}"
+        status: "success"
+        timestamp: "{{now}}"

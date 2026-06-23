@@ -1,0 +1,31 @@
+{
+  "session_id": "20260609-voice-receptionist",
+  "created": "2026-06-09T00:00:00Z",
+  "state": "dispatching",
+  "agents": {
+    "1": {
+      "name": "Architect",
+      "role": "Design system architecture and conversation flows",
+      "status": "assigned",
+      "branch": "hub/20260609-voice-receptionist/agent-1/attempt-1"
+    },
+    "2": {
+      "name": "Tech Stack",
+      "role": "Research and recommend technologies",
+      "status": "assigned",
+      "branch": "hub/20260609-voice-receptionist/agent-2/attempt-1"
+    },
+    "3": {
+      "name": "Integration",
+      "role": "Design framework integration",
+      "status": "assigned",
+      "branch": "hub/20260609-voice-receptionist/agent-3/attempt-1"
+    },
+    "4": {
+      "name": "Prototype",
+      "role": "Build working MVP with tests",
+      "status": "assigned",
+      "branch": "hub/20260609-voice-receptionist/agent-4/attempt-1"
+    }
+  }
+}

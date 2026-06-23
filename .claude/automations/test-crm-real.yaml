@@ -1,0 +1,44 @@
+id: test_crm_real
+name: "Test CRM - Working Workflow"
+description: "Simple workflow that actually works - uses HTTP to create prospect + log activities"
+version: 1.0
+
+steps:
+  - name: step_1_create_prospect
+    action: http
+    config:
+      method: POST
+      url: "https://httpbin.org/post"
+      headers:
+        Content-Type: application/json
+      body:
+        workflow: "test_crm_real"
+        step: "1"
+        action: "create_prospect"
+        prospect: "John Smith"
+
+  - name: step_2_log_activity_research
+    action: http
+    config:
+      method: POST
+      url: "https://httpbin.org/post"
+      headers:
+        Content-Type: application/json
+      body:
+        workflow: "test_crm_real"
+        step: "2"
+        action: "log_activity"
+        activity: "research_completed"
+
+  - name: step_3_log_activity_proposal
+    action: http
+    config:
+      method: POST
+      url: "https://httpbin.org/post"
+      headers:
+        Content-Type: application/json
+      body:
+        workflow: "test_crm_real"
+        step: "3"
+        action: "log_activity"
+        activity: "proposal_sent"

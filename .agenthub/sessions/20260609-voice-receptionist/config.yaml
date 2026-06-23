@@ -1,0 +1,112 @@
+session_id: voice-receptionist-001
+created: 2026-06-09T00:00:00Z
+updated: 2026-06-09T00:00:00Z
+state: init
+
+task:
+  title: "AI Voice Receptionist for Real Estate Agents"
+  description: |
+    Design and prototype an AI voice receptionist product for Eitan Adar's automation agency.
+
+    System Requirements:
+    - Voice input pipeline (phone → transcription → Claude → action → response)
+    - State management (call context, conversation history, decision trees)
+    - Integration with existing automation framework (Flask at localhost:5000, Skill Bridge at localhost:9000)
+    - Real estate specific behaviors (appointment scheduling, lead qualification, message taking)
+
+    Must be MVP/working prototype quality (impressive but not fully production).
+    Skills available: prospect, crm, calendar, invoicing, tasks, etc.
+
+  acceptance_criteria:
+    - Each agent produces a standalone doc/code artifact
+    - Architecture is realistic and integrates with existing framework
+    - Tech decisions are justified (cost, complexity, feature fit)
+    - Prototype can handle at least one end-to-end scenario
+    - Code is well-structured and documented for handoff
+
+agent_count: 4
+eval_mode: hybrid
+eval_cmd: null
+
+agents:
+  - agent_id: 1
+    name: "Architecture Designer"
+    task: |
+      Scope and design the overall system architecture for the voice receptionist.
+
+      Deliverables:
+      - Detailed architecture document with component diagram
+      - Voice input pipeline (phone → transcription → Claude → action → response)
+      - State management design (call context, conversation history, decision trees)
+      - Integration points with automation framework (Flask 5000, Skill Bridge 9000)
+      - Real estate specific behaviors and decision flows
+
+      Output: Create projects/voice-receptionist/docs/ARCHITECTURE.md with:
+      - Component diagram (ASCII or conceptual)
+      - Data flow (voice in → transcription → processing → TTS out)
+      - State machine for calls (idle → connecting → active → decision → end)
+      - Integration patterns with existing framework
+      - Example real estate scenarios (schedule appointment, take message, qualify lead)
+
+  - agent_id: 2
+    name: "Tech Stack Investigator"
+    task: |
+      Research and recommend specific technologies for the voice receptionist.
+
+      Deliverables:
+      - Tech stack recommendation document with justification
+      - Phone/voice platform options (Twilio vs alternatives, cost analysis)
+      - Transcription service (Whisper vs Google Speech-to-Text vs other)
+      - Voice synthesis (ElevenLabs vs Synthesia vs Google TTS vs other)
+      - API structure for integrating with automation framework
+      - Hosting/deployment approach
+
+      Output: Create projects/voice-receptionist/docs/TECH_STACK.md with:
+      - Recommended tech for each component with pricing
+      - Comparison table (feature, cost, complexity)
+      - Setup instructions for each service
+      - Integration APIs (how receptionist calls framework)
+      - Deployment architecture (where to host, scaling approach)
+
+  - agent_id: 3
+    name: "Framework Integration Specialist"
+    task: |
+      Analyze the existing automation framework and design the integration layer.
+
+      Deliverables:
+      - Integration specification with example API calls
+      - Study current executor (Flask at 5000), Skill Bridge (9000), database schema
+      - Design HTTP/API layer to call skills from voice receptionist
+      - Map which skills handle which receptionist functions
+      - Design request/response contracts for each integration
+
+      Output: Create projects/voice-receptionist/docs/INTEGRATION.md with:
+      - Existing framework analysis (endpoints, schemas, capabilities)
+      - Integration layer design (new endpoints needed, authentication)
+      - Skill mapping (schedule appointment → calendar skill, log lead → crm skill, etc.)
+      - Request/response contracts with examples
+      - Error handling and recovery flows
+
+  - agent_id: 4
+    name: "Core Prototype Builder"
+    task: |
+      Build the MVP voice receptionist prototype with working integration.
+
+      Deliverables:
+      - Working prototype code in projects/voice-receptionist/
+      - Main voice processing module (Claude-based decision engine)
+      - Conversation manager (context, history, state tracking)
+      - Three core flows implemented (appointment scheduling, message taking, lead qualification)
+      - Test harness (simulate voice input, verify outputs)
+      - Integration with framework (real HTTP calls to localhost:5000/9000)
+
+      Output: Create projects/voice-receptionist/ with:
+      - voice_receptionist.py (main module)
+      - conversation_manager.py (state + history)
+      - skill_integrator.py (HTTP calls to framework)
+      - test_receptionist.py (test harness with 3+ scenarios)
+      - README.md (setup, usage, architecture overview)
+      - requirements.txt (dependencies)
+
+base_branch: main
+winner: null

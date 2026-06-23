@@ -1,0 +1,51 @@
+id: test_skills_only
+name: "Skills-Only Test Workflow"
+description: "Test workflow that executes skills without external dependencies"
+version: 1.0
+
+steps:
+  # Step 1: Research a prospect
+  - name: research_prospect
+    action: skill
+    config:
+      skill: prospect
+      params:
+        action: research
+        name: "{{lead_name}}"
+        company: "{{lead_company}}"
+
+  # Step 2: Generate a proposal
+  - name: generate_proposal
+    action: skill
+    config:
+      skill: proposal
+      params:
+        action: generate
+        prospect_name: "{{lead_name}}"
+        company: "{{lead_company}}"
+        scope: "Real estate lead automation system"
+
+  # Step 3: Log activity to CRM
+  - name: log_activity
+    action: skill
+    config:
+      skill: crm
+      params:
+        action: log_activity
+        contact_name: "{{lead_name}}"
+        email: "{{lead_email}}"
+        company: "{{lead_company}}"
+        activity_type: "prospect_research"
+        activity_description: "Prospect researched and proposal generated via automation"
+
+  # Step 4: Create a task for follow-up
+  - name: create_followup_task
+    action: skill
+    config:
+      skill: tasks
+      params:
+        action: create
+        title: "Follow up with {{lead_name}}"
+        description: "Send proposal for {{lead_company}}"
+        due_date: "{{follow_up_date}}"
+        priority: "high"
