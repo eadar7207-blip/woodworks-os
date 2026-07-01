@@ -1283,3 +1283,10 @@ All addressable via [[Instagram Carousel Automation System]] (25 topics) + autom
 ## [2026-07-01] cron-run | Competitor Analysis Synthesis — July 2026
 - Monthly competitor-analysis cron produced reports/adar-competitor-report-2026-07.pdf and wiki/synthesis/competitor-analysis-2026-07.md
 - Recovered during 2026-07-01 git history merge (see note above) - the cron's git workflow still needs a real fix so it stops force-pushing over the repo
+
+## [2026-07-01] cron-run | Competitor Analysis — July 2026 (regenerated)
+- Re-ran monthly competitor analysis with fresh research; overwrote previous July 2026 outputs
+- Researched 8 competitors: Structurely, Lofty/AOS, Follow Up Boss, Sierra Interactive, kvCORE/BoldTrail, Ylopo, Real Geeks, CINC
+- Key finding: all 8 are self-serve SaaS — done-for-you agency is an uncontested category
+- PDF: reports/adar-competitor-report-2026-07.pdf
+- Wiki: wiki/synthesis/competitor-analysis-2026-07.md
