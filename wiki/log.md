@@ -1275,3 +1275,11 @@ All addressable via [[Instagram Carousel Automation System]] (25 topics) + autom
 - Guardrails: never writes/creates live campaigns or budgets without explicit turn-by-turn confirmation; checks `is_ads_mcp_enabled` before any write; flagged that scheduling this into a cron/automated trigger would require the deployment-security review first
 - Created wiki/sources/meta-ads-claude-integration.md, wiki/concepts/meta-ads-media-buyer-skill.md
 - Updated: wiki/index.md, wiki/log.md, wiki/overview.md
+
+## [2026-06-23] cron-run | Competitor Analysis Synthesis — June 2026
+- Monthly competitor-analysis cron produced reports/adar-competitor-report-2026-06.pdf and wiki/synthesis/competitor-analysis-2026-06.md
+- Recovered during 2026-07-01 git history merge (cron had been force-pushing an orphaned history that only contained its own outputs, disconnected from the real repo tree)
+
+## [2026-07-01] cron-run | Competitor Analysis Synthesis — July 2026
+- Monthly competitor-analysis cron produced reports/adar-competitor-report-2026-07.pdf and wiki/synthesis/competitor-analysis-2026-07.md
+- Recovered during 2026-07-01 git history merge (see note above) - the cron's git workflow still needs a real fix so it stops force-pushing over the repo
