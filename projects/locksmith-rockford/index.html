@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Main Locksmith | Rockford, IL | 847-440-6479</title>
+  <meta name="description" content="Locksmith in Rockford, IL. Vehicle lockout, residential lockout, car key replacement, lock change and repair. Call 847-440-6479." />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --black: #111111;
+      --yellow: #F5C800;
+      --yellow-dark: #D4AC00;
+      --white: #FFFFFF;
+      --gray: #F4F4F4;
+      --text: #1A1A1A;
+      --muted: #555555;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      color: var(--text);
+      background: var(--white);
+      font-size: 16px;
+      line-height: 1.5;
+    }
+
+    /* STICKY TOP BAR */
+    .top-bar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--yellow);
+      text-align: center;
+      padding: 10px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+    }
+
+    .top-bar span {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--black);
+    }
+
+    .top-bar a {
+      background: var(--black);
+      color: var(--yellow);
+      text-decoration: none;
+      font-size: 15px;
+      font-weight: 700;
+      padding: 8px 20px;
+      border-radius: 6px;
+      white-space: nowrap;
+    }
+
+    /* HERO */
+    .hero {
+      background: var(--black);
+      color: var(--white);
+      text-align: center;
+      padding: 56px 24px 48px;
+    }
+
+    .hero .badge {
+      display: inline-block;
+      background: var(--yellow);
+      color: var(--black);
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      padding: 4px 12px;
+      border-radius: 4px;
+      margin-bottom: 20px;
+    }
+
+    .hero h1 {
+      font-size: clamp(26px, 6vw, 42px);
+      font-weight: 800;
+      line-height: 1.15;
+      margin-bottom: 16px;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .hero h1 span {
+      color: var(--yellow);
+    }
+
+    .hero p {
+      font-size: 17px;
+      color: #CCCCCC;
+      margin-bottom: 32px;
+      max-width: 480px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .cta-phone {
+      display: inline-block;
+      background: var(--yellow);
+      color: var(--black);
+      text-decoration: none;
+      font-size: clamp(22px, 5vw, 32px);
+      font-weight: 800;
+      padding: 18px 40px;
+      border-radius: 8px;
+      letter-spacing: 0.02em;
+      transition: background 0.15s;
+    }
+
+    .cta-phone:hover { background: var(--yellow-dark); }
+
+    .hero .sub {
+      margin-top: 16px;
+      font-size: 13px;
+      color: #888;
+    }
+
+    /* TRUST BAR */
+    .trust-bar {
+      background: #1A1A1A;
+      border-top: 1px solid #2A2A2A;
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 0;
+    }
+
+    .trust-bar .item {
+      padding: 16px 28px;
+      text-align: center;
+      color: #CCCCCC;
+      font-size: 13px;
+      font-weight: 500;
+      border-right: 1px solid #2A2A2A;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .trust-bar .item:last-child { border-right: none; }
+
+    .trust-bar .item .icon {
+      font-size: 18px;
+    }
+
+    /* SECTIONS */
+    section { padding: 56px 24px; }
+
+    .container {
+      max-width: 960px;
+      margin: 0 auto;
+    }
+
+    .section-label {
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--yellow-dark);
+      margin-bottom: 10px;
+    }
+
+    h2 {
+      font-size: clamp(22px, 4vw, 32px);
+      font-weight: 800;
+      margin-bottom: 8px;
+      line-height: 1.2;
+    }
+
+    .section-desc {
+      color: var(--muted);
+      font-size: 16px;
+      margin-bottom: 40px;
+      max-width: 560px;
+    }
+
+    /* SERVICES GRID */
+    .services { background: var(--gray); }
+
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 16px;
+    }
+
+    .service-card {
+      background: var(--white);
+      border-radius: 10px;
+      padding: 28px 24px;
+      border: 2px solid transparent;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+
+    .service-card:hover {
+      border-color: var(--yellow);
+      box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+    }
+
+    .service-card .icon {
+      font-size: 32px;
+      margin-bottom: 14px;
+    }
+
+    .service-card h3 {
+      font-size: 17px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .service-card p {
+      font-size: 14px;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .service-card .emergency-tag {
+      display: inline-block;
+      background: #FFF3CD;
+      color: #7A5000;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      padding: 2px 8px;
+      border-radius: 4px;
+      margin-bottom: 10px;
+    }
+
+    /* WHY US */
+    .why-us { background: var(--white); }
+
+    .why-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 24px;
+      margin-top: 8px;
+    }
+
+    .why-item {
+      padding: 24px;
+      background: var(--black);
+      border-radius: 10px;
+      color: var(--white);
+    }
+
+    .why-item .icon {
+      font-size: 28px;
+      margin-bottom: 14px;
+    }
+
+    .why-item h3 {
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: var(--yellow);
+    }
+
+    .why-item p {
+      font-size: 14px;
+      color: #AAAAAA;
+    }
+
+    /* SERVICE AREA */
+    .service-area { background: var(--gray); }
+
+    .cities-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 8px;
+    }
+
+    .city-tag {
+      background: var(--white);
+      border: 1px solid #DDD;
+      border-radius: 20px;
+      padding: 6px 16px;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text);
+    }
+
+    /* FOOTER CTA */
+    .footer-cta {
+      background: var(--black);
+      color: var(--white);
+      text-align: center;
+      padding: 64px 24px;
+    }
+
+    .footer-cta h2 {
+      color: var(--white);
+      margin-bottom: 12px;
+    }
+
+    .footer-cta p {
+      color: #AAAAAA;
+      margin-bottom: 32px;
+      font-size: 16px;
+    }
+
+    .footer-cta .cta-phone {
+      font-size: clamp(24px, 5vw, 36px);
+    }
+
+    .footer-cta .hours {
+      margin-top: 20px;
+      font-size: 14px;
+      color: #666;
+    }
+
+    /* FOOTER */
+    footer {
+      background: #0A0A0A;
+      text-align: center;
+      padding: 24px 16px;
+      color: #444;
+      font-size: 13px;
+    }
+
+    footer a {
+      color: #888;
+      text-decoration: none;
+    }
+
+    /* MOBILE */
+    @media (max-width: 600px) {
+      .trust-bar {
+        flex-direction: column;
+      }
+      .trust-bar .item {
+        border-right: none;
+        border-bottom: 1px solid #2A2A2A;
+        justify-content: center;
+      }
+      .trust-bar .item:last-child { border-bottom: none; }
+      .top-bar { flex-direction: column; gap: 8px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- STICKY CALL BAR -->
+  <div class="top-bar">
+    <span>Emergency Locksmith — Rockford, IL</span>
+    <a href="tel:8474406479">Call 847-440-6479</a>
+  </div>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="badge">Rockford &amp; Surrounding Areas</div>
+    <h1>Locked Out? <span>We're On the Way.</span></h1>
+    <p>Serving Rockford, IL and a 20-mile radius. Cars, homes, and commercial. No hidden fees.</p>
+    <a href="tel:8474406479" class="cta-phone">847-440-6479</a>
+    <div class="sub">Tap to call — available now</div>
+  </section>
+
+  <!-- TRUST BAR -->
+  <div class="trust-bar">
+    <div class="item"><span class="icon">⚡</span> Fast Response</div>
+<div class="item"><span class="icon">💲</span> Flat-Rate Pricing</div>
+    <div class="item"><span class="icon">📍</span> Rockford Area</div>
+  </div>
+
+  <!-- SERVICES -->
+  <section class="services">
+    <div class="container">
+      <div class="section-label">What We Do</div>
+      <h2>Full-Service Locksmith — Auto, Residential &amp; Commercial</h2>
+      <p class="section-desc">From emergency lockouts to key programming and lock replacement, we handle it all on-site.</p>
+      <div class="services-grid">
+
+        <div class="service-card">
+          <div class="emergency-tag">Emergency</div>
+          <div class="icon">🚗</div>
+          <h3>Vehicle Lockout</h3>
+          <p>Locked your keys in the car? We'll get you back in fast — no damage to your vehicle. All makes and models.</p>
+        </div>
+
+        <div class="service-card">
+          <div class="emergency-tag">Emergency</div>
+          <div class="icon">🏠</div>
+          <h3>Residential Lockout</h3>
+          <p>Locked out of your home? We respond day or night. Front doors, back doors, garage entry — we handle it.</p>
+        </div>
+
+        <div class="service-card">
+          <div class="icon">🔑</div>
+          <h3>All Keys Lost — Car Keys</h3>
+          <p>Lost all your car keys? We create new keys from scratch for most makes and models, right at your location.</p>
+        </div>
+
+        <div class="service-card">
+          <div class="icon">✂️</div>
+          <h3>Key Copy, Cut &amp; Programming</h3>
+          <p>Transponder keys, smart keys, key fobs, and standard cuts. We program on the spot — no dealership needed.</p>
+        </div>
+
+        <div class="service-card">
+          <div class="icon">🔧</div>
+          <h3>Residential Lock Change &amp; Repair</h3>
+          <p>Moving in? Lost a key? Upgrading security? We rekey, replace, and repair all residential locks same day.</p>
+        </div>
+
+        <div class="service-card">
+          <div class="emergency-tag">Emergency</div>
+          <div class="icon">🏢</div>
+          <h3>Commercial Lockout</h3>
+          <p>Locked out of your business? We respond quickly to get you back inside with zero downtime.</p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- WHY US -->
+  <section class="why-us">
+    <div class="container">
+      <div class="section-label">Why Main Locksmith</div>
+      <h2>Local. Reliable. No Surprises.</h2>
+      <p class="section-desc">We're not a call center dispatching a stranger. We're a Rockford-area locksmith you can count on.</p>
+      <div class="why-grid">
+        <div class="why-item">
+          <div class="icon">⚡</div>
+          <h3>Fast Response Time</h3>
+          <p>We aim to be on-site within 15–30 minutes anywhere in the Rockford area. No long wait windows.</p>
+        </div>
+        <div class="why-item">
+          <div class="icon">💲</div>
+          <h3>Flat-Rate, Upfront Pricing</h3>
+          <p>We tell you the price before we start. No hidden fees, no surprise charges when the job is done.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SERVICE AREA -->
+  <section class="service-area">
+    <div class="container">
+      <div class="section-label">Service Area</div>
+      <h2>Serving Rockford and a 20-Mile Radius</h2>
+      <p class="section-desc">If you're in Winnebago County or nearby, we come to you.</p>
+      <div class="cities-grid">
+        <span class="city-tag">Rockford</span>
+        <span class="city-tag">Loves Park</span>
+        <span class="city-tag">Machesney Park</span>
+        <span class="city-tag">Belvidere</span>
+        <span class="city-tag">Roscoe</span>
+        <span class="city-tag">Rockton</span>
+        <span class="city-tag">Winnebago</span>
+        <span class="city-tag">Cherry Valley</span>
+        <span class="city-tag">Byron</span>
+        <span class="city-tag">Pecatonica</span>
+        <span class="city-tag">South Beloit</span>
+        <span class="city-tag">New Milford</span>
+        <span class="city-tag">Davis Junction</span>
+        <span class="city-tag">Stillman Valley</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER CTA -->
+  <section class="footer-cta">
+    <div class="container">
+      <h2>Need a Locksmith Right Now?</h2>
+      <p>One call and we're on the way. Serving Rockford, IL and surrounding areas.</p>
+      <a href="tel:8474406479" class="cta-phone">847-440-6479</a>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <p>Main Locksmith &mdash; Automotive, Residential &amp; Commercial &mdash; Rockford, IL</p>
+    <p style="margin-top:6px;"><a href="tel:8474406479">847-440-6479</a> &nbsp;|&nbsp; Serving Winnebago County &amp; Surrounding Areas</p>
+  </footer>
+
+</body>
+</html>

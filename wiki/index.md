@@ -34,10 +34,27 @@
 
 - YouTube: "How to Grow Your Agency Fast" (analyzed 2026-06-04) — Scaling framework applicable to RE automation agency
 
+- [Business Profile](../business-profile.json) - Single source of truth: brand, pricing, services, owner, differentiators. Read by skills + cloud routines. (created: 2026-06-23)
+- [[Build & Sell with Claude Code (10hr Course) - Nate Herk]](sources/build-sell-with-claude-code.md) - Full 10hr transcript ingested. Validated WAT framework, added Context7 MCP, captured pricing/client-acquisition frameworks. (created: 2026-07-01)
+- [[Being the Director of Your Coding Agents — Nate Herk x Cole Medin]](sources/directing-coding-agents-cole-medin.md) - Podcast: dumb-zone token thresholds, hooks for security (agent-can-touch-it-will-do-it), harness engineering/Ralph loop, agent-team debate panels. Reinforces WAT + deployment-security rule. (created: 2026-07-01)
+- [[Meta Officially Integrated Claude Into Facebook Ads (YouTube ingest)]](sources/meta-ads-claude-integration.md) - Built the `/ads` Meta Ads Media Buyer skill from this video. (created: 2026-07-01)
+- [[Stanford's Method Turns Claude Into a PHD Level Research Team]](sources/storm-research-method.md) - Built the storm-research skill (5-persona verified research pipeline) from this video. (created: 2026-07-01)
+- [[Competitor Analysis Skill]](concepts/competitor-analysis-skill.md) - Monthly automated workflow: web research → branded PDF → GitHub commit → Gmail draft. Runs 1st of every month. (created: 2026-06-23)
+- [[DailyRemote Job Scraper]](concepts/dailyremote-scraper.md) - Python scraper for remote job listings. Current output: 500 UK sales jobs → Excel + Google Sheet. (created: 2026-06-24)
+- [[YouTube Intelligence Pipeline]](concepts/youtube-intelligence-pipeline.md) - Weekly automated YouTube research: 10 search queries → transcripts → Claude synthesis → 4 charts → 9-page PPTX → Gmail. Fires every Monday 7:03am. (created: 2026-06-29)
+- [[Frontend Slides Skill]](concepts/frontend-slides-skill.md) - HTML presentation generator. 12 presets + 34 bold templates. Zero deps, single-file output. Converts PPTX to web. (created: 2026-06-29)
+- [[Awesome Claude Skills (Composio)]](concepts/awesome-claude-skills.md) - 832 Composio app integration skills + 33 standalone skills. Installed at .claude/skills/awesome-claude-skills/. (created: 2026-06-29)
+- [[WAT Framework]](concepts/wat-framework.md) - Workflows/Agent/Tools split documented in root CLAUDE.md; independently validated by the Nate Herk course's identical 3-layer pattern. (created: 2026-07-01)
+- [[Claude Code Power Techniques]](concepts/claude-code-power-techniques.md) - Cheat sheet: context management, CLAUDE.md discipline, build habits, skills vs sub-agents vs agent teams, deployment options. (created: 2026-07-01)
+- [[AI Agency Client Acquisition and Pricing]](concepts/ai-agency-client-acquisition-pricing.md) - PRICE framework, value-based retainer pricing (10-15% of yr-1 savings), Trojan horse partner method, 7-day cold-to-closed framework. (created: 2026-07-01)
+- [[STORM Multi-Perspective Research Method]](concepts/storm-research-method.md) - 5-persona parallel research + contradiction mapping + adversarial peer review. Implemented as `/storm-research` skill. (created: 2026-07-01)
+- [[Meta Ads Media Buyer Skill]](concepts/meta-ads-media-buyer-skill.md) - `/ads` skill: audit, build, and manage Meta ad campaigns via the official Meta Ads MCP connector. Real estate lead-gen focused. (created: 2026-07-01)
+
 ## Synthesis
 
 - [[Chicago Prospect Analysis]](synthesis/chicago-prospect-analysis.md) - Comparison of 3 Chicago prospects, strategy prioritization (updated: 2026-06-04)
 - [[Sohail Shadowing Plan]](synthesis/sohail-shadowing-plan.md) - Detailed plan for shadowing Sohail/his agents, observation checklist, follow-up strategy (updated: 2026-06-04)
+- [[Competitor Analysis — Adar Realty Studios — 2026-06-22]](synthesis/competitor-analysis-2026-06-22.md) - 6 competitors profiled, gap analysis, recommended actions, branded PDF generated (created: 2026-06-23)
 - [[Competitor Landscape]](synthesis/competitor-landscape.md) - 50 RE automation competitors analyzed, pricing tiers, competitive gaps, Eitan's positioning (created: 2026-06-05)
 - [[Red Team Assessment]](synthesis/red-team-assessment.md) - Competitive threats, vulnerabilities, realistic moat candidates, how competitors could win (created: 2026-06-05)
 - [[LinkedIn Strategy]](synthesis/linkedin-strategy.md) - Positioning statement, target audience, 5 content pillars, 30-day content calendar (created: 2026-06-05)

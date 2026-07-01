@@ -3,7 +3,7 @@ title: Overview
 type: overview
 tags: []
 created: 2026-01-01
-updated: 2026-06-16
+updated: 2026-06-24
 sources: 0
 ---
 
@@ -23,6 +23,24 @@ sources: 0
 
 **Sohail Meeting (2026-06-19):** Met with Sohail Salhadin. No automation sale. He's now a mentor — convinced Eitan to get licensed and is helping him do it. Likely eXp sponsor. Sohail is no longer a prospect.
 
+**Business Profile (2026-06-23):** `business-profile.json` created at repo root — single source of truth for business name, brand colors, pricing, services, target customers, differentiators, and GitHub repo. All skills and cloud routines read from this instead of requiring inputs each run.
+
+**Competitor Analysis Workflow (2026-06-23):** Built `/competitor-analysis` skill — web research → branded PDF → monthly cloud cron. First run profiled 6 competitors (Lofty, Ylopo, Structurely, Follow Up Boss, Luxury Presence, SmartZip). Key finding: solo agents ($0–500/mo budget) are almost entirely ignored by all major competitors. Auto-runs 1st of every month and commits PDF to GitHub. Repo live at github.com/eadar7207-blip/woodworks-os. Brand colors locked: primary `#1B3A6B`, accent `#4A9EDB`.
+
+**Firecrawl Integration (2026-06-24):** Firecrawl CLI initialized (API key: fc-c01ff0e4ee84411e81f0d116523800c8). 31 web research skills installed. Unlocks real-time web search, full-page scraping, structured data extraction, lead gen from directories, competitive intel monitoring, and browser interaction for JS-heavy/login-gated sites. Pairs directly with `/competitor-analysis`, `/prospect`, and `/lead-finder` workflows.
+
+**YouTube Intelligence Pipeline (2026-06-29):** Built fully automated weekly AI/automation YouTube research system. Runs every Monday at 7:03am via cloud trigger. Pipeline: YouTube Data API v3 (search 10 queries, top 30 videos) → transcript analysis → Claude synthesis → 4 matplotlib charts → 9-page branded PPTX deck → Gmail delivery to eadar7207@gmail.com. YouTube API key: `AIzaSyAO8rCwEmGpqW8uZQ4UYsfIA4REJmwPbhw`. Cloud trigger: `trig_01LBg5zbehmwaNkbhSoY8d6Z`. Run manually: `python3 tools/youtube_intelligence.py` (add `--test` or `--dry-run` flags). Deck brand: primary `#1B3A6B`, accent `#4A9EDB`.
+
+**Director of Coding Agents Podcast Ingest (2026-07-01):** Watched Nate Herk x Cole Medin podcast (`RzLV8sfFdMM`). Reinforces existing WAT framework and deployment-security rule — no architecture changes. Captured: LLM "dumb zone" token thresholds (Opus ~250K, Sonnet 4.6 ~100-125K — stay well under the 1M marketing number), hooks as the only real permission layer (prompt instructions like "never delete the database" don't actually stop an agent), "every bug becomes a permanent upgrade" habit, and agent-team debate panels as a good pattern for pricing/strategy decisions. Real incident cited: a team's agent misread its task list and emailed an unauthorized discount code to their whole list — good concrete case for the deployment-security rule. See [[Claude Code Power Techniques]].
+
+**Meta Ads Media Buyer Skill (2026-07-01):** Built `/ads` from a YouTube ingest on Meta's official Claude ↔ Facebook Ads MCP integration. Confirmed the connector (`mcp__claude_ai_Facebook_Ads__*`) is already live on eadar7207@gmail.com. Skill does audit (root-cause diagnostic: learning-phase resets, CPM health, funnel drop-off vs. landing-page trust) → build (campaign blueprint, requires explicit confirmation before any live write) → manage (7-day cadence). Adapted from the source's dropshipping terms to real estate lead-gen terms. Directly sellable: free audit as lead magnet, paid build/management as retainer — same shape as the PRICE pricing framework. See [[Meta Ads Media Buyer Skill]].
+
+**Nate Herk Video Ingests (2026-07-01):** Watched two "Build & Sell with Claude Code" videos and extracted what's actually useful: added Context7 MCP (up-to-date library docs), a deployment-security rule, and built a real new skill — `/storm-research` (Stanford STORM method: 5-persona parallel research + adversarial verification, for market/competitor research deeper than a single query). Also captured the PRICE pricing framework and Trojan-horse client-acquisition method in `wiki/concepts/ai-agency-client-acquisition-pricing.md` — directly applicable to closing the next prospect. Confirmed the WAT framework already matches what the course teaches, no rework needed.
+
+**New Skill Packs Installed (2026-06-29):** Installed `marketing-skill` and `c-level-advisor` from `github.com/alirezarezvani/claude-skills` (19.4k stars). Both live in `.claude/skills/`. Marketing-skill: content strategy, SEO/AEO, CRO, outreach, growth, sales pods. C-level-advisor: CEO, CMO, CTO, Chief AI Officer, executive mentor, VPE personas for strategy pressure-testing.
+
+**Broker Lead Scraper (2026-06-24):** Built `projects/re-broker-leads/scrape_brokers.py` — Firecrawl-powered scraper that collects real estate broker leads across major US cities. 30 search queries targeting luxury/high-volume brokers → parse phone + email from snippets → enrich missing phones via contact page scrape. First run: 50 leads, all 50 with phone numbers, uploaded to Google Sheets. Sheet: [RE Broker Leads - High Budget](https://docs.google.com/spreadsheets/d/1eO23Bv_MV5RebO6tE_lHeYO6P4onPvg1dJddajMMVt4/edit?usp=drivesdk). Cities covered: Chicago, NYC, LA, Miami, Dallas, SF, Boston, Seattle, Atlanta, Houston, Las Vegas, Phoenix, Denver, Nashville, Austin, Charlotte.
+
 **Content Strategy (2026-06-09):** Building @eitanadar.ai personal brand with automated Instagram carousel system. One-command carousel generation + posting via Telegram bot. 7 topics × 5 Claude prompts per topic (45 total prompts for realtors). Neon design system with auto-generated captions.
 
 Claude Code is your complete operating system. 40 skills built to run the automation agency + full execution visibility:
@@ -41,8 +59,15 @@ Claude Code is your complete operating system. 40 skills built to run the automa
 - `/invoicing` — create invoices, track payments
 
 **Content & Research:**
+- `/ads` — Meta Ads Media Buyer: audit, build, and manage Meta/Instagram ad campaigns via the official Meta Ads MCP connector. Real estate lead-gen focused (cost-per-lead, lead-form completion, landing-page trust diagnosis). Built 2026-07-01.
+- `/storm-research` — Stanford STORM method: 5-persona parallel research (practitioner/academic/skeptic/economist/historian) → contradiction mapping → adversarial peer review → verified HTML briefing. Built 2026-07-01 from a Nate Herk video. Use for market/competitor research where a single-angle query leaves blind spots.
 - `/youtube-transcript-analyzer` — Analyze videos with captions
+- `/watch-youtube` — Extract transcripts and structured knowledge from YouTube videos (peilingjiang/skills, installed via skillfish 2026-06-29)
 - `/youtube-video-analyzer-universal` — Analyze any video (Whisper-based)
+- `/frontend-slides` — HTML presentation generator. 12 style presets + 34 bold templates. Zero dependencies, single-file output. Converts PPTX to web slides.
+- `awesome-claude-skills` (Composio) — 832 app integration skills + 33 standalone skills (lead research, content writer, competitive ads, resume generator, video downloader, meeting insights, invoice organizer, and more). Installed at `.claude/skills/awesome-claude-skills/`.
+- `/marketing-skill` — Content strategy, SEO/AEO, CRO, outreach, growth, sales (46 skills)
+- `/c-level-advisor` — CEO, CMO, CTO, Chief AI Officer, executive mentor personas (66 skills)
 - `/video-editing` — AI video production end-to-end (Reels, demos, voiceover, music, MP4 render) — powered by claude-code-video-toolkit
 - `/taste-skill` — Anti-slop frontend design for landing pages, portfolios, redesigns (41.5k stars, leonxlnx/taste-skill)
 - `/emil-design-eng` — Emil Kowalski's design engineering philosophy — UI polish, animation decisions, component craft (2.3k stars, emilkowalski/skill)

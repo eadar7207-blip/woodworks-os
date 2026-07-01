@@ -1,0 +1,54 @@
+{
+  "business_name": "Adar Realty Studios",
+  "tagline": "AI Automations for Real Estate",
+  "description": "Builds custom AI automations for real estate agents to generate and capture leads while agents focus on closing deals. Done-for-you agency model — not just software.",
+  "industry": "AI automation for real estate agents",
+  "niche": "Real estate agents and small teams",
+  "model": "Agency (done-for-you)",
+  "owner": {
+    "name": "Eitan Adar",
+    "email": "eadar7207@gmail.com",
+    "github": "eadar7207-blip"
+  },
+  "brand": {
+    "primary_color": "#1B3A6B",
+    "accent_color": "#4A9EDB",
+    "logo": ".claude/skills/competitor-analysis/scripts/generate_logo.py",
+    "logo_output": "/tmp/adar_logo.png"
+  },
+  "services": [
+    "AI lead follow-up automation",
+    "AI voice receptionist",
+    "Instagram DM automation",
+    "CRM integration and workflow automation",
+    "Custom AI agent builds"
+  ],
+  "target_customers": [
+    "Solo real estate agents",
+    "Small real estate teams (2-10 agents)",
+    "Real estate brokerages"
+  ],
+  "geography": "Chicago, IL (primary) — expanding nationally",
+  "pricing": {
+    "starter": "$299–399/mo (solo agent package)",
+    "voice_addon": "$199/mo (AI voice receptionist add-on)",
+    "custom": "$2,500–$50,000 per custom build",
+    "retainer": "$500–$2,000/mo ongoing"
+  },
+  "github_repo": "https://github.com/eadar7207-blip/woodworks-os",
+  "competitors_analyzed": [
+    "Lofty",
+    "Ylopo",
+    "Structurely",
+    "Follow Up Boss",
+    "Luxury Presence",
+    "SmartZip"
+  ],
+  "key_differentiators": [
+    "Done-for-you — we build and run the automations, not just sell software",
+    "Solo agent focus — undercuts all major competitors on price",
+    "AI voice receptionist as standalone product",
+    "No platform lock-in — works with tools agents already use"
+  ],
+  "updated": "2026-06-23"
+}

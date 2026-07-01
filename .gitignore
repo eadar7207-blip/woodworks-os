@@ -3,6 +3,9 @@
 .env.local
 .env.*.local
 
+# Temporary processing files
+.tmp/
+
 # Claude Code auto-memory paths
 **/memory/
 
@@ -18,3 +21,10 @@
 
 # Node (in case projects/ pulls in node-based work)
 node_modules/
+
+# Credentials (never commit tokens - live in .env only)
+.claude/gmail_token.json
+*_token.json
+
+# Browser automation artifacts (Playwright MCP session output)
+.playwright-mcp/

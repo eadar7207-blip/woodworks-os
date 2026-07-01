@@ -45,6 +45,7 @@ See `wiki/CLAUDE.md` for the full wiki schema and operations.
 ## Rules
 
 See `.claude/rules/communication-style.md` for how to write and respond.
+See `.claude/rules/deployment-security.md` before deploying any automation to a scheduled trigger, webhook, or cron.
 
 ---
 
@@ -70,6 +71,7 @@ See `.claude/rules/communication-style.md` for how to write and respond.
 
 Slash commands live in `.claude/commands/`:
 
+- `/ads` - audit, build, and manage Meta (Facebook/Instagram) ad campaigns via the official Meta Ads MCP connector
 - `/onboard` - first-time setup. Personalizes this repo with your name, business, and top priority.
 - `/browser` - control a real browser via Playwright MCP (navigate, click, fill forms, scrape)
 - `/calendar` - schedule calls, block focus time
@@ -98,6 +100,7 @@ Connected services available in every session:
 - **Zapier** - 9,000+ app integrations; call `list_enabled_zapier_actions` before using
 - **Playwright** - browser automation (navigate, click, screenshot, form fill)
 - **Higgsfield** - AI video/image/audio generation
+- **Context7** - up-to-date, version-specific library docs/code examples; use before writing code against a library that may have changed since training data (added 2026-07-01)
 
 ---
 
@@ -105,3 +108,19 @@ Connected services available in every session:
 
 - `projects/` - active workstreams. One folder per project. Each gets its own README.
 - Key active projects: `sohail-demo/` (interactive pitch dashboard), `voice-receptionist/` (AI receptionist MVP), `instagram-carousels/` (content automation), `website/`
+
+---
+
+## Automation Execution (WAT Framework)
+
+When building automations, follow this separation:
+
+- **Workflows** (`workflows/`) - Markdown SOPs for recurring tasks. Defines the objective, inputs, tools to use, and edge cases. Update these when you discover better methods or hit unexpected constraints.
+- **Tools** (`tools/`) - Python scripts for deterministic execution. API calls, data transforms, file ops. Credentials go in `.env` only.
+- **Agent (you)** - Read the relevant workflow, call the right tools in sequence, handle failures, ask when unsure.
+
+**Key rules:**
+- Check `tools/` before writing anything new -- reuse first
+- When a script fails: read the full error, fix it, verify it works, then update the workflow so it doesn't happen again
+- Don't create or overwrite workflows without being asked -- they're instructions, not throwaway notes
+- Temporary/intermediate files go in `.tmp/` -- final outputs go to cloud (Google Drive, Sheets, etc.)

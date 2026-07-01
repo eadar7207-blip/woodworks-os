@@ -49,6 +49,27 @@ Append-only log of every wiki operation. Newest entries at the bottom.
 
 ---
 
+## [2026-06-24] build | DailyRemote job scraper — 500 UK sales jobs
+
+- Built `projects/dailyremote-scraper/scrape_jobs.py` — scrapes dailyremote.com by country-specific sales URLs
+- Key finding: `?location=Europe` URL param is JS-rendered, doesn't work with static scraping — must use `/remote-sales-jobs-in-{country}` pattern
+- Scraped 500 UK remote sales jobs across 17 pages
+- Output: `projects/dailyremote-scraper/europe_sales_jobs.xlsx` — formatted with brand colors, auto-filter, clickable links
+- Google Sheet (100-row preview): https://docs.google.com/spreadsheets/d/1vrNFYCySiwTntUHVMezWwLNihxG-8gthfE6poCsmQjg/edit
+- Full 500-row upload to Sheets requires one-time browser OAuth (command in concept page)
+
+## [2026-06-29] update | Meeting recording setup — Tactiq installed, /meeting-insights wired up
+
+- Built `/meeting-insights` command — pulls call transcripts and runs analysis via the meeting-insights-analyzer skill (from awesome-claude-skills)
+- Covers Google Meet, Zoom, Teams — any platform Tactiq supports
+- Tried Fathom (onboarding friction, requires desktop app completion) and Granola (requires Google Workspace/work account — not available)
+- Active solution: **Tactiq** Chrome extension — installed, logged in as eadar7207@gmail.com, free plan (10 meetings)
+- Works for Google Meet (browser), Zoom (browser), Teams (browser) — does not capture Zoom/Teams desktop apps
+- Parked for future use — Eitan is 18 and not currently doing business calls; will be ready when sales calls begin
+- Created: wiki/concepts/dailyremote-scraper.md
+
+---
+
 ## [2026-06-18] update | Sohail demo dashboard built for meeting tomorrow
 
 - Built `projects/sohail-demo/demo.html` — interactive browser dashboard simulating automation system running for Sohail's team
@@ -1128,3 +1149,129 @@ All addressable via [[Instagram Carousel Automation System]] (25 topics) + autom
 - Generated branded PDF report with deep navy blue branding
 - PDF: ~/Desktop/adar-realty-studios-competitor-report-2026-06-22.pdf
 - Wiki: wiki/synthesis/competitor-analysis-2026-06-22.md
+
+## [2026-06-23] update | Competitor Analysis Skill + Monthly Automation
+- Built /competitor-analysis skill (SKILL.md, generate_pdf.py, generate_logo.py)
+- Generated Adar Realty Studios logo (navy #1B3A6B / blue #4A9EDB)
+- Ran full competitor research: Lofty, Ylopo, Structurely, Follow Up Boss, Luxury Presence, SmartZip
+- Generated branded PDF: ~/Desktop/adar-realty-studios-competitor-report-2026-06-22.pdf
+- Created monthly cloud routine trig_01BMexRt2dGAgM7MLjTiqAsw (runs 1st of every month)
+- Created GitHub repo: github.com/eadar7207-blip/woodworks-os — full codebase pushed
+- Created: wiki/concepts/competitor-analysis-skill.md
+- Created: wiki/synthesis/competitor-analysis-2026-06-22.md
+- Updated: wiki/overview.md, wiki/index.md
+
+## [2026-06-23] update | Business Profile JSON created
+- Created business-profile.json at repo root
+- Contains: owner info, brand colors, services, pricing tiers, target customers, competitors list, key differentiators, GitHub repo
+- Single source of truth for all skills and cloud routines to read instead of re-entering business info
+
+## [2026-06-24] build | RE Broker Lead Scraper — 50 leads → Google Sheets
+
+- Built `projects/re-broker-leads/scrape_brokers.py` — Firecrawl-powered broker lead collector
+- Approach: 30 search queries across 15+ US cities targeting luxury/high-volume brokers → parse phone + email from snippets → enrich via contact page scrape for missing phones
+- Result: 50 leads, all 50 with phone numbers, 12 columns (name, brokerage, phone, email, city, state, sales volume, team size, specialty, budget signal, website, source)
+- Budget signals used: luxury listings, team/group structure, premium brokerage brand (Sotheby's, Compass, etc.), top producer recognition, high review counts
+- Cities covered: Chicago, NYC, LA, Miami, Dallas, SF, Boston, Seattle, Atlanta, Houston, Las Vegas, Phoenix, Denver, Nashville, Austin, Charlotte
+- Notable leads: Emily Sachs Wong (Chicago luxury), Aaron Kirman (LA), Greenwood King (Houston), Carrie McCormick (Chicago)
+- Google Sheets URL: https://docs.google.com/spreadsheets/d/1eO23Bv_MV5RebO6tE_lHeYO6P4onPvg1dJddajMMVt4/edit?usp=drivesdk
+- Updated: wiki/overview.md
+
+## [2026-06-24] setup | Firecrawl CLI initialized + 31 web skills installed
+- Ran `npx firecrawl-cli@latest init --all -k fc-c01ff0e4ee84411e81f0d116523800c8`
+- Authenticated, installed CLI globally, installed 31 skills
+- Skills installed: firecrawl (scrape), firecrawl-search, firecrawl-crawl, firecrawl-map, firecrawl-interact, firecrawl-lead-gen, firecrawl-lead-research, firecrawl-competitive-intel, firecrawl-market-research, firecrawl-deep-research, firecrawl-download, firecrawl-agent, firecrawl-build-*, and more
+- Directly upgrades: /competitor-analysis (live web research), /prospect (lead intel), /lead-finder (directory extraction)
+- Updated: wiki/overview.md
+
+## [2026-06-29] build | YouTube Intelligence Pipeline — weekly AI/automation report automation
+
+- Built full 5-phase weekly automation: YouTube Data API v3 → transcripts → Claude synthesis → charts → 9-page PPTX → Gmail
+- Files created: `tools/youtube_api.py`, `tools/transcript_batch.py`, `tools/chart_generator.py`, `tools/slide_builder.js`, `tools/youtube_intelligence.py`
+- Updated `tools/send_email.py` with attachment support (MIMEMultipart + MIMEBase)
+- YouTube API key obtained via Playwright browser automation on Google Cloud Console: `AIzaSyAO8rCwEmGpqW8uZQ4UYsfIA4REJmwPbhw`
+- Slide deck: 9 pages (Title → Executive Summary → Top Videos → Top Channels → Engagement → Trending Topics → Posting Patterns → Recommendations → Thank You). Brand: `#1B3A6B` / `#4A9EDB`
+- Charts: 4 types (trending topics bar, top videos bar, channel subscribers bar, engagement scatter)
+- Search queries: 10 AI/automation niche queries covering agents, LLMs, n8n, Make.com, ChatGPT workflows
+- Cloud trigger `trig_01LBg5zbehmwaNkbhSoY8d6Z` fires every Monday 7:03am, creates fresh session, push notification on completion
+- Run manually: `python3 tools/youtube_intelligence.py` (--test = 5 videos no email, --dry-run = full run no email)
+- Output dir: `projects/youtube-intelligence/reports/YYYY-MM-DD/`
+- Created: wiki/concepts/youtube-intelligence-pipeline.md
+- Updated: wiki/overview.md, wiki/index.md
+
+## [2026-06-29] skill-installation | awesome-claude-skills installed (ComposioHQ/awesome-claude-skills)
+
+- Cloned `github.com/ComposioHQ/awesome-claude-skills` and installed to `.claude/skills/awesome-claude-skills/`
+- 832 Composio app integration skills (one per app: Salesforce, HubSpot, Ahrefs, Adobe, Algolia, ActiveCampaign, Slack, Jira, ZoomInfo, and 823 more)
+- 33 standalone skills: lead-research-assistant, content-research-writer, competitive-ads-extractor, tailored-resume-generator, video-downloader, meeting-insights-analyzer, invoice-organizer, file-organizer, developer-growth-analysis, domain-name-brainstormer, and more
+- All 832 composio-skills confirmed downloaded (verified: -21risk → zyte-api-automation)
+- Created: wiki/concepts/awesome-claude-skills.md
+- Updated: wiki/overview.md, wiki/index.md
+
+## [2026-06-29] skill-installation | frontend-slides installed (zarazhangrui/frontend-slides)
+
+- Cloned `github.com/zarazhangrui/frontend-slides` and installed to `.claude/skills/frontend-slides/`
+- What it does: generates zero-dependency single-file HTML presentations with 12 built-in style presets + 34 bold template pack designs. Also converts PPTX to web slides.
+- Invoke with `/frontend-slides`
+- Relevant for: client pitches, proposals, YouTube Intelligence report (HTML alternative to PPTX), any presentation deliverable
+- Updated: wiki/overview.md, wiki/index.md
+
+## [2026-06-29] skill-installation | watch-youtube installed (peilingjiang/skills)
+
+- Ran `npx skillfish add peilingjiang/skills watch-youtube`
+- Installed to `~/.claude/skills/watch-youtube`
+- What it does: extracts transcripts from YouTube videos, presents structured knowledge and key insights
+- Invoke with `/watch-youtube`
+- Relevant for: learning from YouTube tutorials, summarizing video content, building on YouTube Intelligence Pipeline
+- Updated: wiki/overview.md
+
+## [2026-06-29] skill-installation | marketing-skill + c-level-advisor installed (alirezarezvani/claude-skills)
+
+- Cloned `github.com/alirezarezvani/claude-skills` (19.4k stars, 345 skills total)
+- Installed `marketing-skill` → `.claude/skills/marketing-skill/` — 46 skills: content, SEO/AEO, CRO, channels, growth, intelligence, sales pods
+- Installed `c-level-advisor` → `.claude/skills/c-level-advisor/` — 66 skills: CEO, CMO, CTO, Chief AI Officer, Chief Customer Officer, executive mentor, VPE, general counsel
+- Rationale: marketing-skill for content strategy + outreach; c-level-advisor for pressure-testing agency strategy decisions with executive perspective
+- Updated: wiki/overview.md, wiki/index.md
+
+## [2026-07-01] ingest | Build & Sell with Claude Code (10hr course, Nate Herk)
+
+- Full transcript ingested (all ~10 hours, via youtube-transcript-api, processed in parallel by 3 sub-agents)
+- Video: https://www.youtube.com/watch?v=mpALXah_PBg — 793K views, "Build & Sell with Claude Code"
+- Audited existing system against everything mentioned before adding anything (skills, MCP config, CLAUDE.md, wiki)
+- Added: Context7 MCP server (up-to-date library docs, free/no-auth — genuine gap, now in `claude mcp list`)
+- Added: `.claude/rules/deployment-security.md` (security review before any scheduled/webhook deploy), referenced from root CLAUDE.md
+- Created wiki/sources/build-sell-with-claude-code.md, wiki/concepts/wat-framework.md, wiki/concepts/claude-code-power-techniques.md, wiki/concepts/ai-agency-client-acquisition-pricing.md
+- Deliberately skipped: n8n/n8n MCP (repo doesn't use n8n), Pinecone/Gemini embeddings (no RAG use case yet), Google Workspace CLI (redundant with existing Gmail/Drive connectors), Modal/Trigger.dev (would need new accounts/API keys — documented as an upgrade path instead), Agent Teams (experimental flag, noted but not enabled), various content-gen tools with no immediate business need (Excalidraw, Blotato, Kie.ai, Pixel Agents)
+- Confirmed: this repo's existing WAT framework, front-end design skill, canvas design skill, and skill-creator already match what the course teaches — no duplication needed
+- Highest-value capture: PRICE pricing framework, value-based retainer pricing (10-15% of yr-1 savings), "Trojan horse" partner referral method, 7-day client acquisition framework — directly applicable to top priority (make money)
+- Updated: wiki/index.md, wiki/log.md, CLAUDE.md (rules section + MCP integrations list)
+
+## [2026-07-01] ingest + skill-installation | Stanford's Method Turns Claude Into a PHD Level Research Team (Nate Herk)
+
+- Full transcript ingested (12min video, same channel as the 10hr course above)
+- Video: https://www.youtube.com/watch?v=Tj3018n5MVg
+- Built `.claude/skills/storm-research/` — SKILL.md + references/report_template.html — a real, invokable skill implementing Stanford's STORM method: 5 persona sub-agents (practitioner, academic, skeptic, economist, historian) research in parallel → contradiction mapping → synthesis → adversarial peer review + citation verification → verified HTML briefing
+- Created wiki/sources/storm-research-method.md, wiki/concepts/storm-research-method.md
+- Rationale: directly usable for market/competitor research where a single-angle query has previously been the approach ([[Competitor Landscape]], [[Chicago Prospect Analysis]]); extends rather than replaces the existing `/competitor-analysis` skill
+- Updated: wiki/index.md, wiki/log.md, CLAUDE.md (skills list)
+
+## [2026-07-01] ingest | Being the Director of Your Coding Agents (Nate Herk x Cole Medin podcast)
+
+- Full transcript ingested (68min video)
+- Video: https://www.youtube.com/watch?v=RzLV8sfFdMM
+- No new skills/tools built — this was a reinforcement + detail-capture ingest, not a new-capability ingest
+- Key new details captured: dumb-zone token thresholds (Opus ~250K, Opus 4.7 ~200K, Sonnet 4.6 ~100-125K), hooks-as-the-only-real-permission-layer argument (prompt instructions don't stop an agent from working around them), harness engineering / Ralph loop pattern, "every bug becomes a permanent upgrade" system-evolution habit, agent-team debate-panel use case for pricing/strategy decisions
+- Real incident referenced (Nate's team): agent misread task list, sent an unauthorized discount-code email to their whole list — direct real-world case for [.claude/rules/deployment-security.md](../../.claude/rules/deployment-security.md)
+- Created wiki/sources/directing-coding-agents-cole-medin.md
+- Updated wiki/concepts/claude-code-power-techniques.md (added dumb zone specifics, hooks-for-security, harness engineering, debate-panel use case)
+- Confirmed: no changes needed to existing WAT framework, deployment-security rule, or skill architecture — this video validates what's already in place
+- Updated: wiki/index.md, wiki/log.md
+
+## [2026-07-01] ingest + skill-installation | Meta Officially Integrated Claude Into Facebook Ads
+
+- Transcript ingested (16min video, dropshipping/e-com ads channel, https://www.youtube.com/watch?v=DIe1uYwHBBo)
+- Verified the official Meta Ads MCP connector (`mcp__claude_ai_Facebook_Ads__*`) is already linked to eadar7207@gmail.com — found 1 ad account (`1721146352562942`, ILS, `is_ads_mcp_enabled: false` — Meta gradually rolling out write access per account)
+- Built `.claude/skills/meta-ads/SKILL.md` + `.claude/commands/ads.md` — a real, invokable `/ads` skill implementing the video's audit → build → manage pattern, adapted from dropshipping (add-to-cart/checkout) to real estate lead gen (cost-per-lead, lead-form completion, listing/open-house creative). Three operations: audit (read-only diagnostic, root-causes learning-phase resets/CPM/funnel drop-off), build (campaign blueprint, requires user confirmation before any live write), manage (7-day cadence: data collection → decision checkpoint → optimize → scale-or-kill)
+- Guardrails: never writes/creates live campaigns or budgets without explicit turn-by-turn confirmation; checks `is_ads_mcp_enabled` before any write; flagged that scheduling this into a cron/automated trigger would require the deployment-security review first
+- Created wiki/sources/meta-ads-claude-integration.md, wiki/concepts/meta-ads-media-buyer-skill.md
+- Updated: wiki/index.md, wiki/log.md, wiki/overview.md
