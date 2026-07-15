@@ -44,6 +44,17 @@ Work through in order, stopping as soon as it resolves:
 4. Try a different network or a private/incognito browser window — rules out local network/extension interference
 5. Try another device — isolates whether it's account-wide or device-specific
 
+### "Response incomplete" error (Claude stops mid-response)
+
+When Claude's response cuts off with a "Response incomplete" banner:
+1. Retry the message (usually works on the second attempt)
+2. Hard refresh the page or restart the app
+3. Try a shorter prompt or smaller context
+4. If it's consistently cutting off responses, check status.anthropic.com for rate-limit or service issues
+5. Try on a different device to see if it's app/network-specific
+
+If retries don't work and there's no active incident, this is a backend issue — escalate to support.
+
 ### Anything else (errors, crashes, missing features)
 
 Get the exact error message/screenshot before troubleshooting blind. Check status.anthropic.com regardless of symptom.
